@@ -476,6 +476,13 @@ flowchart LR
 
 `id`, `job_id`, `application_id`, `skill_key`, `phase`, `agent_id`, `token_input`, `token_output`, `model_cost`, `runner_cost`, `total_cost`, `currency`, `recorded_at`
 
+### Deployment (as a microservice)
+
+- Independently deployable service behind **gateway** (`GET /applications/{id}/costs`, program-level rollup APIs)
+- Owns its data: `cost_record` (no other service writes it)
+- Ingest paths: pull/webhook from Langfuse (spans) + events from job-service (runner lifetime); both async — FinOps downtime never blocks a migration job
+- Scales independently (ingest volume, not job volume); stateless workers + its own schema/DB
+
 ---
 
 # PART E — Adaption Engine
@@ -506,6 +513,14 @@ flowchart LR
 ### Engagement track fields (logical)
 
 `application_id`, `stage`, `owner_emails`, `last_contact_at`, `next_action`, `sla_due_at`, `status`
+
+### Deployment (as a microservice)
+
+- Independently deployable service behind **gateway** (`GET /applications/{id}/engagement`)
+- Owns its data: `engagement_track`, `email_event` (audit)
+- Consumes job-service lifecycle events from the message bus (decoupled — job pipeline never waits on email)
+- Pluggable mail transport (Graph / SMTP / SES) behind one interface; respects quiet hours / unsubscribe
+- Scheduler component for SLA/idle timers (e.g. periodic sweep) — separate from the event consumer
 
 ---
 
@@ -553,7 +568,7 @@ ice/
 │   └── adaption/
 ├── runners/               # runner images / exec bridge
 ├── infra/
-├── docs/                  # architecture diagrams (.mmd)
+├── docs/                  # architecture diagrams (.drawio)
 └── skills/                # seed SKILL.md content
 ```
 
@@ -568,15 +583,29 @@ ice/
 - FinOps Engine for agent cost per run
 - Adaption Engine for tracks + owner email
 
+## Build order
+
+**This phase (docs only — done):** microservice map, this architecture document, draw.io diagrams in `docs/`.
+
+Implementation phases (post architecture sign-off, no code yet):
+
+| Phase | Scope |
+|-------|-------|
+| **1** | gateway + job-service + Application entity + Discovery wizard skeleton + local Docker runner + Skill 1 end-to-end (Discovery Inventory Artifact) |
+| **2** | Recommendation scoring + HITL gate + skill-loader + Langfuse skill registry integration |
+| **3** | Onboarding + Procure runners (Skills 3–4) + AKS ephemeral runner backend + Architecture Design Document composition |
+| **4** | knowledge-service memory (episodes, reflection, skill-review HITL) + MCP/CLI parity |
+| **5** | finops-engine (cost_record from Langfuse + runner metrics) + adaption-engine (tracks + email) + dashboards |
+
 ## Architecture status & next steps
 
 | Done in this phase | Explicitly not done |
 |--------------------|---------------------|
 | This architecture doc | Application / service source code |
 | Microservice boundaries | Deployable stubs / scaffolds |
-| Mermaid diagrams in `docs/*.mmd` | Production infra/Terraform |
+| draw.io diagrams in `docs/*.drawio` | Production infra/Terraform |
 
-**Next:** review this architecture → then scaffold microservices.
+**Next:** review this architecture → then scaffold microservices per the build order above.
 
 ## Open items (TBD)
 

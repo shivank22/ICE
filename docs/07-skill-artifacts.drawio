@@ -1,10 +1,10 @@
-<mxfile host="app.diagrams.net" agent="ICE Architecture" version="22.1.0" type="device">
-  <diagram id="ice-art" name="Skill Artifacts &amp; ADD">
+<mxfile host="app.diagrams.net" agent="Agentic Framework Architecture" version="22.1.0" type="device">
+  <diagram id="af-art" name="Skill Artifacts &amp; ADD">
     <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="580" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" value="ICE — Skill Artifacts → Architecture Design Document (No MR)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1a1a2e;" vertex="1" parent="1">
+        <mxCell id="title" value="Agentic Framework — Skill Artifacts → Architecture Design Document (No MR)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1a1a2e;" vertex="1" parent="1">
           <mxGeometry x="100" y="10" width="1100" height="40" as="geometry" />
         </mxCell>
         <mxCell id="s17" value="Skill 1 Discovery" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">

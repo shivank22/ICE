@@ -1,10 +1,10 @@
-<mxfile host="app.diagrams.net" agent="ICE Architecture" version="22.1.0" type="device">
-  <diagram id="ice-exec" name="Execution &amp; Skill Mount">
+<mxfile host="app.diagrams.net" agent="Agentic Framework Architecture" version="22.1.0" type="device">
+  <diagram id="af-exec" name="Execution &amp; Skill Mount">
     <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1300" pageHeight="520" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" value="ICE — Execution: skill-loader mounts skills onto ephemeral runners" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1a1a2e;" vertex="1" parent="1">
+        <mxCell id="title" value="Agentic Framework — Execution: skill-loader mounts skills onto ephemeral runners" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1a1a2e;" vertex="1" parent="1">
           <mxGeometry x="80" y="10" width="1200" height="40" as="geometry" />
         </mxCell>
         <mxCell id="job5" value="job-service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
