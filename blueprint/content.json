@@ -1,6 +1,6 @@
 {
   "title": "Vanilla Agentic Framework",
-  "subtitle": "A Blueprint Guide for Building an Agentic Infrastructure Discovery & Migration Platform",
+  "subtitle": "A Blueprint Guide for Building an Enterprise Agentic Platform with Best Practices Built In",
   "author": "shivank.sharma@wipro.com",
   "date": "July 2026",
   "footer": "Vanilla Agentic Framework \u2014 Blueprint Guide \u00b7 shivank.sharma@wipro.com",
@@ -9,8 +9,8 @@
       "heading": "Preface",
       "body": [
         "This document is a blueprint guide for teams who want to build an agentic framework: a platform where AI agents, orchestrated as durable state machines, execute reusable skills inside ephemeral, sandboxed runners and produce versioned, reviewable artifacts.",
-        "The guide uses a concrete reference implementation \u2014 an Infrastructure Discovery & Migration platform \u2014 to make every concept tangible. The same layers, contracts, and services apply to any domain where agents must discover, recommend, and act with human oversight: the domain skills change, the framework does not.",
-        "Every component described here maps to a managed Azure platform service, so the blueprint can be stood up without inventing infrastructure. All architecture diagrams and flowcharts referenced in the text are embedded in the relevant chapters.",
+        "The framework described here is deliberately domain-agnostic. To keep the concepts concrete, the guide uses four neutral example skills \u2014 Research, Planning, Execution, and Reporting \u2014 but these are placeholders: any domain can plug its own skills into the same pipeline without changing the framework itself.",
+        "Every component maps to a managed Azure platform service, so the blueprint can be stood up without inventing infrastructure. All architecture diagrams and flowcharts referenced in the text are embedded in the relevant chapters.",
         "This is an architecture-phase document: it defines boundaries, contracts, and a build order. It deliberately contains no application source code."
       ]
     },
@@ -19,7 +19,7 @@
       "body": [
         "- Platform and solution architects designing an agentic system on top of LangGraph and Deep Agents",
         "- Engineering leads who need clear microservice boundaries, data ownership, and a phased build order before writing code",
-        "- Infrastructure and migration teams evaluating how AI agents can drive discovery, readiness assessment, onboarding, and provisioning",
+        "- Teams evaluating how AI agents can research a problem, propose a plan, and act on it with human oversight",
         "- FinOps and governance stakeholders who need cost-per-run visibility and human-in-the-loop control points",
         "- Azure practitioners who want a component-to-service mapping for deploying the framework on managed Azure services"
       ]
@@ -27,13 +27,13 @@
     {
       "heading": "Introduction",
       "body": [
-        "An agentic framework is more than a chatbot with tools. It is a platform with five concerns kept deliberately separate: how users reach it (access), what the agents know (skills and knowledge), how work is orchestrated and executed (orchestration and execution), how quality and cost are measured (evaluation), and how the humans who own the affected systems stay engaged (engagement).",
+        "An agentic framework is more than a chatbot with tools. It is a platform with five concerns kept deliberately separate: how users reach it (access), what the agents know (skills and knowledge), how work is orchestrated and executed (orchestration and execution), how quality and cost are measured (evaluation), and how the stakeholders who own the outcome stay engaged (engagement).",
         "The Vanilla Agentic Framework realizes these concerns as independently deployable microservices behind a single gateway. Agents are built with LangGraph (durable state machines with checkpoints and human-in-the-loop pauses) and Deep Agents (planning and sub-agent fan-out). Work never executes on the control plane: every skill runs inside an ephemeral runner that is created on demand, receives its skills by mounting, and is destroyed afterwards.",
         "Three design commitments define the framework:",
         "- Skills are centralized, versioned content \u2014 prompts and procedures managed in a registry (Langfuse), never baked into runner images. A dedicated service, the skill-loader, mounts them onto runners at execution time.",
-        "- Every skill execution produces a durable, versioned artifact. The pipeline composes these artifacts into a final deliverable \u2014 an Architecture Design Document. There is no merge request or pull request anywhere in the process.",
-        "- Everything is anchored on an Application ID (for example AA12345), not a git repository. The platform is interactive: users collaborate with agents through a guided wizard rather than waiting on batch jobs.",
-        "The reference domain is the migration of applications from end-of-life infrastructure (RHEL 7) to modern targets (Kubernetes or RHEL 10). Four skills carry the process: Application Discovery, Migration Recommendation, Cloud Onboarding, and Procure & Create Resources."
+        "- Every skill execution produces a durable, versioned artifact. The pipeline composes these artifacts into a final deliverable \u2014 the Final Deliverable Document. There is no merge request or pull request anywhere in the process.",
+        "- Everything is anchored on an Engagement ID \u2014 a generic unit of work \u2014 not a git repository. The platform is interactive: users collaborate with agents through a guided wizard rather than waiting on batch jobs.",
+        "Four example skills carry the reference pipeline: Research (gather and confirm context), Planning (analyze and recommend), Execution (carry out the approved plan), and Reporting (summarize outcomes). Swap in your own domain skills and the framework is unchanged."
       ]
     },
     {
@@ -50,7 +50,7 @@
               ["Skill & Knowledge", "Skills registry, org facts, episodic memory", "knowledge-service, Langfuse, Postgres + pgvector"],
               ["Execution", "Ephemeral runners and skill mounting", "skill-loader, sandbox-provisioner, runners"],
               ["Evaluation", "Traces, quality signals, cost per run", "Langfuse traces, finops-engine"],
-              ["Engagement", "Owner communication and SLA tracking", "adaption-engine, message bus"]
+              ["Engagement", "Stakeholder communication and SLA tracking", "adaption-engine, message bus"]
             ]
           }
         },
@@ -66,19 +66,19 @@
     {
       "heading": "End-to-End Process",
       "body": [
-        "A run begins when a user opens their application on the platform by its Application ID. From there the default pipeline is sequential: Application Discovery, Migration Recommendation, a human approval gate, Cloud Onboarding, and finally Procure & Create Resources. Each skill persists an artifact, and after the last skill the platform composes the final Architecture Design Document from all of them.",
-        "The workflow is hybrid rather than rigid: any skill can be re-run if its inputs changed, or skipped when its previous artifact is still valid. The single mandatory human gate sits after Migration Recommendation, before any irreversible onboarding or provisioning takes place.",
+        "A run begins when a user opens an engagement on the platform by its Engagement ID. From there the default pipeline is sequential: Research, Planning, a human approval gate, Execution, and finally Reporting. Each skill persists an artifact, and after the last skill the platform composes the Final Deliverable Document from all of them.",
+        "The workflow is hybrid rather than rigid: any skill can be re-run if its inputs changed, or skipped when its previous artifact is still valid. The single mandatory human gate sits after Planning, before any irreversible execution takes place.",
         {
           "image": {
             "path": "png/01-overall-process.png",
             "caption": "Overall process \u2014 all layers, the four skills, artifacts, HITL gate, FinOps and Adaption engines on one canvas"
           }
         },
-        "The flow below isolates the skill pipeline itself: four skills, four artifacts, one approval gate, one final document. Cost events stream to the FinOps engine and lifecycle events notify application owners through the Adaption engine.",
+        "The flow below isolates the skill pipeline itself: four skills, four artifacts, one approval gate, one final document. Cost events stream to the FinOps engine and lifecycle events notify stakeholders through the Adaption engine.",
         {
           "image": {
             "path": "pipeline.png",
-            "caption": "Skill pipeline \u2014 artifacts accumulate into the Architecture Design Document; no merge request is produced"
+            "caption": "Skill pipeline \u2014 artifacts accumulate into the Final Deliverable Document; no merge request is produced"
           }
         }
       ]
@@ -127,13 +127,13 @@
               ["web", "Access", "Interactive guided wizard UI", "None (API client)"],
               ["mcp", "Access", "MCP tools mapping 1:1 to gateway routes", "None"],
               ["cli", "Access", "Scriptable / CI client at parity", "None"],
-              ["knowledge-service", "Skill & Knowledge", "Application inventory, skill metadata, semantic + episodic memory, change-request review", "Postgres + Langfuse pointers"],
+              ["knowledge-service", "Skill & Knowledge", "Engagement records, skill metadata, semantic + episodic memory, change-request review", "Postgres + Langfuse pointers"],
               ["job-service", "Orchestration", "Job lifecycle, hybrid skip/re-run, HITL state, event publish", "Job + plan state"],
               ["agent-orchestrator", "Orchestration", "LangGraph state machine, Deep Agents; consumes skills already mounted on runners", "LangGraph checkpoints"],
               ["skill-loader", "Execution", "Central mount authority: resolves skills, talks to provisioner, mounts bundles onto runners", "Transient bundles + mount records"],
               ["sandbox-provisioner", "Execution", "Create / destroy ephemeral runners; apply mount instructions", "Runner refs / TTL"],
-              ["finops-engine", "Evaluation", "Agent + runner cost per run; rollups by app / skill / day", "cost_record"],
-              ["adaption-engine", "Engagement", "Engagement tracks; email owners on lifecycle events", "engagement_track, email_event"]
+              ["finops-engine", "Evaluation", "Agent + runner cost per run; rollups by engagement / skill / day", "cost_record"],
+              ["adaption-engine", "Engagement", "Engagement tracks; email stakeholders on lifecycle events", "engagement_track, email_event"]
             ]
           }
         },
@@ -154,15 +154,15 @@
             "caption": "System overview \u2014 control plane, data plane, and shared stores at runtime"
           }
         },
-        "The gateway exposes an application-centric API. Every route is anchored on the Application ID, which keeps the UI, MCP tools, and CLI at exact parity:",
-        "- POST /applications/{id}/discover \u2014 start or continue the Discovery wizard",
-        "- POST /applications/{id}/recommend \u2014 run Migration Recommendation",
-        "- POST /applications/{id}/approve \u2014 the HITL gate on the readiness plan",
-        "- POST /applications/{id}/onboard and /procure \u2014 the two action skills",
-        "- GET /applications/{id}/jobs/{job_id}/artifacts \u2014 list and fetch skill artifacts",
-        "- GET /applications/{id}/jobs/{job_id}/architecture-design-document \u2014 the final deliverable",
-        "- GET /applications/{id}/costs and /engagement \u2014 FinOps and engagement views",
-        "Illustrative RBAC roles: viewer, migrator, skill-author, skill-reviewer, admin, finops-viewer."
+        "The gateway exposes an engagement-centric API. Every route is anchored on the Engagement ID, which keeps the UI, MCP tools, and CLI at exact parity:",
+        "- POST /engagements/{id}/research \u2014 start or continue the guided Research wizard",
+        "- POST /engagements/{id}/plan \u2014 run Planning",
+        "- POST /engagements/{id}/approve \u2014 the HITL gate on the plan",
+        "- POST /engagements/{id}/execute and /report \u2014 the two downstream skills",
+        "- GET /engagements/{id}/jobs/{job_id}/artifacts \u2014 list and fetch skill artifacts",
+        "- GET /engagements/{id}/jobs/{job_id}/final-deliverable \u2014 the final composed document",
+        "- GET /engagements/{id}/costs and /track \u2014 FinOps and engagement views",
+        "Illustrative RBAC roles: viewer, operator, skill-author, skill-reviewer, admin, finops-viewer."
       ]
     },
     {
@@ -177,24 +177,24 @@
         },
         {
           "table": {
-            "caption": "The four reference skills",
+            "caption": "The four example skills",
             "headers": ["Skill", "Purpose", "Artifact produced"],
             "rows": [
-              ["1. Application Discovery", "Guided discovery of infrastructure around an Application ID", "Discovery Inventory Artifact"],
-              ["2. Migration Recommendation", "Readiness scores and a recommended migration path", "Readiness & Recommendation Artifact"],
-              ["3. Cloud Onboarding", "Prepare the application for the target platform", "Onboarding Blueprint Artifact"],
-              ["4. Procure & Create Resources", "Create the approved resources", "Provisioning Manifest Artifact"]
+              ["1. Research", "Guided gathering and confirmation of context for the engagement", "Research Findings Artifact"],
+              ["2. Planning", "Analyze findings, score options, recommend a course of action", "Plan & Recommendation Artifact"],
+              ["3. Execution", "Carry out the approved plan against enterprise systems", "Execution Report Artifact"],
+              ["4. Reporting", "Summarize outcomes, metrics, and learnings", "Summary Artifact"]
             ]
           }
         },
-        "An optional secondary skill, Code Adapt, handles application code changes when the recommendation requires them; it emits an Adapt Report Artifact and still produces no merge request.",
+        "Optional secondary skills can be added per domain; each emits its own artifact and still produces no merge request.",
         {
           "table": {
             "caption": "Three memory types",
             "headers": ["Memory", "What it holds", "Store"],
             "rows": [
-              ["Procedural", "How to discover / recommend / onboard / procure", "Langfuse (production label)"],
-              ["Semantic", "Org facts: platform standards, images, network zones, baselines", "Postgres + embeddings"],
+              ["Procedural", "How to research / plan / execute / report", "Langfuse (production label)"],
+              ["Semantic", "Org facts: standards, catalogs, policies, reference data", "Postgres + embeddings"],
               ["Episodic", "Past runs: scores, outcomes, failures", "Postgres + embeddings"]
             ]
           }
@@ -218,24 +218,24 @@
             "caption": "Runner types",
             "headers": ["Runner", "Used by"],
             "rows": [
-              ["Discovery", "Skill 1 \u2014 probes, parsers, inventory writes"],
-              ["Onboarding", "Skill 3 \u2014 target platform APIs"],
-              ["Procure", "Skill 4 \u2014 Terraform / internal provisioning APIs"],
-              ["Code Adapt", "Optional \u2014 isolated code workspace"]
+              ["Research", "Skill 1 \u2014 data gathering, enrichment, findings writes"],
+              ["Execution", "Skill 3 \u2014 enterprise system APIs, action execution"],
+              ["Reporting", "Skill 4 \u2014 aggregation, document generation"],
+              ["Custom", "Optional domain skills \u2014 isolated workspace"]
             ]
           }
         },
-        "Runners are destroyed on completion or TTL expiry; a sweeper reclaims orphans. One workspace exists per job, with no cross-job leakage. The sandbox backend is a protocol seam: local Docker first, AKS pods later, with no change to agent code."
+        "Runners are destroyed on completion or TTL expiry; a sweeper reclaims orphans. One workspace exists per job, with no cross-job leakage. The sandbox backend is a protocol seam: local Docker first, managed Kubernetes pods later, with no change to agent code."
       ]
     },
     {
-      "heading": "Interactive Discovery Wizard",
+      "heading": "Interactive Guided Wizard",
       "body": [
-        "Discovery is a guided collaboration, not a silent batch CMDB pull. The user opens their application, and the agent walks servers, dependencies, and configurations with them step by step, enriching with live checks where available. The user confirms the result before it becomes the Discovery Inventory Artifact.",
+        "Research is a guided collaboration, not a silent batch pull. The user opens an engagement, and the agent walks the relevant context with them step by step, enriching with live checks where available. The user confirms the result before it becomes the Research Findings Artifact.",
         {
           "image": {
             "path": "png/06-discovery-wizard.png",
-            "caption": "Guided discovery wizard \u2014 user and agent converge on a confirmed inventory"
+            "caption": "Guided wizard \u2014 user and agent converge on confirmed findings"
           }
         },
         "Wizard progress is checkpointed in LangGraph, so an abandoned session resumes exactly where it stopped; the UI receives progress over server-sent events. An abandoned wizard also triggers an engagement nudge from the Adaption engine."
@@ -244,11 +244,11 @@
     {
       "heading": "Artifact Pipeline & Final Deliverable",
       "body": [
-        "Every completed skill persists a versioned skill artifact. When the approved path completes, the platform composes the Architecture Design Document from all artifacts. The document is a first-class, downloadable deliverable in the UI \u2014 there is no git merge anywhere in the process.",
+        "Every completed skill persists a versioned skill artifact. When the approved path completes, the platform composes the Final Deliverable Document from all artifacts. The document is a first-class, downloadable deliverable in the UI \u2014 there is no git merge anywhere in the process.",
         {
           "image": {
             "path": "png/07-skill-artifacts.png",
-            "caption": "Artifact flow \u2014 four skill artifacts compose into the Architecture Design Document"
+            "caption": "Artifact flow \u2014 four skill artifacts compose into the Final Deliverable Document"
           }
         },
         {
@@ -256,11 +256,11 @@
             "caption": "Skill to artifact mapping",
             "headers": ["Skill / step", "Artifact"],
             "rows": [
-              ["Application Discovery", "Discovery Inventory Artifact"],
-              ["Migration Recommendation", "Readiness & Recommendation Artifact"],
-              ["Cloud Onboarding", "Onboarding Blueprint Artifact"],
-              ["Procure & Create Resources", "Provisioning Manifest Artifact"],
-              ["Final composition", "Architecture Design Document"]
+              ["Research", "Research Findings Artifact"],
+              ["Planning", "Plan & Recommendation Artifact"],
+              ["Execution", "Execution Report Artifact"],
+              ["Reporting", "Summary Artifact"],
+              ["Final composition", "Final Deliverable Document"]
             ]
           }
         },
@@ -270,7 +270,7 @@
     {
       "heading": "FinOps Engine",
       "body": [
-        "The FinOps engine answers one question with authority: what did this agent run cost \u2014 per job, per application, per skill, per day?",
+        "The FinOps engine answers one question with authority: what did this agent run cost \u2014 per job, per engagement, per skill, per day?",
         {
           "image": {
             "path": "png/08-finops-engine.png",
@@ -278,18 +278,18 @@
           }
         },
         "It ingests Langfuse spans (tokens, model, latency) keyed by job, phase, skill, and agent; attributes ephemeral runner compute when metered; persists an immutable cost_record; and exposes rollups through the gateway. Soft budgets and alerts are optional additions.",
-        "A cost_record carries: id, job_id, application_id, skill_key, phase, agent_id, token_input, token_output, model_cost, runner_cost, total_cost, currency, recorded_at.",
-        "Deployment notes: it is an independently deployable service that exclusively owns cost_record; both ingest paths are asynchronous, so FinOps downtime never blocks a migration job; it scales on ingest volume, not job volume."
+        "A cost_record carries: id, job_id, engagement_id, skill_key, phase, agent_id, token_input, token_output, model_cost, runner_cost, total_cost, currency, recorded_at.",
+        "Deployment notes: it is an independently deployable service that exclusively owns cost_record; both ingest paths are asynchronous, so FinOps downtime never blocks a job; it scales on ingest volume, not job volume."
       ]
     },
     {
       "heading": "Adaption Engine",
       "body": [
-        "The Adaption engine keeps each application's migration journey moving. It tracks engagement per application and emails application owners at the moments that matter \u2014 approvals waiting, wizards abandoned, end-of-life deadlines approaching.",
+        "The Adaption engine keeps each engagement moving. It tracks progress per engagement and emails stakeholders at the moments that matter \u2014 approvals waiting, wizards abandoned, deadlines approaching.",
         {
           "image": {
             "path": "png/09-adaption-engine.png",
-            "caption": "Adaption engine \u2014 lifecycle events become tracked engagements and audited owner emails"
+            "caption": "Adaption engine \u2014 lifecycle events become tracked engagements and audited stakeholder emails"
           }
         },
         {
@@ -297,15 +297,15 @@
             "caption": "Example triggers",
             "headers": ["Event", "Email intent"],
             "rows": [
-              ["Recommendation ready", "Ask owner to review and approve the plan"],
+              ["Plan ready", "Ask stakeholder to review and approve the plan"],
               ["HITL idle beyond N days", "Reminder"],
-              ["Discovery wizard abandoned", "Nudge to resume"],
-              ["Procure complete", "Summary and next validation steps"],
-              ["End-of-life approaching", "Urgency / program outreach"]
+              ["Guided wizard abandoned", "Nudge to resume"],
+              ["Execution complete", "Summary and next validation steps"],
+              ["Deadline approaching", "Urgency / program outreach"]
             ]
           }
         },
-        "An engagement track carries: application_id, stage, owner_emails, last_contact_at, next_action, sla_due_at, status. Emails are audited as email_event records.",
+        "An engagement track carries: engagement_id, stage, stakeholder_emails, last_contact_at, next_action, sla_due_at, status. Emails are audited as email_event records.",
         "Deployment notes: the engine consumes job lifecycle events from the message bus, so the pipeline never waits on email; the mail transport (Graph, SMTP, or a provider) sits behind one interface; a separate scheduler component sweeps SLA and idle timers."
       ]
     },
@@ -341,7 +341,7 @@
     {
       "heading": "Design Principles",
       "body": [
-        "The framework's choices follow a small set of principles that generalize beyond the reference domain:",
+        "The framework's choices follow a small set of principles that generalize across domains:",
         {
           "table": {
             "caption": "Design principles and how the framework applies them",
@@ -351,7 +351,7 @@
               ["Scalable", "Gateway replicas; workers scale on queue depth; runners on demand"],
               ["Portable", "Agent logic is cloud-agnostic; infrastructure bindings are pluggable"],
               ["Open", "REST + MCP + CLI; skills are prompts and SKILL.md content, not binaries"],
-              ["Human-in-the-loop", "Approval after Recommendation; skill-review for knowledge updates"],
+              ["Human-in-the-loop", "Approval after Planning; skill-review for knowledge updates"],
               ["Agent / sub-agent", "Orchestrator on the control plane; work in runners; credentials stay central"],
               ["Parallelism", "Fan-out within phases; many jobs across workers"],
               ["Handoffs", "FIFO pipeline, circular revise loops, fan-out / consolidate, handoff-to-human"],
@@ -370,22 +370,22 @@
             "caption": "Implementation phases",
             "headers": ["Phase", "Scope"],
             "rows": [
-              ["1", "Gateway + job-service + Application entity + Discovery wizard skeleton + local Docker runner + Skill 1 end to end (Discovery Inventory Artifact)"],
-              ["2", "Recommendation scoring + HITL gate + skill-loader + Langfuse skill registry integration"],
-              ["3", "Onboarding + Procure runners (Skills 3\u20134) + AKS ephemeral runner backend + Architecture Design Document composition"],
+              ["1", "Gateway + job-service + Engagement entity + guided wizard skeleton + local Docker runner + Skill 1 end to end (Research Findings Artifact)"],
+              ["2", "Planning skill + HITL gate + skill-loader + Langfuse skill registry integration"],
+              ["3", "Execution + Reporting runners (Skills 3\u20134) + managed K8s ephemeral runner backend + Final Deliverable Document composition"],
               ["4", "knowledge-service memory (episodes, reflection, skill-review HITL) + MCP / CLI parity"],
               ["5", "finops-engine (cost records from traces + runner metrics) + adaption-engine (tracks + email) + dashboards"]
             ]
           }
         },
-        "Open items to resolve during implementation: the target-platform provisioning API surface, live discovery mechanisms per CI type, readiness score dimensions and weights, cloud provider bindings, the adaption email transport, and whether FinOps v1 includes runner compute cost or model cost only."
+        "Open items to resolve during implementation: the concrete skill catalog for the first use case, live enrichment mechanisms per data source, plan scoring dimensions and weights, cloud provider bindings, the adaption email transport, and whether FinOps v1 includes runner compute cost or model cost only."
       ]
     },
     {
       "heading": "Conclusion",
       "body": [
         "The Vanilla Agentic Framework shows that an agentic platform is, at its core, a disciplined separation of six concerns: access, orchestration, skills and knowledge, execution, evaluation, and engagement. Keep skills centralized and mounted at runtime, keep execution ephemeral and credential-free, make every step produce a durable artifact, and put a human gate in front of anything irreversible.",
-        "The reference domain \u2014 infrastructure discovery and migration \u2014 exercises every part of the framework: interactive wizards, scoring and recommendation, approval gates, real-world provisioning, cost accounting, and owner engagement. Replacing the four reference skills with skills from another domain changes nothing structural.",
+        "The four example skills \u2014 Research, Planning, Execution, Reporting \u2014 exercise every part of the framework: interactive wizards, scoring and recommendation, approval gates, real-world actions, cost accounting, and stakeholder engagement. Replacing them with skills from your own domain changes nothing structural.",
         "With the microservice boundaries, contracts, diagrams, and build order in this guide, a team can proceed directly to Phase 1 scaffolding with confidence that the architecture will hold as the platform grows."
       ]
     }

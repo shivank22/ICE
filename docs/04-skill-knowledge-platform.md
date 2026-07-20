@@ -2,7 +2,7 @@
 
 Companion to [`04-skill-knowledge-platform.drawio`](04-skill-knowledge-platform.drawio).
 
-Four ICE skills, three memory types, skill update loop with reviewer HITL.
+Four framework skills (Research, Planning, Execution, Reporting), three memory types, skill update loop with reviewer HITL.
 
 Open in [diagrams.net](https://app.diagrams.net/) or the Draw.io extension.
 

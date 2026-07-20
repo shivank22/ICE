@@ -1,8 +1,8 @@
-# Discovery Wizard
+# Guided Wizard
 
 Companion to [`06-discovery-wizard.drawio`](06-discovery-wizard.drawio).
 
-Interactive guided discovery for Skill 1 — user + agent collaboration.
+Interactive guided wizard for Skill 1 (Research) — user + agent collaboration, confirmed findings.
 
 Open in [diagrams.net](https://app.diagrams.net/) or the Draw.io extension.
 

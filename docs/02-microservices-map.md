@@ -1,4 +1,4 @@
-# ICE Microservices Map
+# Agentic Framework Microservices Map
 
 Companion to [`02-microservices-map.drawio`](02-microservices-map.drawio).
 

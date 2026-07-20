@@ -1,25 +1,25 @@
-# ICE — Infrastructure Discovery & Migration Platform
+# Vanilla Agentic Framework — Architecture
 
 ## Architecture (Microservices)
 
 > **Scope of this document:** Architecture only. No application code yet.  
-> Reference patterns (Deep Agents, LangGraph, skill registry, ephemeral runners) were adapted from a prior migration-platform design — ICE is a different product.
+> Core patterns: Deep Agents, LangGraph, a centralized skill registry, and ephemeral runners with skill mounting. The framework is domain-agnostic — the example skills used throughout are illustrative and pluggable.
 
 ---
 
 ## Goal
 
-**ICE** is an interactive enterprise platform for **Infrastructure Discovery and Migration**.
+The **Vanilla Agentic Framework** is an interactive enterprise platform for running **agentic workflows with best practices built in**: durable orchestration, centralized skills, ephemeral execution, human-in-the-loop gates, cost accounting, and stakeholder engagement.
 
-Users bring an **application number** (e.g. `AA12345`) and work through a guided flow to:
+Users open an **engagement** (a unit of work identified by an Engagement ID) and work through a guided flow of skills. The reference pipeline uses four neutral example skills:
 
-1. Discover infrastructure around the application → **Discovery Inventory Artifact**
-2. Get a **migration recommendation** (readiness scores) → **Readiness & Recommendation Artifact**
-3. Perform **cloud / UK8S onboarding** → **Onboarding Blueprint Artifact**
-4. **Procure and create** approved resources → **Provisioning Manifest Artifact**
-5. Compose the final **Architecture Design Document** from those artifacts
+1. **Research** — gather and confirm context through a guided wizard → **Research Findings Artifact**
+2. **Planning** — analyze findings and propose a plan → **Plan & Recommendation Artifact**
+3. **Execution** — carry out the approved plan → **Execution Report Artifact**
+4. **Reporting** — summarize outcomes and learnings → **Summary Artifact**
+5. Compose the final **Final Deliverable Document** from those artifacts
 
-**There is no Merge Request (MR) in this process.** Deliverables are skill artifacts and the Architecture Design Document.
+**There is no Merge Request (MR) in this process.** Deliverables are skill artifacts and the Final Deliverable Document.
 
 ### Platforms (physical)
 
@@ -29,17 +29,17 @@ Users bring an **application number** (e.g. `AA12345`) and work through a guided
 | **Skill & Knowledge Platform** | Skills, org memory, skill registry (Langfuse), governance |
 | **Execution Platform** | LangGraph + Deep Agents control plane + ephemeral runners |
 
-### Logical fabrics / frameworks
+### Logical layers / frameworks
 
-| Fabric / Framework | Concern |
-|--------------------|---------|
-| **Connectivity Fabric** | Clients + Gateway + SSE |
-| **Context Fabric** | Skills, prompts, semantic + episodic memory |
+| Layer / Framework | Concern |
+|-------------------|---------|
+| **Connectivity Layer** | Clients + Gateway + SSE |
+| **Context Layer** | Skills, prompts, semantic + episodic memory |
 | **Orchestrator Framework** | Jobs, LangGraph, Deep Agents, Skill Loader |
 | **Execution Framework** | Ephemeral runners, provisioner, phase work |
 | **Evaluation Framework** | Tracing + **FinOps Engine** (agent cost per run) |
 
-**Cross-cut:** **Adaption Engine** — engagement tracks + emails to application owners.
+**Cross-cut:** **Adaption Engine** — engagement tracks + emails to stakeholders.
 
 ---
 
@@ -49,16 +49,16 @@ Users bring an **application number** (e.g. `AA12345`) and work through a guided
 
 | # | Diagram | Notes |
 |---|---------|-------|
-| 01 | [`docs/01-overall-process.drawio`](docs/01-overall-process.drawio) / [`ICE.drawio`](ICE.drawio) | Full layered architecture (DSE-style) — ICE skills → artifacts → ADD, no MR ([notes](docs/01-overall-process.md)) |
+| 01 | [`docs/01-overall-process.drawio`](docs/01-overall-process.drawio) / [`ICE.drawio`](ICE.drawio) | Full layered architecture — skills → artifacts → Final Deliverable Document, no MR ([notes](docs/01-overall-process.md)) |
 | 02 | [`docs/02-microservices-map.drawio`](docs/02-microservices-map.drawio) | All microservices + gateway ([notes](docs/02-microservices-map.md)) |
 | 03 | [`docs/03-system-overview.drawio`](docs/03-system-overview.drawio) | Platforms, engines, runners ([notes](docs/03-system-overview.md)) |
 | 04 | [`docs/04-skill-knowledge-platform.drawio`](docs/04-skill-knowledge-platform.drawio) | Skills, memory, update loop ([notes](docs/04-skill-knowledge-platform.md)) |
 | 05 | [`docs/05-execution-runners.drawio`](docs/05-execution-runners.drawio) | skill-loader → provisioner → mount → agents ([notes](docs/05-execution-runners.md)) |
-| 06 | [`docs/06-discovery-wizard.drawio`](docs/06-discovery-wizard.drawio) | Interactive Discovery wizard ([notes](docs/06-discovery-wizard.md)) |
-| 07 | [`docs/07-skill-artifacts.drawio`](docs/07-skill-artifacts.drawio) | Artifacts → Architecture Design Document ([notes](docs/07-skill-artifacts.md)) |
+| 06 | [`docs/06-discovery-wizard.drawio`](docs/06-discovery-wizard.drawio) | Interactive guided wizard ([notes](docs/06-discovery-wizard.md)) |
+| 07 | [`docs/07-skill-artifacts.drawio`](docs/07-skill-artifacts.drawio) | Artifacts → Final Deliverable Document ([notes](docs/07-skill-artifacts.md)) |
 | 08 | [`docs/08-finops-engine.drawio`](docs/08-finops-engine.drawio) | Agent cost per run ([notes](docs/08-finops-engine.md)) |
-| 09 | [`docs/09-adaption-engine.drawio`](docs/09-adaption-engine.drawio) | Tracks + email owners ([notes](docs/09-adaption-engine.md)) |
-| 10 | [`docs/10-logical-fabrics.drawio`](docs/10-logical-fabrics.drawio) | Five fabrics/frameworks ([notes](docs/10-logical-fabrics.md)) |
+| 09 | [`docs/09-adaption-engine.drawio`](docs/09-adaption-engine.drawio) | Tracks + email stakeholders ([notes](docs/09-adaption-engine.md)) |
+| 10 | [`docs/10-logical-fabrics.drawio`](docs/10-logical-fabrics.drawio) | Five layers/frameworks ([notes](docs/10-logical-fabrics.md)) |
 
 Index: [`docs/README.md`](docs/README.md)
 
@@ -106,28 +106,28 @@ flowchart TD
     Loader --> Prov
 
     subgraph runners [Ephemeral Runners]
-        D["Discovery"]
-        O["Onboarding"]
-        P["Procure"]
-        A["Optional Code Adapt"]
+        R["Research"]
+        E["Execution"]
+        Rep["Reporting"]
+        C["Optional Custom"]
     end
 
     Prov -->|"spawn"| runners
     Loader -->|"mount centralized skills"| runners
     Orch -->|"agents use mounted skills"| runners
-    runners --> Ext["CMDB / SSH / Cloud / UK8S APIs"]
+    runners --> Ext["Enterprise systems / APIs / data sources"]
     runners -.-> LF
     Orch -->|"episodes"| KS
     LF --> FinOps
     Job --> FinOps
     Job -->|"lifecycle events"| Adapt
-    Adapt -->|"email"| Owners["Application owners"]
+    Adapt -->|"email"| Owners["Stakeholders"]
 ```
 ---
 
 ## Microservice Map
 
-ICE is a **microservice architecture**. Each service below is an independently deployable unit with a clear API and ownership boundary. Clients never call execution services directly — only via **gateway**.
+The framework is a **microservice architecture**. Each service below is an independently deployable unit with a clear API and ownership boundary. Clients never call execution services directly — only via **gateway**.
 
 ```mermaid
 flowchart TB
@@ -184,33 +184,33 @@ flowchart TB
 | **web** | Access | Interactive guided wizard UI | None (API client) |
 | **mcp** | Access | MCP tools → Gateway parity | None |
 | **cli** | Access | Scriptable / CI client | None |
-| **knowledge-service** | Skill & Knowledge | Application inventory, skills metadata, semantic + episodic memory, change-request review | Postgres + Langfuse pointers |
-| **job-service** | Execution | Application job lifecycle, hybrid phase skip/re-run, HITL state, event publish | Job + plan state |
+| **knowledge-service** | Skill & Knowledge | Engagement records, skills metadata, semantic + episodic memory, change-request review | Postgres + Langfuse pointers |
+| **job-service** | Execution | Engagement job lifecycle, hybrid phase skip/re-run, HITL state, event publish | Job + plan state |
 | **agent-orchestrator** | Execution | LangGraph state machine, Deep Agents; agents **consume** skills already mounted on runners | LangGraph checkpoints |
 | **skill-loader** | Execution | **Central mount authority** — resolve production skills/facts/episodes; talk to sandbox-provisioner; mount skill bundles onto ephemeral runners for agents | Transient bundles + mount records |
 | **sandbox-provisioner** | Execution | Create/destroy ephemeral runners; apply mount instructions from skill-loader | Runner refs / TTL |
-| **finops-engine** | Evaluation | Agent + runner cost per run; rollups by app/skill/day | `cost_record` |
-| **adaption-engine** | Engagement | Engagement tracks; email application owners on lifecycle events | `engagement_track`, `email_event` |
+| **finops-engine** | Evaluation | Agent + runner cost per run; rollups by engagement/skill/day | `cost_record` |
+| **adaption-engine** | Engagement | Engagement tracks; email stakeholders on lifecycle events | `engagement_track`, `email_event` |
 
 ### Shared infrastructure
 
 - **Postgres + pgvector** — structured domain data + embeddings
 - **Langfuse** — procedural skill prompts (`draft` / `staging` / `production`) + tracing
 - **Message bus** — durable job/event fan-out (e.g. Azure Service Bus)
-- **Runner workspace store** — per-job share for discovery artifacts (e.g. Azure Files / PVC)
+- **Runner workspace store** — per-job share for skill artifacts (e.g. Azure Files / PVC)
 
 ### Design seams
 
-- **SandboxBackendProtocol** — local Docker first; swap to AKS/K8s runners without changing agent code
+- **SandboxBackendProtocol** — local Docker first; swap to managed K8s runners without changing agent code
 - **Skill mount contract** — centralized skills are never baked into images. **skill-loader** resolves them and mounts them onto ephemeral runners (via sandbox-provisioner). Agents only use skills that skill-loader has mounted for that run.
 - **Gateway as single edge** — UI / MCP / CLI stay thin and at parity
 
 ---
 
-## Logical Architecture — Fabrics Mapping
+## Logical Architecture — Layer Mapping
 
-| Fabric / Framework | Microservices |
-|--------------------|---------------|
+| Layer / Framework | Microservices |
+|-------------------|---------------|
 | Connectivity | gateway, web, mcp, cli, adaption-engine (outbound email) |
 | Context | knowledge-service, Langfuse prompts, Postgres memory |
 | Orchestrator | job-service, agent-orchestrator |
@@ -221,28 +221,26 @@ flowchart TB
 
 ## Core Domain Model
 
-Everything is anchored on **Application ID** (`AA12345`), not a git repo.
+Everything is anchored on an **Engagement ID** — a generic unit of work, not a git repo.
 
 | Entity | Description |
 |--------|-------------|
-| **Application** | id, name, owner contacts, criticality, target (UK8S / RHEL10 / …) |
-| **Infrastructure CI** | Servers, middleware, DBs, networks, dependencies |
-| **Discovery Session** | Wizard state: user inputs + agent findings + confidence |
-| **Skill Artifact** | Versioned output of each skill run (inventory, readiness, blueprint, provision manifest) |
-| **Readiness Assessment** | Dimension scores → overall readiness + recommendation path |
-| **Migration Plan** | Target architecture, onboarding steps, resource requirements |
-| **Architecture Design Document** | **Final deliverable** — composed from skill artifacts (no MR) |
+| **Engagement** | id, name, stakeholder contacts, priority, objective |
+| **Guided Session** | Wizard state: user inputs + agent findings + confidence |
+| **Skill Artifact** | Versioned output of each skill run (findings, plan, execution report, summary) |
+| **Plan & Recommendation** | Scored options → recommended course of action |
+| **Final Deliverable Document** | **Final deliverable** — composed from skill artifacts (no MR) |
 | **Episode** | Past run outcomes for learning / few-shot retrieval |
 | **Cost Record** | Per job/phase/agent: tokens, model $, runner $, totals |
-| **Engagement Track** | Per app: stage, owners, SLA clocks, next nudge |
+| **Engagement Track** | Per engagement: stage, stakeholders, SLA clocks, next nudge |
 | **Email Event** | Audit of Adaption Engine sends |
 
 ### Logical data ownership
 
 | Service | Tables / stores (logical) |
 |---------|---------------------------|
-| knowledge-service | `application`, `infrastructure_ci`, `discovery_session`, `skill_meta`, `org_asset`, `episode`, `change_request` |
-| job-service | `job`, `skill_artifact`, `readiness_assessment`, `migration_plan`, `architecture_design_document` |
+| knowledge-service | `engagement`, `guided_session`, `skill_meta`, `org_asset`, `episode`, `change_request` |
+| job-service | `job`, `skill_artifact`, `plan_recommendation`, `final_deliverable_document` |
 | finops-engine | `cost_record` |
 | adaption-engine | `engagement_track`, `email_event` |
 | agent-orchestrator | LangGraph checkpoints (separate store) |
@@ -256,30 +254,30 @@ Thin clients over **gateway**. No business logic in clients.
 ```mermaid
 flowchart LR
     subgraph clients [Clients]
-        UI["web - guided wizard\n- open AA12345\n- discovery collaboration\n- approve recommendation\n- FinOps + engagement views"]
+        UI["web - guided wizard\n- open engagement\n- research collaboration\n- approve plan\n- FinOps + engagement views"]
         MCP["mcp - tools map 1:1 to Gateway"]
         CLI["cli - scriptable parity"]
     end
     clients --> GW["gateway"]
 ```
 
-### Starter Gateway routes (application-centric)
+### Starter Gateway routes (engagement-centric)
 
-- `POST /applications/{id}/discover` — start / continue Discovery wizard
-- `GET /applications/{id}/inventory` — validated CI inventory
-- `POST /applications/{id}/recommend` — run Migration Recommendation
-- `POST /applications/{id}/approve` — HITL gate on readiness plan
-- `POST /applications/{id}/onboard` — Cloud Onboarding
-- `POST /applications/{id}/procure` — Procure resources → Provisioning Manifest Artifact
-- `GET /applications/{id}/jobs/{job_id}/artifacts` — list skill artifacts
-- `GET /applications/{id}/jobs/{job_id}/artifacts/{artifact_id}` — fetch artifact
-- `GET /applications/{id}/jobs/{job_id}/architecture-design-document` — final ADD
-- `GET /applications/{id}/jobs/{job_id}` — status
-- `GET /applications/{id}/jobs/{job_id}/events` — SSE progress
-- `GET /applications/{id}/costs` — FinOps rollup for app
-- `GET /applications/{id}/engagement` — Adaption track status
+- `POST /engagements/{id}/research` — start / continue the guided Research wizard
+- `GET /engagements/{id}/findings` — confirmed research findings
+- `POST /engagements/{id}/plan` — run Planning
+- `POST /engagements/{id}/approve` — HITL gate on the plan
+- `POST /engagements/{id}/execute` — Execution
+- `POST /engagements/{id}/report` — Reporting → Summary Artifact
+- `GET /engagements/{id}/jobs/{job_id}/artifacts` — list skill artifacts
+- `GET /engagements/{id}/jobs/{job_id}/artifacts/{artifact_id}` — fetch artifact
+- `GET /engagements/{id}/jobs/{job_id}/final-deliverable` — final composed document
+- `GET /engagements/{id}/jobs/{job_id}` — status
+- `GET /engagements/{id}/jobs/{job_id}/events` — SSE progress
+- `GET /engagements/{id}/costs` — FinOps rollup for the engagement
+- `GET /engagements/{id}/track` — Adaption track status
 
-RBAC roles (illustrative): `viewer`, `migrator`, `skill-author`, `skill-reviewer`, `admin`, `finops-viewer`.
+RBAC roles (illustrative): `viewer`, `operator`, `skill-author`, `skill-reviewer`, `admin`, `finops-viewer`.
 
 ---
 
@@ -304,26 +302,26 @@ flowchart TD
     Review -->|"approve fact"| PG
 ```
 
-## B1. Four ICE skills (procedural)
+## B1. Four example skills (procedural)
 
 | Skill | Purpose | Artifact produced | Mounted into |
 |-------|---------|-------------------|--------------|
-| **1. Application Discovery** | Guided discovery of infra around `AA12345` | Discovery Inventory Artifact | Discovery runner |
-| **2. Migration Recommendation** | Readiness scores + recommended path | Readiness & Recommendation Artifact | Orchestrator / scoring path |
-| **3. Cloud Onboarding** | Prepare for UK8S / target platform | Onboarding Blueprint Artifact | Onboarding runner |
-| **4. Procure & Create Resources** | Create approved resources | Provisioning Manifest Artifact | Procure runner |
+| **1. Research** | Guided gathering and confirmation of context for the engagement | Research Findings Artifact | Research runner |
+| **2. Planning** | Analyze findings, score options, recommend a course of action | Plan & Recommendation Artifact | Orchestrator / planning path |
+| **3. Execution** | Carry out the approved plan against enterprise systems | Execution Report Artifact | Execution runner |
+| **4. Reporting** | Summarize outcomes, metrics, and learnings | Summary Artifact | Reporting runner |
 
-**Final composition (not a skill mount):** Architecture Design Document — assembled from the four skill artifacts after the pipeline (or after the last executed skill in a hybrid path).
+**Final composition (not a skill mount):** Final Deliverable Document — assembled from the four skill artifacts after the pipeline (or after the last executed skill in a hybrid path).
 
-Optional secondary: **Code Adapt** — only when recommendation requires app code changes; emits an Adapt Report Artifact. Still **no MR**.
+Optional secondary skills can be added per domain (e.g. a code-change skill emitting its own artifact). Still **no MR**.
 
 ## B2. Three memory types
 
 | Memory | What | Store |
 |--------|------|-------|
-| **Procedural** | How to discover / recommend / onboard / procure | Langfuse (`production` label) |
-| **Semantic** | Org facts: UK8S standards, images, network zones, RHEL baselines, catalogs | Postgres + embeddings |
-| **Episodic** | Past migrations: scores, outcomes, failures | Postgres + embeddings |
+| **Procedural** | How to research / plan / execute / report | Langfuse (`production` label) |
+| **Semantic** | Org facts: standards, catalogs, policies, reference data | Postgres + embeddings |
+| **Episodic** | Past runs: scores, outcomes, failures | Postgres + embeddings |
 
 ## B3. Skill update loop
 
@@ -335,73 +333,73 @@ Completed jobs write **episodes** → reflection opens **change_request** → sk
 
 ## C1. Job lifecycle (hybrid)
 
-Default pipeline: **Discovery → Recommendation → HITL → Onboarding → Procure**. Skills may be **re-run** or **skipped** when prior outputs remain valid.
+Default pipeline: **Research → Planning → HITL → Execution → Reporting**. Skills may be **re-run** or **skipped** when prior outputs remain valid.
 
 ```mermaid
 flowchart TD
-    Start([User opens AA12345]) --> Wizard["Discovery Wizard - Skill 1"]
-    Wizard --> A1["Artifact: Discovery Inventory"]
-    A1 --> Rec["Migration Recommendation - Skill 2"]
-    Rec --> A2["Artifact: Readiness and Recommendation"]
-    A2 --> HITL{"HITL approve readiness artifact?"}
+    Start([User opens an engagement]) --> Wizard["Guided Wizard - Skill 1: Research"]
+    Wizard --> A1["Artifact: Research Findings"]
+    A1 --> Plan["Planning - Skill 2"]
+    Plan --> A2["Artifact: Plan and Recommendation"]
+    A2 --> HITL{"HITL approve plan artifact?"}
     HITL -->|"revise"| Wizard
-    HITL -->|"approve"| Onboard["Cloud Onboarding - Skill 3"]
-    Onboard --> A3["Artifact: Onboarding Blueprint"]
-    A3 --> Procure["Procure Resources - Skill 4"]
-    Procure --> A4["Artifact: Provisioning Manifest"]
-    A4 --> Compose["Compose Architecture Design Document"]
+    HITL -->|"approve"| Exec["Execution - Skill 3"]
+    Exec --> A3["Artifact: Execution Report"]
+    A3 --> Report["Reporting - Skill 4"]
+    Report --> A4["Artifact: Summary"]
+    A4 --> Compose["Compose Final Deliverable Document"]
     A1 --> Compose
     A2 --> Compose
     A3 --> Compose
-    Compose --> ADD["Final deliverable: Architecture Design Document"]
-    ADD --> Done([Complete])
+    Compose --> FDD["Final deliverable: Final Deliverable Document"]
+    FDD --> Done([Complete])
     Done --> Episode["Write episode"]
     Done --> Cost["FinOps cost_record"]
     Done --> Track["Adaption Engine update track"]
 ```
 
-Primary human gate: **after Migration Recommendation**, before irreversible onboarding/procure.
+Primary human gate: **after Planning**, before irreversible execution.
 
-**Outputs (no MR):** each completed skill persists a **skill artifact**. After Procure (or when the approved path completes), the platform **composes the Architecture Design Document** from all skill artifacts. There is **no Merge Request / PR** in this process.
+**Outputs (no MR):** each completed skill persists a **skill artifact**. After Reporting (or when the approved path completes), the platform **composes the Final Deliverable Document** from all skill artifacts. There is **no Merge Request / PR** in this process.
 
-## C2. Discovery wizard (interactive)
+## C2. Guided wizard (interactive)
 
-Discovery is a **guided collaboration**, not a silent batch CMDB pull:
+Research is a **guided collaboration**, not a silent batch pull:
 
-1. User opens application on the platform
-2. Agent and user walk servers, dependencies, and configs step by step
+1. User opens an engagement on the platform
+2. Agent and user walk through the relevant context step by step
 3. Agent may enrich with live checks / APIs when available
-4. User confirms inventory → persisted as **Discovery Inventory Artifact** → input to Recommendation
+4. User confirms the findings → persisted as **Research Findings Artifact** → input to Planning
 
 Wizard progress is checkpointed in LangGraph; UI receives SSE updates.
 
-## C2b. Skill artifacts & Architecture Design Document
+## C2b. Skill artifacts & Final Deliverable Document
 
 | Skill / step | Artifact |
 |--------------|----------|
-| Application Discovery | Discovery Inventory Artifact |
-| Migration Recommendation | Readiness & Recommendation Artifact |
-| Cloud Onboarding | Onboarding Blueprint Artifact |
-| Procure & Create Resources | Provisioning Manifest Artifact |
-| **Final composition** | **Architecture Design Document** |
+| Research | Research Findings Artifact |
+| Planning | Plan & Recommendation Artifact |
+| Execution | Execution Report Artifact |
+| Reporting | Summary Artifact |
+| **Final composition** | **Final Deliverable Document** |
 
 ```mermaid
 flowchart LR
-    S1["Skill 1"] --> A1["Inventory"]
-    S2["Skill 2"] --> A2["Readiness"]
-    S3["Skill 3"] --> A3["Onboarding Blueprint"]
-    S4["Skill 4"] --> A4["Provisioning Manifest"]
-    A1 --> ADD["Architecture Design Document"]
-    A2 --> ADD
-    A3 --> ADD
-    A4 --> ADD
+    S1["Skill 1"] --> A1["Findings"]
+    S2["Skill 2"] --> A2["Plan"]
+    S3["Skill 3"] --> A3["Execution Report"]
+    S4["Skill 4"] --> A4["Summary"]
+    A1 --> FDD["Final Deliverable Document"]
+    A2 --> FDD
+    A3 --> FDD
+    A4 --> FDD
 ```
 
-Artifact metadata lives with job-service / knowledge-service; payload in workspace/object store. ADD is a first-class downloadable/viewable deliverable in the UI — **not** a git merge.
+Artifact metadata lives with job-service / knowledge-service; payload in workspace/object store. The Final Deliverable Document is a first-class downloadable/viewable deliverable in the UI — **not** a git merge.
 
 ## C3. Ephemeral runners + skill mounting
 
-**Control plane (always-on):** gateway edge → job-service, agent-orchestrator, **skill-loader**, sandbox-provisioner, credentials. Never runs untrusted infra commands itself.
+**Control plane (always-on):** gateway edge → job-service, agent-orchestrator, **skill-loader**, sandbox-provisioner, credentials. Never runs untrusted commands itself.
 
 **Data plane (ephemeral):** runners per phase; **centralized skills mounted by skill-loader** at start; torn down after TTL/completion.
 
@@ -438,10 +436,10 @@ Runner types (same or phase-specific images):
 
 | Runner | Used by |
 |--------|---------|
-| Discovery | Skill 1 — probes, parsers, inventory writes |
-| Onboarding | Skill 3 — UK8S / platform APIs |
-| Procure | Skill 4 — Terraform / internal provision APIs |
-| Code Adapt | Optional — isolated code workspace |
+| Research | Skill 1 — data gathering, enrichment, findings writes |
+| Execution | Skill 3 — enterprise system APIs, action execution |
+| Reporting | Skill 4 — aggregation, document generation |
+| Custom | Optional domain skills — isolated workspace |
 
 ## C4. Orchestration notes
 
@@ -454,7 +452,7 @@ Runner types (same or phase-specific images):
 
 # PART D — FinOps Engine
 
-**Purpose:** answer “what did this agent run cost?” per job, application, skill, and day.
+**Purpose:** answer “what did this agent run cost?” per job, engagement, skill, and day.
 
 ```mermaid
 flowchart LR
@@ -474,28 +472,28 @@ flowchart LR
 
 ### Example `cost_record` fields
 
-`id`, `job_id`, `application_id`, `skill_key`, `phase`, `agent_id`, `token_input`, `token_output`, `model_cost`, `runner_cost`, `total_cost`, `currency`, `recorded_at`
+`id`, `job_id`, `engagement_id`, `skill_key`, `phase`, `agent_id`, `token_input`, `token_output`, `model_cost`, `runner_cost`, `total_cost`, `currency`, `recorded_at`
 
 ### Deployment (as a microservice)
 
-- Independently deployable service behind **gateway** (`GET /applications/{id}/costs`, program-level rollup APIs)
+- Independently deployable service behind **gateway** (`GET /engagements/{id}/costs`, program-level rollup APIs)
 - Owns its data: `cost_record` (no other service writes it)
-- Ingest paths: pull/webhook from Langfuse (spans) + events from job-service (runner lifetime); both async — FinOps downtime never blocks a migration job
+- Ingest paths: pull/webhook from Langfuse (spans) + events from job-service (runner lifetime); both async — FinOps downtime never blocks a job
 - Scales independently (ingest volume, not job volume); stateless workers + its own schema/DB
 
 ---
 
 # PART E — Adaption Engine
 
-**Purpose:** keep **tracks** of each application’s migration journey and **email application owners** so work continues (HITL, stalls, EoL urgency, stage transitions).
+**Purpose:** keep **tracks** of each engagement’s journey and **email stakeholders** so work continues (HITL, stalls, deadlines, stage transitions).
 
-> Naming: **Adaption Engine** = owner engagement. **Code Adapt skill** = optional code changes. They are different.
+> Naming: **Adaption Engine** = stakeholder engagement. Optional domain skills that change systems are different.
 
 ```mermaid
 flowchart LR
     Job["job-service events"] --> Adapt["adaption-engine"]
     Adapt --> Tracks[("engagement_track")]
-    Adapt -->|"email"| Owners["Application owners"]
+    Adapt -->|"email"| Owners["Stakeholders"]
     Adapt --> Hist[("email_event")]
     Adapt --> UI["Gateway / UI status"]
 ```
@@ -504,21 +502,21 @@ flowchart LR
 
 | Event | Email intent |
 |-------|----------------|
-| Recommendation ready | Ask owner to review / approve plan |
+| Plan ready | Ask stakeholder to review / approve the plan |
 | HITL idle > N days | Reminder |
-| Discovery wizard abandoned | Nudge to resume |
-| Procure complete | Summary + next validation steps |
-| EoL approaching | Urgency / program outreach |
+| Guided wizard abandoned | Nudge to resume |
+| Execution complete | Summary + next validation steps |
+| Deadline approaching | Urgency / program outreach |
 
 ### Engagement track fields (logical)
 
-`application_id`, `stage`, `owner_emails`, `last_contact_at`, `next_action`, `sla_due_at`, `status`
+`engagement_id`, `stage`, `stakeholder_emails`, `last_contact_at`, `next_action`, `sla_due_at`, `status`
 
 ### Deployment (as a microservice)
 
-- Independently deployable service behind **gateway** (`GET /applications/{id}/engagement`)
+- Independently deployable service behind **gateway** (`GET /engagements/{id}/track`)
 - Owns its data: `engagement_track`, `email_event` (audit)
-- Consumes job-service lifecycle events from the message bus (decoupled — job pipeline never waits on email)
+- Consumes job-service lifecycle events from the message bus (decoupled — the job pipeline never waits on email)
 - Pluggable mail transport (Graph / SMTP / SES) behind one interface; respects quiet hours / unsubscribe
 - Scheduler component for SLA/idle timers (e.g. periodic sweep) — separate from the event consumer
 
@@ -526,15 +524,13 @@ flowchart LR
 
 # Design Principles
 
-Adapted from the reference design; ICE examples replace code-migration examples.
-
-| Principle | ICE application |
-|-----------|-----------------|
+| Principle | Application in this framework |
+|-----------|-------------------------------|
 | **Modular** | Microservices + clear APIs; swap Docker ↔ K8s runners behind one protocol |
 | **Scalable** | Gateway replicas; workers on queue depth; runners on demand |
 | **Portable** | Agent logic cloud-agnostic; infra bindings pluggable |
 | **Open** | REST + MCP + CLI; skills as `SKILL.md` / prompts, not binaries |
-| **HITL** | Recommendation approval; skill-review for knowledge updates |
+| **HITL** | Plan approval; skill-review for knowledge updates |
 | **Agent / sub-agent** | Orchestrator in control plane; work in runners; credentials stay central |
 | **Parallelism** | Fan-out within phases; many jobs across workers |
 | **Handoffs** | FIFO pipeline + circular revise loops + fan-out/consolidate + handoff-to-human |
@@ -553,7 +549,7 @@ Adapted from the reference design; ICE examples replace code-migration examples.
 ## Proposed monorepo layout (for later implementation — not created yet)
 
 ```
-ice/
+framework/
 ├── apps/
 │   ├── web/
 │   ├── cli/
@@ -574,14 +570,14 @@ ice/
 
 ## Key decisions
 
-- ICE is **infra discovery & migration**, application-centric (`AA12345`)
-- Four primary skills; each emits a **skill artifact**; pipeline ends with **Architecture Design Document**
-- **No Merge Request / PR** in the ICE process
-- Interactive discovery wizard first-class
-- HITL after Recommendation artifact
+- The framework is **domain-agnostic** and engagement-centric (Engagement ID)
+- Four example skills; each emits a **skill artifact**; pipeline ends with the **Final Deliverable Document**
+- **No Merge Request / PR** in the process
+- Interactive guided wizard first-class
+- HITL after the Plan & Recommendation artifact
 - Microservices behind gateway; **skill-loader** mounts centralized skills onto ephemeral runners (via sandbox-provisioner) for agents
 - FinOps Engine for agent cost per run
-- Adaption Engine for tracks + owner email
+- Adaption Engine for tracks + stakeholder email
 
 ## Build order
 
@@ -591,9 +587,9 @@ Implementation phases (post architecture sign-off, no code yet):
 
 | Phase | Scope |
 |-------|-------|
-| **1** | gateway + job-service + Application entity + Discovery wizard skeleton + local Docker runner + Skill 1 end-to-end (Discovery Inventory Artifact) |
-| **2** | Recommendation scoring + HITL gate + skill-loader + Langfuse skill registry integration |
-| **3** | Onboarding + Procure runners (Skills 3–4) + AKS ephemeral runner backend + Architecture Design Document composition |
+| **1** | gateway + job-service + Engagement entity + guided wizard skeleton + local Docker runner + Skill 1 end-to-end (Research Findings Artifact) |
+| **2** | Planning skill + HITL gate + skill-loader + Langfuse skill registry integration |
+| **3** | Execution + Reporting runners (Skills 3–4) + managed K8s ephemeral runner backend + Final Deliverable Document composition |
 | **4** | knowledge-service memory (episodes, reflection, skill-review HITL) + MCP/CLI parity |
 | **5** | finops-engine (cost_record from Langfuse + runner metrics) + adaption-engine (tracks + email) + dashboards |
 
@@ -609,9 +605,9 @@ Implementation phases (post architecture sign-off, no code yet):
 
 ## Open items (TBD)
 
-- UK8S / provisioning API surface
-- Live discovery mechanisms per CI type
-- Readiness score dimensions and weights
+- Domain skill catalog for the first concrete use case
+- Live enrichment mechanisms per data source
+- Plan scoring dimensions and weights
 - Cloud provider bindings
 - Adaption email transport (Graph / SMTP / SES)
 - FinOps v1: model $ only vs include runner compute $

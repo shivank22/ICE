@@ -1,50 +1,50 @@
 <mxfile host="app.diagrams.net" agent="Agentic Framework Architecture" version="22.1.0" type="device">
   <diagram id="af-layers" name="Logical Layers">
-    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="420" math="0" shadow="0">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1240" pageHeight="580" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
         <mxCell id="title" value="Agentic Framework — Logical Layers &amp; Frameworks" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1a1a2e;" vertex="1" parent="1">
-          <mxGeometry x="200" y="10" width="900" height="40" as="geometry" />
+          <mxGeometry x="170" y="10" width="900" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="c1" value="Connectivity Layer&#xa;web · mcp · cli · gateway&#xa;(+ adaption email outbound)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="80" width="220" height="90" as="geometry" />
+        <mxCell id="c1" value="Connectivity Layer&#xa;web · mcp · cli · gateway&#xa;(+ adaption email outbound)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="90" width="220" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="c2" value="Context Layer&#xa;knowledge-service&#xa;Langfuse skills&#xa;Postgres memory" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="300" y="80" width="220" height="90" as="geometry" />
+        <mxCell id="c3" value="Orchestrator Framework&#xa;job-service&#xa;agent-orchestrator&#xa;LangGraph + Deep Agents" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="340" y="90" width="220" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="c3" value="Orchestrator Framework&#xa;job-service&#xa;agent-orchestrator&#xa;LangGraph + Deep Agents" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="560" y="80" width="220" height="90" as="geometry" />
+        <mxCell id="c4" value="Execution Framework&#xa;sandbox-provisioner&#xa;ephemeral runners&#xa;skill-loader (mount)" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="640" y="90" width="220" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="c4" value="Execution Framework&#xa;sandbox-provisioner&#xa;ephemeral runners&#xa;skill-loader (mount)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="820" y="80" width="220" height="90" as="geometry" />
+        <mxCell id="c2" value="Context Layer&#xa;knowledge-service&#xa;Langfuse skills&#xa;Postgres memory" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="340" y="250" width="220" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="c5" value="Evaluation Framework&#xa;Langfuse traces&#xa;finops-engine&#xa;validation hooks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="220" width="280" height="90" as="geometry" />
+        <mxCell id="c5" value="Evaluation Framework&#xa;Langfuse traces&#xa;finops-engine&#xa;validation hooks" style="rounded=1;whiteSpace=wrap;html=1;fontSize=11;fontStyle=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="640" y="390" width="280" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="mapnote" value="Physical platforms&#xa;Access ← Connectivity&#xa;Skill &amp; Knowledge ← Context&#xa;Execution ← Orchestrator + Execution + Evaluation&#xa;Adaption Engine spans Connectivity (email) + job events" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;spacingLeft=6;spacingTop=4;" vertex="1" parent="1">
-          <mxGeometry x="40" y="220" width="320" height="120" as="geometry" />
+        <mxCell id="mapnote" value="Physical platforms&#xa;Access ← Connectivity&#xa;Skill &amp; Knowledge ← Context&#xa;Execution ← Orchestrator + Execution + Evaluation&#xa;Adaption Engine spans Connectivity (email) + job events" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontSize=10;spacingLeft=6;spacingTop=4;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="260" height="130" as="geometry" />
         </mxCell>
-        <mxCell id="n10" value="Layers = logical separation of concerns.&#xa;Microservices map to layers (see catalogue)." style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;spacingLeft=6;spacingTop=4;" vertex="1" parent="1">
-          <mxGeometry x="720" y="220" width="320" height="80" as="geometry" />
+        <mxCell id="n10" value="Layers = logical separation of concerns.&#xa;Microservices map to layers (see catalogue)." style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fontSize=10;spacingLeft=6;spacingTop=4;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="40" y="420" width="260" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="e1" value="jobs / SSE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="c1" target="c3">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e1" value="jobs / SSE" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="c1" target="c3">
+          <mxGeometry relative="1" as="geometry"></mxGeometry>
         </mxCell>
-        <mxCell id="e2" value="load context" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="c3" target="c2">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e2" value="load context" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c3" target="c2">
+          <mxGeometry relative="1" as="geometry"></mxGeometry>
         </mxCell>
-        <mxCell id="e3" value="run phases" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="c3" target="c4">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e3" value="run phases" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="c3" target="c4">
+          <mxGeometry relative="1" as="geometry"></mxGeometry>
         </mxCell>
-        <mxCell id="e4" value="via skill-loader" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeWidth=1;" edge="1" parent="1" source="c4" target="c2">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e4" value="via skill-loader" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;fontSize=10;labelBackgroundColor=#ffffff;dashed=1;exitX=0.3;exitY=1;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="c4" target="c2">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="706" y="295" /></Array></mxGeometry>
         </mxCell>
-        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeWidth=1;" edge="1" parent="1" source="c3" target="c5">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e5" value="traces" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;fontSize=10;labelBackgroundColor=#ffffff;dashed=1;exitX=1;exitY=0.8;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="c3" target="c5">
+          <mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="600" y="162" /><mxPoint x="600" y="435" /></Array></mxGeometry>
         </mxCell>
-        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeWidth=1;" edge="1" parent="1" source="c4" target="c5">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="e6" value="cost + traces" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;fontSize=10;labelBackgroundColor=#ffffff;dashed=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="c4" target="c5">
+          <mxGeometry relative="1" as="geometry"></mxGeometry>
         </mxCell>
       </root>
     </mxGraphModel>

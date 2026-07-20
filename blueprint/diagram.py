@@ -38,7 +38,7 @@ with Diagram(
     direction="LR",
     graph_attr=GRAPH_ATTR,
 ):
-    users = Users("Application Owners\n& Platform Users")
+    users = Users("Stakeholders\n& Platform Users")
 
     with Cluster("Access Layer"):
         web = React("Web (Guided Wizard)")
@@ -81,39 +81,39 @@ with Diagram(
     orch >> Edge(label="traces") >> logs
     logs >> Edge(label="usage + cost") >> finops
     job >> Edge(label="lifecycle events") >> bus >> adaption
-    adaption >> Edge(label="email owners") >> users
+    adaption >> Edge(label="email stakeholders") >> users
 
 with Diagram(
-    "Skill Pipeline - Artifacts to Architecture Design Document",
+    "Skill Pipeline - Artifacts to Final Deliverable Document",
     filename="pipeline",
     outformat="png",
     show=False,
     direction="LR",
     graph_attr=GRAPH_ATTR,
 ):
-    owner = Users("User\n(Application ID)")
+    owner = Users("User\n(Engagement ID)")
 
-    with Cluster("Skill 1: Application Discovery"):
-        s1 = ContainerInstances("Discovery Runner\n(guided wizard)")
-        a1 = Files("Infrastructure\nInventory")
+    with Cluster("Skill 1: Research"):
+        s1 = ContainerInstances("Research Runner\n(guided wizard)")
+        a1 = Files("Research\nFindings")
 
-    with Cluster("Skill 2: Migration Recommendation"):
-        s2 = ContainerInstances("Recommendation\nRunner")
-        a2 = Files("Readiness\nAssessment")
+    with Cluster("Skill 2: Planning"):
+        s2 = ContainerInstances("Planning\nRunner")
+        a2 = Files("Plan &\nRecommendation")
 
     hitl = Users("HITL Approval")
 
-    with Cluster("Skill 3: Cloud Onboarding"):
-        s3 = ContainerInstances("Onboarding Runner")
-        a3 = Files("Onboarding\nBlueprint")
+    with Cluster("Skill 3: Execution"):
+        s3 = ContainerInstances("Execution Runner")
+        a3 = Files("Execution\nReport")
 
-    with Cluster("Skill 4: Procure & Create Resources"):
-        s4 = ContainerInstances("Provisioning Runner")
-        a4 = Files("Provision\nManifest")
+    with Cluster("Skill 4: Reporting"):
+        s4 = ContainerInstances("Reporting Runner")
+        a4 = Files("Summary\nArtifact")
 
-    add = Files("Architecture Design\nDocument (final)")
+    add = Files("Final Deliverable\nDocument")
     finops = CostManagement("finops-engine\n(cost per run)")
-    adaption = LogicApps("adaption-engine\n(owner updates)")
+    adaption = LogicApps("adaption-engine\n(stakeholder updates)")
 
     owner >> s1 >> a1 >> s2 >> a2 >> Edge(label="approve / revise") >> hitl
     hitl >> s3 >> a3 >> s4 >> a4 >> add

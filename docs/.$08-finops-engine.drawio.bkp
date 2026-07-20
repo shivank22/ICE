@@ -1,0 +1,55 @@
+<mxfile host="app.diagrams.net" agent="Agentic Framework Architecture" version="22.1.0" type="device">
+  <diagram id="af-finops" name="FinOps Engine">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1000" pageHeight="500" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="Agentic Framework — FinOps Engine (Agent cost per run)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1a1a2e;" vertex="1" parent="1">
+          <mxGeometry x="200" y="10" width="900" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="orch8" value="agent-orchestrator&#xa;+ runners" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="100" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="lf8" value="Langfuse traces&#xa;tokens · model · latency" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="280" y="90" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="job8" value="job-service&#xa;runner lifetime" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="40" y="220" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="fo8" value="finops-engine" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="120" width="160" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cr8" value="cost_record&#xa;per job / skill / agent" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="740" y="110" width="160" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="ui8" value="Gateway / UI&#xa;cost APIs &amp; dashboards" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="260" width="180" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="fields" value="cost_record fields (logical)&#xa;job_id · engagement_id · skill_key · phase&#xa;token_in/out · model_cost · runner_cost · total" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;spacingLeft=6;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="40" y="340" width="420" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="goal8" value="Answers: What did this agent run cost?&#xa;Rollups by app, skill, day. Optional budgets." style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;spacingLeft=6;spacingTop=4;" vertex="1" parent="1">
+          <mxGeometry x="500" y="360" width="400" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" value="traces" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="orch8" target="lf8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="token/model cost" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="lf8" target="fo8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="runner metrics" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="job8" target="fo8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="fo8" target="cr8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="fo8" target="ui8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" value="query" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ui8" target="cr8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

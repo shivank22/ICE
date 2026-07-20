@@ -4,7 +4,7 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="title" value="Agentic Framework — Adaption Engine (tracks + email application owners)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1a1a2e;" vertex="1" parent="1">
+        <mxCell id="title" value="Agentic Framework — Adaption Engine (tracks + email stakeholders)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontStyle=1;fontSize=16;fontColor=#1a1a2e;" vertex="1" parent="1">
           <mxGeometry x="150" y="10" width="1000" height="40" as="geometry" />
         </mxCell>
         <mxCell id="job9" value="job-service&#xa;lifecycle events" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;fontStyle=1;" vertex="1" parent="1">
@@ -13,7 +13,7 @@
         <mxCell id="ad9" value="adaption-engine" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=11;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="300" y="110" width="160" height="90" as="geometry" />
         </mxCell>
-        <mxCell id="tr9" value="engagement_track&#xa;per AA12345" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="tr9" value="engagement_track&#xa;per engagement" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="540" y="80" width="150" height="80" as="geometry" />
         </mxCell>
         <mxCell id="em9" value="email_event&#xa;audit history" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=10;fillColor=#f5f5f5;strokeColor=#666666;fontSize=11;" vertex="1" parent="1">
@@ -22,31 +22,31 @@
         <mxCell id="mail" value="Email transport&#xa;Graph / SMTP / SES" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="300" y="260" width="160" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="own9" value="Application owners" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
+        <mxCell id="own9" value="Stakeholders" style="ellipse;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=11;" vertex="1" parent="1">
           <mxGeometry x="540" y="260" width="150" height="60" as="geometry" />
         </mxCell>
         <mxCell id="ui9" value="UI engagement status" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;fontStyle=1;" vertex="1" parent="1">
           <mxGeometry x="40" y="260" width="160" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="trig" value="Example triggers&#xa;• Recommendation ready → approve link&#xa;• HITL idle &gt; N days → reminder&#xa;• Wizard abandoned → nudge&#xa;• Procure complete → summary&#xa;• EoL approaching → urgency&#xa;&#xa;Distinct from Code Adapt skill" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;spacingLeft=6;spacingTop=4;" vertex="1" parent="1">
+        <mxCell id="trig" value="Example triggers&#xa;• Plan ready → approve link&#xa;• HITL idle &gt; N days → reminder&#xa;• Wizard abandoned → nudge&#xa;• Execution complete → summary&#xa;• Deadline approaching → urgency" style="rounded=0;whiteSpace=wrap;html=1;align=left;verticalAlign=top;fillColor=#f5f5f5;strokeColor=#666666;fontSize=10;spacingLeft=6;spacingTop=4;" vertex="1" parent="1">
           <mxGeometry x="740" y="100" width="280" height="220" as="geometry" />
         </mxCell>
-        <mxCell id="e1" value="events" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="job9" target="ad9">
+        <mxCell id="e1" value="events" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="job9" target="ad9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="ad9" target="tr9">
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ad9" target="tr9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="ad9" target="em9">
+        <mxCell id="e3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ad9" target="em9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="ad9" target="mail">
+        <mxCell id="e4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ad9" target="mail">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e5" value="email" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="mail" target="own9">
+        <mxCell id="e5" value="email" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="mail" target="own9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;" edge="1" parent="1" source="ad9" target="ui9">
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=1;labelBackgroundColor=#ffffff;" edge="1" parent="1" source="ad9" target="ui9">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>

@@ -1,8 +1,8 @@
-# Logical Fabrics
+# Logical Layers
 
 Companion to [`10-logical-fabrics.drawio`](10-logical-fabrics.drawio).
 
-Five logical fabrics/frameworks mapped to ICE microservices.
+Five logical layers/frameworks mapped to the framework microservices.
 
 Open in [diagrams.net](https://app.diagrams.net/) or the Draw.io extension.
 

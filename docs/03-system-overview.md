@@ -1,4 +1,4 @@
-# ICE System Overview
+# Agentic Framework System Overview
 
 Companion to [`03-system-overview.drawio`](03-system-overview.drawio).
 
