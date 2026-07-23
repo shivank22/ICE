@@ -603,6 +603,10 @@ Implementation phases (post architecture sign-off, no code yet):
 
 **Next:** review this architecture → then scaffold microservices per the build order above.
 
+### Implementation skills
+
+Repo-local Agent Skills under [`skills/`](skills/README.md) interview the reader’s stack and guide implementation phase-by-phase (opinionated architecture, flexible tools). Start with **`agentic-framework-bootstrap`**, then **`phase-1-access-and-research`** through **`phase-5-finops-and-adaption`**. These are build-guidance skills — not the runtime procedural skills mounted onto runners.
+
 ## Open items (TBD)
 
 - Domain skill catalog for the first concrete use case
