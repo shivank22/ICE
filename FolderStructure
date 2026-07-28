@@ -2,43 +2,42 @@ agent-service/
 │
 ├── app/
 │   │
-│   ├── main.py                     # FastAPI entrypoint
+│   ├── main.py                      # FastAPI application entrypoint
 │   │
-│   ├── api/
-│   │   ├── routes/
-│   │   │   ├── chat.py
+│   ├── api/                         # HTTP layer
+│   │   ├── router.py                # Registers all route modules
+│   │   ├── routes/                  # REST/WebSocket endpoints
 │   │   │   ├── agents.py
+│   │   │   ├── chat.py
 │   │   │   ├── skills.py
 │   │   │   ├── threads.py
 │   │   │   ├── artifacts.py
 │   │   │   └── health.py
 │   │   │
-│   │   ├── auth/
-│   │   │   ├── jwt.py
-│   │   │   ├── dependencies.py
-│   │   │   ├── permissions.py
-│   │   │   └── middleware.py
-│   │   │
-│   │   └── router.py               # Registers all routes
+│   │   └── auth/                    # Authentication & authorization
+│   │       ├── jwt.py
+│   │       ├── dependencies.py
+│   │       ├── permissions.py
+│   │       └── middleware.py
 │   │
-│   ├── agents/
+│   ├── agents/                      # Agent definitions (composition root)
 │   │   ├── analyst/
-│   │   │   ├── agent.py            # Composition root
-│   │   │   ├── prompt.md
-│   │   │   └── config.py
+│   │   │   ├── agent.py             # Stitches workflow, skills & tools
+│   │   │   ├── prompt.md            # Agent identity/system prompt
+│   │   │   └── config.py            # Agent-specific configuration
 │   │   │
 │   │   ├── migration/
 │   │   ├── reviewer/
 │   │   └── orchestrator/
 │   │
-│   ├── workflow/
-│   │   ├── graphs/
-│   │   ├── nodes/
-│   │   ├── state.py
-│   │   ├── runtime.py
-│   │   └── interrupts.py
+│   ├── workflows/                   # LangGraph workflows
+│   │   ├── graphs/                  # Graph definitions
+│   │   ├── nodes/                   # Graph node implementations
+│   │   ├── state.py                 # Shared graph state
+│   │   ├── runtime.py               # Graph execution helpers
+│   │   └── interrupts.py            # HITL / interrupt handling
 │   │
-│   ├── skills/
+│   ├── skills/                      # Reusable business capabilities
 │   │   ├── discover_application/
 │   │   │   ├── skill.py
 │   │   │   ├── prompt.md
@@ -49,44 +48,44 @@ agent-service/
 │   │   ├── assign_journey/
 │   │   └── generate_code/
 │   │
-│   ├── tools/
+│   ├── tools/                       # External integrations & callable tools
 │   │   ├── github.py
 │   │   ├── jira.py
-│   │   ├── shell.py
 │   │   ├── kubernetes.py
-│   │   └── filesystem.py
+│   │   ├── filesystem.py
+│   │   └── shell.py
 │   │
-│   ├── db/
+│   ├── repositories/                # Database access layer
+│   │
+│   ├── models/                      # SQLAlchemy ORM models
+│   │
+│   ├── schemas/                     # Pydantic request/response models
+│   │
+│   ├── db/                          # Database configuration & migrations
 │   │   ├── session.py
 │   │   ├── base.py
 │   │   └── migrations/
 │   │
-│   ├── models/
-│   │
-│   ├── repositories/
-│   │
-│   ├── schemas/
-│   │
-│   ├── config/
+│   ├── config/                      # Environment & application settings
 │   │   ├── settings.py
 │   │   ├── logging.py
-│   │   ├── constants.py
-│   │   └── prompts.py
+│   │   └── constants.py
 │   │
-│   ├── telemetry/
+│   ├── telemetry/                   # Tracing, metrics & observability
 │   │
-│   └── utils/
+│   └── utils/                       # Shared helper utilities
 │
-├── tests/
+├── tests/                           # Test suite
 │   ├── unit/
 │   ├── integration/
 │   ├── e2e/
 │   └── fixtures/
 │
-├── alembic/
+├── alembic/                         # Alembic migration configuration
 │
-├── .env
-├── .env.example
-├── pyproject.toml
-├── Dockerfile
-└── README.md
+├── .env                             # Local environment variables
+├── .env.example                     # Example environment variables
+├── pyproject.toml                   # Python dependencies & tooling
+├── Dockerfile                       # Container image
+├── docker-compose.yml               # Local development stack
+└── README.md                        # Project documentation
