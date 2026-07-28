@@ -1,66 +1,92 @@
-dice-platform/
-
-├── backend/
-│   ├── main.py
+agent-service/
+│
+├── app/
+│   │
+│   ├── main.py                     # FastAPI entrypoint
+│   │
 │   ├── api/
-│   │   ├── chat.py
-│   │   ├── discovery.py
-│   │   ├── migration.py
-│   │   └── health.py
+│   │   ├── routes/
+│   │   │   ├── chat.py
+│   │   │   ├── agents.py
+│   │   │   ├── skills.py
+│   │   │   ├── threads.py
+│   │   │   ├── artifacts.py
+│   │   │   └── health.py
+│   │   │
+│   │   ├── auth/
+│   │   │   ├── jwt.py
+│   │   │   ├── dependencies.py
+│   │   │   ├── permissions.py
+│   │   │   └── middleware.py
+│   │   │
+│   │   └── router.py               # Registers all routes
 │   │
 │   ├── agents/
 │   │   ├── analyst/
-│   │   │   ├── agent.py
-│   │   │   ├── graph.py
-│   │   │   ├── AGENTS.md
-│   │   │   └── config.yaml
+│   │   │   ├── agent.py            # Composition root
+│   │   │   ├── prompt.md
+│   │   │   └── config.py
 │   │   │
 │   │   ├── migration/
 │   │   ├── reviewer/
 │   │   └── orchestrator/
 │   │
+│   ├── workflow/
+│   │   ├── graphs/
+│   │   ├── nodes/
+│   │   ├── state.py
+│   │   ├── runtime.py
+│   │   └── interrupts.py
+│   │
 │   ├── skills/
-│   │   ├── discover-application/
-│   │   │   ├── SKILL.md
+│   │   ├── discover_application/
+│   │   │   ├── skill.py
 │   │   │   ├── prompt.md
-│   │   │   └── templates/
+│   │   │   ├── schema.py
+│   │   │   ├── examples/
+│   │   │   └── tests/
 │   │   │
-│   │   ├── assign-journey/
-│   │   └── generate-terraform/
-│   │
-│   ├── graphs/
-│   │   ├── discovery_graph.py
-│   │   ├── migration_graph.py
-│   │   └── supervisor_graph.py
-│   │
-│   ├── memory/
-│   │   ├── semantic/
-│   │   ├── procedural/
-│   │   └── checkpoints/
+│   │   ├── assign_journey/
+│   │   └── generate_code/
 │   │
 │   ├── tools/
-│   │   ├── jira.py
 │   │   ├── github.py
-│   │   ├── ado.py
-│   │   └── kubernetes.py
+│   │   ├── jira.py
+│   │   ├── shell.py
+│   │   ├── kubernetes.py
+│   │   └── filesystem.py
 │   │
-│   ├── artifacts/
-│   │   ├── yaml/
-│   │   ├── reports/
-│   │   └── diagrams/
+│   ├── db/
+│   │   ├── session.py
+│   │   ├── base.py
+│   │   └── migrations/
 │   │
-│   ├── services/
-│   ├── repositories/
 │   ├── models/
+│   │
+│   ├── repositories/
+│   │
+│   ├── schemas/
+│   │
 │   ├── config/
+│   │   ├── settings.py
+│   │   ├── logging.py
+│   │   ├── constants.py
+│   │   └── prompts.py
+│   │
+│   ├── telemetry/
+│   │
 │   └── utils/
 │
-├── frontend/
-│
-├── deployments/
-│
-├── docs/
-│
 ├── tests/
+│   ├── unit/
+│   ├── integration/
+│   ├── e2e/
+│   └── fixtures/
 │
-└── docker/
+├── alembic/
+│
+├── .env
+├── .env.example
+├── pyproject.toml
+├── Dockerfile
+└── README.md
