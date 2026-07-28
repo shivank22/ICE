@@ -1,0 +1,66 @@
+dice-platform/
+
+├── backend/
+│   ├── main.py
+│   ├── api/
+│   │   ├── chat.py
+│   │   ├── discovery.py
+│   │   ├── migration.py
+│   │   └── health.py
+│   │
+│   ├── agents/
+│   │   ├── analyst/
+│   │   │   ├── agent.py
+│   │   │   ├── graph.py
+│   │   │   ├── AGENTS.md
+│   │   │   └── config.yaml
+│   │   │
+│   │   ├── migration/
+│   │   ├── reviewer/
+│   │   └── orchestrator/
+│   │
+│   ├── skills/
+│   │   ├── discover-application/
+│   │   │   ├── SKILL.md
+│   │   │   ├── prompt.md
+│   │   │   └── templates/
+│   │   │
+│   │   ├── assign-journey/
+│   │   └── generate-terraform/
+│   │
+│   ├── graphs/
+│   │   ├── discovery_graph.py
+│   │   ├── migration_graph.py
+│   │   └── supervisor_graph.py
+│   │
+│   ├── memory/
+│   │   ├── semantic/
+│   │   ├── procedural/
+│   │   └── checkpoints/
+│   │
+│   ├── tools/
+│   │   ├── jira.py
+│   │   ├── github.py
+│   │   ├── ado.py
+│   │   └── kubernetes.py
+│   │
+│   ├── artifacts/
+│   │   ├── yaml/
+│   │   ├── reports/
+│   │   └── diagrams/
+│   │
+│   ├── services/
+│   ├── repositories/
+│   ├── models/
+│   ├── config/
+│   └── utils/
+│
+├── frontend/
+│
+├── deployments/
+│
+├── docs/
+│
+├── tests/
+│
+└── docker/
