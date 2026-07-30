@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "skill.json",
+  "title": "Skill",
+  "type": "object",
+  "required": ["manifest", "package"],
+  "properties": {
+    "manifest": { "$ref": "skill-manifest.json" },
+    "package": {
+      "type": "object",
+      "required": ["locator"],
+      "properties": {
+        "locator": {
+          "type": "object",
+          "properties": {
+            "backend": { "type": "string", "enum": ["fs", "blob", "registry"] },
+            "uri": { "type": "string" },
+            "checksum": { "type": "string" }
+          }
+        },
+        "contents": {
+          "type": "object",
+          "description": "Logical package tree references, not implementation files",
+          "properties": {
+            "purpose": { "type": "string" },
+            "algorithms": { "type": "array", "items": { "type": "string" } },
+            "references": { "type": "array", "items": { "type": "string" } },
+            "examples": { "type": "array", "items": { "type": "string" } },
+            "diagrams": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "label": {
+      "type": "string",
+      "enum": ["draft", "staging", "production", "deprecated", "archived"]
+    }
+  }
+}

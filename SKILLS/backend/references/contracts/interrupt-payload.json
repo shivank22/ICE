@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "interrupt-payload.json",
+  "title": "InterruptPayload",
+  "type": "object",
+  "required": ["interrupt_id", "type", "summary"],
+  "properties": {
+    "interrupt_id": { "type": "string" },
+    "type": {
+      "type": "string",
+      "enum": ["approval", "input", "policy_hold"]
+    },
+    "summary": { "type": "string" },
+    "artifact_ids": { "type": "array", "items": { "type": "string" } },
+    "options": { "type": "array", "items": { "type": "string" } },
+    "required_roles": { "type": "array", "items": { "type": "string" } },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

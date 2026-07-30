@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evaluation.json",
+  "title": "Evaluation",
+  "type": "object",
+  "required": ["evaluation_id", "subject", "scores", "pass"],
+  "properties": {
+    "evaluation_id": { "type": "string" },
+    "subject": {
+      "type": "object",
+      "required": ["type", "id"],
+      "properties": {
+        "type": { "type": "string", "enum": ["run", "episode", "skill_version"] },
+        "id": { "type": "string" }
+      }
+    },
+    "criteria_ref": { "type": "string" },
+    "scores": {
+      "type": "object",
+      "additionalProperties": { "type": "number" }
+    },
+    "pass": { "type": "boolean" },
+    "inconclusive": { "type": "boolean" },
+    "notes": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

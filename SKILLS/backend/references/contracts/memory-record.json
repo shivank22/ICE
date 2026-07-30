@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "memory-record.json",
+  "title": "MemoryRecord",
+  "type": "object",
+  "required": ["memory_id", "domain", "namespace", "status"],
+  "properties": {
+    "memory_id": { "type": "string" },
+    "domain": {
+      "type": "string",
+      "enum": ["short_term", "semantic", "procedural", "episodic"]
+    },
+    "namespace": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["active", "superseded", "archived", "deleted"]
+    },
+    "revision": { "type": "integer" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "provenance": {
+      "type": "object",
+      "properties": {
+        "actor_user_id": { "type": "string" },
+        "source_thread_id": { "type": "string" },
+        "source_skill_id": { "type": "string" }
+      }
+    }
+  }
+}

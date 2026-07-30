@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "context.json",
+  "title": "ContextPackage",
+  "type": "object",
+  "required": ["schema_version", "thread_id", "sections", "assembly_digest"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "thread_id": { "type": "string" },
+    "checkpoint_id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "sections": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "priority", "blocks"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "policy",
+              "identity",
+              "stm",
+              "skills",
+              "semantic",
+              "episodic",
+              "artifacts",
+              "request"
+            ]
+          },
+          "priority": { "type": "integer" },
+          "token_budget": { "type": "integer" },
+          "blocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "source_id": { "type": "string" },
+                "source_type": { "type": "string" },
+                "content": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "assembly_digest": { "type": "string" },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "tokens_total": { "type": "integer" },
+        "drops": { "type": "array", "items": { "type": "string" } },
+        "conflicts": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

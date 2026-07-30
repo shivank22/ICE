@@ -1,0 +1,13 @@
+%% Security boundaries
+flowchart TB
+  IdP[OIDC_IdP]
+  Gw[Gateway_JWT_Validation]
+  Orch[Orchestrator]
+  Know[Knowledge_NamespaceACL]
+  Reg[Registry_PromoteACL]
+  Trace[Trace_Redaction]
+  IdP --> Gw --> Orch
+  Orch --> Know
+  Orch --> Reg
+  Orch --> Trace
+  Spoof[ClientSupplied_user_id] -.->|ignored| Gw

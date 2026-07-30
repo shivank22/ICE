@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "reflection.json",
+  "title": "ReflectionProposal",
+  "type": "object",
+  "required": ["proposal_id", "status", "evidence", "suggested_change"],
+  "properties": {
+    "proposal_id": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["open", "accepted", "rejected", "deferred"]
+    },
+    "target_skill_id": { "type": "string" },
+    "base_skill_version": { "type": "string" },
+    "evidence": {
+      "type": "object",
+      "properties": {
+        "episode_ids": { "type": "array", "items": { "type": "string" } },
+        "trace_ids": { "type": "array", "items": { "type": "string" } },
+        "rationale": { "type": "string" }
+      }
+    },
+    "suggested_change": {
+      "type": "object",
+      "properties": {
+        "diff_summary": { "type": "string" },
+        "confidence": { "type": "number" }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

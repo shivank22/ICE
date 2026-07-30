@@ -1,0 +1,13 @@
+%% STM and checkpoint flow
+sequenceDiagram
+  participant O as Orchestrator
+  participant CP as CheckpointStore
+  participant C as Client
+  O->>CP: save checkpoint
+  O->>O: execute node
+  O->>CP: save checkpoint
+  O->>C: interrupt awaiting approval
+  C->>O: resume with approval
+  O->>CP: restore checkpoint
+  O->>O: continue graph
+  O->>CP: save checkpoint

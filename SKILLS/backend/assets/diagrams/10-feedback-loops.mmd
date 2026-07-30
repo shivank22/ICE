@@ -1,0 +1,20 @@
+%% Feedback loops overview
+flowchart TB
+  subgraph hitl [HITL_Loop]
+    R1[running] --> I1[awaiting_approval]
+    I1 --> R1
+  end
+  subgraph rework [Rework_Loop]
+    Art[Artifact] --> Rev[Revise]
+    Rev --> CP[RestoreCheckpoint]
+    CP --> Rerun[RerunPhase]
+  end
+  subgraph promo [Promotion_Loop]
+    Ep[Episodes] --> Prop[Proposal]
+    Prop --> Ap[Approval]
+    Ap --> Skill[NewSkillVersion]
+  end
+  subgraph eval [Eval_Loop]
+    Score[Scores] --> Gate[ThresholdGate]
+    Gate --> Block[BlockOrAlert]
+  end

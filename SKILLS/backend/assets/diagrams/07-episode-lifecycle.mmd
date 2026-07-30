@@ -1,0 +1,9 @@
+%% Episode lifecycle
+stateDiagram-v2
+  [*] --> open
+  open --> complete: run_terminal
+  complete --> under_reflection: selected
+  under_reflection --> proposed: proposal_created
+  proposed --> closed: accepted_or_rejected
+  complete --> closed: no_action
+  closed --> [*]

@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "skill-manifest.json",
+  "title": "SkillManifest",
+  "type": "object",
+  "required": ["skill_id", "version", "name", "purpose", "compatibility"],
+  "properties": {
+    "skill_id": { "type": "string" },
+    "version": { "type": "string" },
+    "name": { "type": "string" },
+    "purpose": { "type": "string" },
+    "scope": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "inputs": { "type": "object" },
+    "outputs": { "type": "object" },
+    "constraints": { "type": "array", "items": { "type": "string" } },
+    "policies": { "type": "array", "items": { "type": "string" } },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "skill_id": { "type": "string" },
+          "version_range": { "type": "string" }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "properties": {
+        "runtime": { "type": "string" },
+        "min_platform_version": { "type": "string" }
+      }
+    },
+    "evaluation_criteria_ref": { "type": "string" },
+    "examples_ref": { "type": "string" }
+  }
+}

@@ -1,0 +1,14 @@
+%% Approval gates — run vs promotion
+flowchart TB
+  subgraph runGate [RunGate]
+    Plan[PlanOrIrreversibleNode] --> Intr[Interrupt]
+    Intr --> Hum[HumanDecision]
+    Hum -->|approve_revise| Resume[ResumeGraph]
+  end
+  subgraph promoGate [PromotionGate]
+    Prop[ReflectionProposal] --> Rev[Reviewer]
+    Rev -->|approve| Draft[DraftSkill]
+    Draft --> Stage[StagingEval]
+    Stage -->|approve| Prod[ProductionLabel]
+  end
+  runGate -.->|separate_from| promoGate

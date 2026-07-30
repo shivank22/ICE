@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "semantic-memory.json",
+  "title": "SemanticMemory",
+  "allOf": [
+    { "$ref": "memory-record.json" },
+    {
+      "type": "object",
+      "required": ["Memory.md"],
+      "properties": {
+        "domain": { "const": "semantic" },
+        "namespace": {
+          "type": "string",
+          "description": "Preferred form: user:<user_id> from JWT"
+        },
+        "Memory.md": {
+          "type": "string",
+          "description": "Markdown memory document body"
+        },
+        "embedding_ref": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  ]
+}

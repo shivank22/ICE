@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "procedural-memory.json",
+  "title": "ProceduralMemory",
+  "allOf": [
+    { "$ref": "memory-record.json" },
+    {
+      "type": "object",
+      "required": ["skill_id", "version", "label", "locator"],
+      "properties": {
+        "domain": { "const": "procedural" },
+        "skill_id": { "type": "string" },
+        "version": { "type": "string" },
+        "label": {
+          "type": "string",
+          "enum": ["draft", "staging", "production", "deprecated", "archived"]
+        },
+        "locator": {
+          "type": "object",
+          "required": ["backend", "uri"],
+          "properties": {
+            "backend": { "type": "string", "enum": ["fs", "blob", "registry"] },
+            "uri": { "type": "string" },
+            "checksum": { "type": "string" }
+          }
+        },
+        "manifest_ref": { "type": "string" }
+      }
+    }
+  ]
+}

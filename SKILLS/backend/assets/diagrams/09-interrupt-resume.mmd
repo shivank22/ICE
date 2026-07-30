@@ -1,0 +1,14 @@
+%% Interrupt and resume sequence
+sequenceDiagram
+  participant O as Orchestrator
+  participant CP as CheckpointStore
+  participant H as Human
+  participant A as ApprovalService
+  O->>CP: checkpoint before gate
+  O->>O: interrupt
+  O->>H: awaiting approval
+  H->>A: approve or revise
+  A->>O: Approval record
+  O->>CP: restore
+  O->>O: resume graph
+  O->>CP: checkpoint after resume

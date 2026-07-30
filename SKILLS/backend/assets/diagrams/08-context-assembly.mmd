@@ -1,0 +1,13 @@
+%% Context assembly ordered pipeline
+flowchart TB
+  P1[1_Policies]
+  P2[2_Identity]
+  P3[3_STM_Checkpoint]
+  P4[4_ProceduralSkills]
+  P5[5_SemanticHits]
+  P6[6_EpisodicExemplars]
+  P7[7_Artifacts_ToolOutputs]
+  P8[8_UserRequest]
+  P9[9_Compress]
+  Out[ContextPackage]
+  P1 --> P2 --> P3 --> P4 --> P5 --> P6 --> P7 --> P8 --> P9 --> Out

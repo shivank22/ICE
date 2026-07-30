@@ -1,0 +1,12 @@
+%% Runtime state transitions
+stateDiagram-v2
+  [*] --> running: thread_create
+  running --> running: checkpoint_save
+  running --> awaiting_approval: interrupt
+  awaiting_approval --> running: approve_or_revise
+  awaiting_approval --> cancelled: reject
+  running --> succeeded: complete
+  running --> failed: error
+  failed --> running: retry_from_checkpoint
+  succeeded --> [*]
+  cancelled --> [*]

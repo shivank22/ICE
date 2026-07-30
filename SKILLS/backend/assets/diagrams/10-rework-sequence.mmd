@@ -1,0 +1,13 @@
+%% Rework sequence
+sequenceDiagram
+  participant U as User
+  participant O as Orchestrator
+  participant CP as CheckpointStore
+  participant S as SkillPhase
+  U->>O: revise_requested
+  O->>CP: restore phase boundary checkpoint
+  O->>O: inject revision comments
+  O->>S: rerun affected skill
+  S-->>O: new artifact version
+  O->>CP: save checkpoint
+  O-->>U: updated progress

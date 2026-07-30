@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "checkpoint.json",
+  "title": "Checkpoint",
+  "type": "object",
+  "required": ["checkpoint_id", "thread_id", "created_at", "state"],
+  "properties": {
+    "checkpoint_id": { "type": "string" },
+    "thread_id": { "type": "string" },
+    "parent_checkpoint_id": { "type": ["string", "null"] },
+    "graph_id": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "checksum": { "type": "string" },
+    "schema_version": { "type": "string" },
+    "state": {
+      "type": "object",
+      "properties": {
+        "runtime": { "$ref": "runtime-state.json" },
+        "thread": { "$ref": "thread-state.json" }
+      }
+    },
+    "metadata": { "type": "object", "additionalProperties": true }
+  }
+}

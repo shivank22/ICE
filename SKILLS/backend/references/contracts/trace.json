@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "trace.json",
+  "title": "Trace",
+  "type": "object",
+  "required": ["trace_id", "thread_id", "spans"],
+  "properties": {
+    "trace_id": { "type": "string" },
+    "thread_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "assembly_digest": { "type": "string" },
+    "spans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "span_id": { "type": "string" },
+          "name": { "type": "string" },
+          "started_at": { "type": "string", "format": "date-time" },
+          "ended_at": { "type": "string", "format": "date-time" },
+          "attributes": { "type": "object", "additionalProperties": true }
+        }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

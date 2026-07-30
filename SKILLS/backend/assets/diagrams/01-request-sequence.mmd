@@ -1,0 +1,18 @@
+%% Request sequence — happy path
+sequenceDiagram
+  participant C as Client
+  participant G as Gateway
+  participant O as Orchestrator
+  participant A as ContextAssembler
+  participant M as MemoryStores
+  participant L as LLM_Tools
+  C->>G: Authenticated request
+  G->>O: Start or resume thread
+  O->>A: Assemble context
+  A->>M: Retrieve STM semantic procedural episodic
+  M-->>A: Hits and manifests
+  A-->>O: ContextPackage
+  O->>L: Model and tool step
+  L-->>O: Results
+  O->>O: Checkpoint save
+  O-->>C: Progress or interrupt

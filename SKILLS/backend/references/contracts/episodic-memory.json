@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "episodic-memory.json",
+  "title": "EpisodicMemory",
+  "allOf": [
+    { "$ref": "memory-record.json" },
+    {
+      "type": "object",
+      "required": ["episode_id", "outcome"],
+      "properties": {
+        "domain": { "const": "episodic" },
+        "episode_id": { "type": "string" },
+        "thread_id": { "type": "string" },
+        "run_id": { "type": "string" },
+        "trace_id": { "type": "string" },
+        "skill_versions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "skill_id": { "type": "string" },
+              "version": { "type": "string" }
+            }
+          }
+        },
+        "outcome": {
+          "type": "string",
+          "enum": ["succeeded", "failed", "cancelled", "partial"]
+        },
+        "summary": { "type": "string" },
+        "scores": { "type": "object", "additionalProperties": { "type": "number" } },
+        "artifact_ids": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  ]
+}

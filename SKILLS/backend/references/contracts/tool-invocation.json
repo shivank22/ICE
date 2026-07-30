@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tool-invocation.json",
+  "title": "ToolInvocation",
+  "type": "object",
+  "required": ["invocation_id", "tool_name", "status"],
+  "properties": {
+    "invocation_id": { "type": "string" },
+    "thread_id": { "type": "string" },
+    "checkpoint_id": { "type": "string" },
+    "tool_name": { "type": "string" },
+    "arguments_digest": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["pending", "running", "succeeded", "failed", "cancelled"]
+    },
+    "result_ref": { "type": "string" },
+    "error": { "type": "string" },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": "string", "format": "date-time" }
+  }
+}

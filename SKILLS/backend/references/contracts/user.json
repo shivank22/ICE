@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "user.json",
+  "title": "User",
+  "type": "object",
+  "required": ["user_id"],
+  "properties": {
+    "user_id": { "type": "string", "description": "Stable subject from JWT" },
+    "org_id": { "type": "string" },
+    "display_name": { "type": "string" },
+    "email": { "type": "string" },
+    "roles": { "type": "array", "items": { "type": "string" } },
+    "attributes": { "type": "object", "additionalProperties": true }
+  }
+}

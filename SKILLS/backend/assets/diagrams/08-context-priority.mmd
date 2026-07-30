@@ -1,0 +1,9 @@
+%% Context conflict priority
+flowchart TB
+  Policy[Policy]
+  Skill[SkillConstraint]
+  Memory[RetrievedMemory]
+  Pref[ModelPreference]
+  Policy -->|wins_over| Skill
+  Skill -->|wins_over| Memory
+  Memory -->|wins_over| Pref

@@ -1,0 +1,16 @@
+%% State model relationships
+flowchart TB
+  User[User]
+  Session[Session]
+  Thread[Thread]
+  Runtime[RuntimeState]
+  ThreadState[ThreadState]
+  Checkpoint[Checkpoint]
+  Context[ContextPackage]
+  User --> Session
+  Session --> Thread
+  Thread --> Runtime
+  Thread --> ThreadState
+  Runtime --> Checkpoint
+  ThreadState --> Checkpoint
+  Runtime -.-> Context

@@ -1,0 +1,13 @@
+%% Skill registry and loader
+flowchart LR
+  Author[Author]
+  Reg[SkillRegistry]
+  FS[FS_or_Blob]
+  Loader[SkillLoader]
+  Orch[Orchestrator]
+  Author --> Reg
+  Reg --> FS
+  Orch --> Loader
+  Loader --> Reg
+  Loader --> FS
+  Loader -->|mount_or_resolve| Orch

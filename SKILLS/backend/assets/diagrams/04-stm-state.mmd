@@ -1,0 +1,12 @@
+%% STM status state diagram
+stateDiagram-v2
+  [*] --> empty
+  empty --> running: first_event
+  running --> checkpointed: save
+  checkpointed --> running: continue
+  running --> awaiting_input: interrupt
+  awaiting_input --> running: resume
+  running --> completed: success
+  running --> failed: error
+  completed --> [*]
+  failed --> [*]

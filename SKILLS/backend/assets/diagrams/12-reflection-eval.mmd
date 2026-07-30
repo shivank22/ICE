@@ -1,0 +1,10 @@
+%% Reflection and evaluation flow
+flowchart LR
+  Ep[Episodes] --> Eval[Evaluation]
+  Eval --> Cohort[SelectCohort]
+  Cohort --> Ref[Reflection]
+  Ref --> Prop[Proposal]
+  Prop --> Appr[Approval]
+  Appr --> Draft[DraftSkillVersion]
+  Draft --> Soak[StagingEval]
+  Soak --> Prod[Production]

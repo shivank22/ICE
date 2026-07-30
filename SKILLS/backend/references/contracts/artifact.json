@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "artifact.json",
+  "title": "Artifact",
+  "type": "object",
+  "required": ["artifact_id", "type", "version", "checksum", "locator"],
+  "properties": {
+    "artifact_id": { "type": "string" },
+    "type": { "type": "string" },
+    "version": { "type": "integer" },
+    "schema_id": { "type": "string" },
+    "thread_id": { "type": "string" },
+    "skill_id": { "type": "string" },
+    "skill_version": { "type": "string" },
+    "checkpoint_id": { "type": "string" },
+    "checksum": { "type": "string" },
+    "locator": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["active", "superseded", "archived"]
+    },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,12 @@
+%% Episodic to promotion — never auto-mutate production
+flowchart TB
+  Run[AgentRun]
+  Trace[TraceStore]
+  Episode[EpisodeRecord]
+  Reflect[ReflectionService]
+  Proposal[ReflectionProposal]
+  Approval[HumanApproval]
+  Draft[DraftSkillVersion]
+  Staging[Staging]
+  Prod[ProductionLabel]
+  Run --> Trace --> Episode --> Reflect --> Proposal --> Approval --> Draft --> Staging --> Prod

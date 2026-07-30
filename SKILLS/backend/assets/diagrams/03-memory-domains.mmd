@@ -1,0 +1,13 @@
+%% Four memory domains
+flowchart TB
+  STM[ShortTerm_MessagesCheckpoints]
+  Sem[Semantic_Postgres_MemoryMd]
+  Proc[Procedural_SkillRegistry]
+  Epi[Episodic_TracesEpisodes]
+  Ctx[ContextAssembler]
+  STM --> Ctx
+  Sem --> Ctx
+  Proc --> Ctx
+  Epi --> Ctx
+  Epi -->|proposals_only| Reflect[Reflection]
+  Reflect -->|approval_gated| Proc

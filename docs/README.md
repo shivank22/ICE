@@ -1,5 +1,17 @@
 # Agentic Framework Architecture Diagrams
 
+## Design records
+
+| Document | Description |
+|----------|-------------|
+| [`adr/ADR-001-vanilla-agentic-platform.md`](adr/ADR-001-vanilla-agentic-platform.md) | Architecture Design Record — full component inventory + technology stack (React/Redux, FastAPI, LangGraph Deep Agents, Langfuse, Azure, Postgres, OpenAI) |
+| [`../framework/.stack.md`](../framework/.stack.md) | Stack binding for implementation agents |
+| [`../skills/README.md`](../skills/README.md) | Fabric coding skills (Connectivity, Context, Orchestrator, Execution, Evaluation, Adaption) for Cursor / GHCP / VS Code agents |
+
+Primary narrative: [`../ARCHITECTURE.md`](../ARCHITECTURE.md)
+
+---
+
 All diagrams are **draw.io** (`.drawio`) with a short markdown companion.
 
 | Diagram | Notes | Description |
@@ -14,5 +26,3 @@ All diagrams are **draw.io** (`.drawio`) with a short markdown companion.
 | [`08-finops-engine.drawio`](08-finops-engine.drawio) | [08-finops-engine.md](08-finops-engine.md) | Agent cost per run from Langfuse + runner metrics → cost_record. |
 | [`09-adaption-engine.drawio`](09-adaption-engine.drawio) | [09-adaption-engine.md](09-adaption-engine.md) | Engagement tracks and emails to stakeholders on lifecycle events. |
 | [`10-logical-fabrics.drawio`](10-logical-fabrics.drawio) | [10-logical-fabrics.md](10-logical-fabrics.md) | Five logical layers/frameworks mapped to the framework microservices. |
-
-Primary narrative: [`../ARCHITECTURE.md`](../ARCHITECTURE.md)

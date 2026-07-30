@@ -1,0 +1,9 @@
+%% Skill label lifecycle
+stateDiagram-v2
+  [*] --> draft
+  draft --> staging: submit
+  staging --> production: approve_promote
+  production --> deprecated: deprecate
+  deprecated --> archived: archive
+  staging --> draft: reject_or_revise
+  archived --> [*]

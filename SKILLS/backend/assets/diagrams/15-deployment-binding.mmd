@@ -1,0 +1,16 @@
+%% Deployment binding — contracts vs vendors
+flowchart TB
+  Contracts[StableContracts]
+  OrchBind[OrchestratorBinding]
+  StoreBind[StoreBindings]
+  TraceBind[TraceBinding]
+  AuthBind[AuthBinding]
+  Contracts --> OrchBind
+  Contracts --> StoreBind
+  Contracts --> TraceBind
+  Contracts --> AuthBind
+  OrchBind --> LG[LangGraph_reference]
+  StoreBind --> PG[Postgres]
+  StoreBind --> Blob[Blob_or_FS]
+  TraceBind --> LF[Langfuse_or_equivalent]
+  AuthBind --> OIDC[OIDC_JWT]

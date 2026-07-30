@@ -1,0 +1,14 @@
+%% Semantic write and read
+sequenceDiagram
+  participant O as OrchestratorOrTool
+  participant K as KnowledgeService
+  participant DB as Postgres
+  participant E as Embedder
+  O->>K: write Memory.md
+  K->>K: authorize namespace from JWT
+  K->>DB: insert revision
+  K->>E: enqueue embed
+  O->>K: retrieve query
+  K->>DB: ACL filter then rank
+  DB-->>K: hits
+  K-->>O: ranked memories

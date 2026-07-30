@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "session.json",
+  "title": "Session",
+  "type": "object",
+  "required": ["session_id", "user_id", "started_at"],
+  "properties": {
+    "session_id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "org_id": { "type": "string" },
+    "auth_issuer": { "type": "string" },
+    "roles": { "type": "array", "items": { "type": "string" } },
+    "started_at": { "type": "string", "format": "date-time" },
+    "ended_at": { "type": "string", "format": "date-time" },
+    "thread_ids": { "type": "array", "items": { "type": "string" } }
+  }
+}

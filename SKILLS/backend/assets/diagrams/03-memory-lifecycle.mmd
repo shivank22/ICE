@@ -1,0 +1,10 @@
+%% Memory lifecycle across domains
+flowchart LR
+  Create[Create] --> Active[Active]
+  Active --> Update[UpdateOrRevise]
+  Update --> Active
+  Active --> Archive[Archive]
+  Archive --> Purge[Purge]
+  EpiLearn[EpisodicLearn] --> Propose[Propose]
+  Propose --> DraftSkill[DraftSkill]
+  DraftSkill --> Promote[PromoteWithApproval]

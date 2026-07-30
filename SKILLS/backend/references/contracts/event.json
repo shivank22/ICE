@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "event.json",
+  "title": "Event",
+  "type": "object",
+  "required": ["event_id", "type", "occurred_at"],
+  "properties": {
+    "event_id": { "type": "string" },
+    "type": { "type": "string" },
+    "thread_id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "payload": { "type": "object", "additionalProperties": true },
+    "occurred_at": { "type": "string", "format": "date-time" }
+  }
+}

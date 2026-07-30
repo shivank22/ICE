@@ -1,0 +1,24 @@
+%% Container overview — architectural services
+flowchart LR
+  Gw[Gateway]
+  Orch[Orchestrator]
+  Ctx[ContextAssembler]
+  Know[KnowledgeService]
+  Loader[SkillLoader]
+  Reg[SkillRegistry]
+  Cp[(CheckpointStore)]
+  Sem[(PostgresSemantic)]
+  Blob[(SkillBlobOrFS)]
+  Tr[(TraceStore)]
+  Appr[ApprovalService]
+  Gw --> Orch
+  Orch --> Ctx
+  Orch --> Cp
+  Ctx --> Know
+  Ctx --> Loader
+  Know --> Sem
+  Loader --> Reg
+  Reg --> Blob
+  Orch --> Tr
+  Appr --> Orch
+  Appr --> Reg

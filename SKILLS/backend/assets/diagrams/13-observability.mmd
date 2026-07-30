@@ -1,0 +1,9 @@
+%% Observability data flow
+flowchart LR
+  Orch[Orchestrator] --> Tr[TraceStore]
+  Tools[ToolsRunners] --> Tr
+  Tr --> Ep[EpisodeCuration]
+  Tr --> Fin[FinOps]
+  Ep --> Ref[Reflection]
+  Fin --> Cost[CostRecord]
+  Orch --> Logs[CorrelatedLogs]

@@ -1,0 +1,9 @@
+%% Checkpoint lifecycle
+stateDiagram-v2
+  [*] --> none
+  none --> saved: first_save
+  saved --> saved: newer_save
+  saved --> restored: restore
+  restored --> saved: continue_and_save
+  saved --> expired: TTL_or_archive
+  expired --> [*]

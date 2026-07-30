@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "approval.json",
+  "title": "Approval",
+  "type": "object",
+  "required": ["approval_id", "target_type", "target_id", "decision", "actor_user_id"],
+  "properties": {
+    "approval_id": { "type": "string" },
+    "target_type": {
+      "type": "string",
+      "enum": ["interrupt", "promotion", "policy_exception"]
+    },
+    "target_id": { "type": "string" },
+    "decision": {
+      "type": "string",
+      "enum": ["approve", "revise", "reject"]
+    },
+    "actor_user_id": { "type": "string" },
+    "comments": { "type": "string" },
+    "created_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -1,0 +1,31 @@
+%% Context diagram — platform layers
+flowchart TB
+  Client[Clients_Web_MCP_CLI]
+  subgraph access [Access]
+    Gw[Gateway_Identity]
+  end
+  subgraph orch [Orchestration]
+    Orch[AgentOrchestrator]
+    Ctx[ContextAssembler]
+  end
+  subgraph mem [MemoryAndSkills]
+    Sem[SemanticMemory]
+    Reg[SkillRegistry]
+    Epi[EpisodicStore]
+  end
+  subgraph exec [Execution]
+    Tools[ToolsOrRunners]
+  end
+  subgraph gov [EvaluationGovernance]
+    Trace[Traces]
+    Reflect[Reflection]
+    Approve[ApprovalGate]
+  end
+  Client --> Gw --> Orch
+  Orch --> Ctx
+  Ctx --> Sem
+  Ctx --> Reg
+  Ctx --> Epi
+  Orch --> Tools
+  Orch --> Trace
+  Trace --> Reflect --> Approve --> Reg

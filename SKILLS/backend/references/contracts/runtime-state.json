@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "runtime-state.json",
+  "title": "RuntimeState",
+  "type": "object",
+  "required": ["schema_version", "thread_id", "status", "user_id"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "thread_id": { "type": "string" },
+    "session_id": { "type": "string" },
+    "user_id": { "type": "string" },
+    "org_id": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["running", "awaiting_approval", "succeeded", "failed", "cancelled"]
+    },
+    "graph_id": { "type": "string" },
+    "current_node": { "type": "string" },
+    "checkpoint_id": { "type": "string" },
+    "skill_pins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["skill_id", "version"],
+        "properties": {
+          "skill_id": { "type": "string" },
+          "version": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    },
+    "interrupt": { "$ref": "interrupt-payload.json" },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

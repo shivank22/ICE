@@ -1,0 +1,10 @@
+%% Semantic namespace isolation
+flowchart TB
+  JWT[ValidatedJWT]
+  UID[user_id_claim]
+  NS["namespace user:user_id"]
+  Table[(SemanticMemoryTable)]
+  Ctx[ContextAssembler]
+  JWT --> UID --> NS --> Table
+  Table --> Ctx
+  Bad[ClientSuppliedNamespace] -.->|rejected_without_JWT_match| Deny[Deny]
