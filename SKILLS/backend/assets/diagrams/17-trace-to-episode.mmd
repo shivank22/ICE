@@ -1,0 +1,11 @@
+%% Trace store to episodic memory
+flowchart LR
+  LG[LangGraph_invoke]
+  CB[CallbackHandler_Langfuse_or_LangSmith]
+  TS[TraceStore]
+  Ep[EpisodeRecord]
+  Ev[Evaluation]
+  LG --> CB --> TS
+  TS --> Ep
+  Ev --> Ep
+  Ep --> Ref[Reflection_proposals_only]

@@ -1,13 +1,14 @@
-%% Rework sequence
+%% Rework sequence — resume/fork on LangGraph
 sequenceDiagram
   participant U as User
-  participant O as Orchestrator
-  participant CP as CheckpointStore
+  participant O as Orchestrator_LangGraph
+  participant CP as Checkpointer
   participant S as SkillPhase
-  U->>O: revise_requested
-  O->>CP: restore phase boundary checkpoint
-  O->>O: inject revision comments
-  O->>S: rerun affected skill
+  U->>O: revise via Approval or new input
+  O->>O: Command resume or update_state fork
+  CP-->>O: lineage via checkpointer
+  O->>O: inject revision into state
+  O->>S: rerun affected skill node
   S-->>O: new artifact version
-  O->>CP: save checkpoint
+  Note over O,CP: auto checkpoint
   O-->>U: updated progress

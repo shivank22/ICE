@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-Deploy the architecture as replaceable services behind stable contracts. Bind cloud and frameworks after elicitation. Evolve memory, skills, and graphs independently. This pack stays vendor-neutral; ICE Azure bindings are one example.
+Deploy the architecture as replaceable services behind stable contracts, with **LangGraph as the default orchestration binding**. Bind cloud and secondary frameworks after elicitation. Evolve memory, skills, and graphs independently. Override LangGraph only when the user explicitly requires a different orchestrator.
 
 ## 2. Purpose
 
@@ -20,11 +20,12 @@ See [../assets/diagrams/15-deployment-binding.mmd](../assets/diagrams/15-deploym
 
 | Concern | Preferred |
 |---------|-----------|
-| Orchestration | LangGraph durable graphs |
-| Checkpoints | Postgres |
-| Semantic memory | Postgres + vector |
+| Orchestration | LangGraph `StateGraph` |
+| Checkpoints | LangGraph `PostgresSaver` |
+| Semantic memory | LangGraph `PostgresStore` (+ vector index); `Memory.md` in values |
 | Procedural | Registry + FS or Blob |
-| Traces | Agent-native trace platform (e.g. Langfuse) |
+| Traces | Langfuse (ICE) / LangSmith; graph + agent spans ([17](17-langgraph-observability.md)) |
+| Evaluation | DeepEval example and/or LangSmith + agentevals ([18](18-evaluation-frameworks.md)) |
 | Auth | OIDC/JWT |
 
 ### Example binding (ICE / Azure)
@@ -41,10 +42,11 @@ Documented in repo ADR-001: Entra ID, Azure Postgres, Service Bus, Langfuse, Azu
 
 | ID | Decision |
 |----|----------|
-| Dpl1 | Do not hard-code cloud into reference docs |
-| Dpl2 | Single writer for checkpoints preserved under scale-out |
+| Dpl1 | Default to LangGraph class names in stack bindings; cloud remains elicited |
+| Dpl2 | Single writer for checkpoints = compiled graph + checkpointer under scale-out |
 | Dpl3 | Skill bodies not baked into images |
 | Dpl4 | Evolve eval/reflection after durable runs exist |
+| Dpl5 | Configure Store alongside checkpointer when semantic memory is required |
 
 ## 7. Decision Rationale
 
@@ -104,7 +106,9 @@ All contracts under [contracts/](contracts/) remain stable across bindings; only
 
 ## 17. Common Mistakes
 
-- Assuming LangGraph is the only possible orchestrator (it is the reference, not a religion).
+- Assuming LangGraph is optional without an explicit override (it is the **default** binding of this pack; document alternatives only when chosen).
+- Skipping Store when cross-thread semantic memory is required.
+- Unbounded checkpointer history without TTL/prune.
 - Skipping retention policies until storage incident.
 - Treating blueprint PDF as the runtime contract.
 
@@ -114,4 +118,4 @@ Multi-region active/active checkpoints; federated skill registries; policy-as-co
 
 ## 19. Related Documents
 
-[01-architecture-overview.md](01-architecture-overview.md) · [00-index.md](00-index.md) · [SKILL.md](../SKILL.md) · ICE `docs/adr/ADR-001-vanilla-agentic-platform.md` (example binding)
+[01-architecture-overview.md](01-architecture-overview.md) · [langgraph-bindings.md](langgraph-bindings.md) · [00-index.md](00-index.md) · [SKILL.md](../SKILL.md) · ICE `docs/adr/ADR-001-vanilla-agentic-platform.md` (example binding)

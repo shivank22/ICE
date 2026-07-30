@@ -18,8 +18,10 @@ See [../assets/diagrams/11-approval-gates.mmd](../assets/diagrams/11-approval-ga
 
 Two primary gates:
 
-1. **Run gate** — interrupt before irreversible execution.
-2. **Promotion gate** — label moves on procedural skills.
+1. **Run gate** — LangGraph `interrupt()` before irreversible execution; Approval authorizes `Command(resume=...)` via the ResumeRun / ApproveAndResume API ([16-api-surface-interrupt-resume.md](16-api-surface-interrupt-resume.md)).
+2. **Promotion gate** — label moves on procedural skills (platform; not a LangGraph primitive).
+
+Prefer **dynamic** `interrupt()` for production HITL. Use static `interrupt_before` / `interrupt_after` for debugging, not as the primary approval mechanism ([Interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts)).
 
 ## 5. Core Concepts
 
@@ -34,8 +36,9 @@ Two primary gates:
 |----|----------|
 | G1 | Run approval ≠ skill promotion approval |
 | G2 | Approvals are append-only |
-| G3 | High-risk tools always require_approval |
+| G3 | High-risk tools always require_approval via `interrupt()` before side effects |
 | G4 | Policy priority participates in context assembly |
+| G5 | Approval service wraps LangGraph resume—it does not replace checkpointer/interrupt |
 
 ## 7. Decision Rationale
 

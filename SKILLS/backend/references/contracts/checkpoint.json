@@ -2,18 +2,21 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "checkpoint.json",
   "title": "Checkpoint",
+  "description": "API-facing projection of a LangGraph checkpointer snapshot. Durability is owned by the configured checkpointer (e.g. PostgresSaver), not a custom parallel writer.",
   "type": "object",
-  "required": ["checkpoint_id", "thread_id", "created_at", "state"],
+  "required": ["checkpoint_id", "thread_id", "created_at"],
   "properties": {
     "checkpoint_id": { "type": "string" },
     "thread_id": { "type": "string" },
     "parent_checkpoint_id": { "type": ["string", "null"] },
+    "checkpoint_ns": { "type": "string" },
     "graph_id": { "type": "string" },
     "created_at": { "type": "string", "format": "date-time" },
     "checksum": { "type": "string" },
     "schema_version": { "type": "string" },
     "state": {
       "type": "object",
+      "description": "Optional projected DTOs for clients; source of truth remains StateSnapshot.values",
       "properties": {
         "runtime": { "$ref": "runtime-state.json" },
         "thread": { "$ref": "thread-state.json" }

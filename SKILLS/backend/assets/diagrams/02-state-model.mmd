@@ -1,16 +1,18 @@
-%% State model relationships
+%% State model — StateSnapshot SoR, DTOs are projections
 flowchart TB
   User[User]
   Session[Session]
   Thread[Thread]
-  Runtime[RuntimeState]
-  ThreadState[ThreadState]
-  Checkpoint[Checkpoint]
+  Snap[StateSnapshot_LangGraph]
+  Runtime[RuntimeState_DTO]
+  ThreadState[ThreadState_DTO]
+  Cp[Checkpointer]
   Context[ContextPackage]
   User --> Session
   Session --> Thread
-  Thread --> Runtime
-  Thread --> ThreadState
-  Runtime --> Checkpoint
-  ThreadState --> Checkpoint
+  Thread --> Snap
+  Snap --> Cp
+  Snap -.-> Runtime
+  Snap -.-> ThreadState
   Runtime -.-> Context
+  ThreadState -.-> Context

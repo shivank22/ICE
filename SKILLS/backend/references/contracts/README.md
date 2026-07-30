@@ -1,17 +1,23 @@
 # JSON Contracts
 
-Canonical structural schemas for architectural objects. These document **shape**, not a specific database or framework implementation.
+Canonical structural schemas for architectural objects. These document **shape** for APIs and design docs.
+
+**LangGraph note:** `runtime-state`, `thread-state`, `checkpoint`, `interrupt-payload`, and `run-result` are **projections/DTOs** over LangGraph `StateSnapshot` / interrupt values / invoke outcomes—not a license to invent a second durability layer. `run-create` vs `resume-request` encode StartRun (`input`) vs ResumeRun (`command.resume`). `semantic-memory` is the **Store value shape**. See [../langgraph-bindings.md](../langgraph-bindings.md) and [../16-api-surface-interrupt-resume.md](../16-api-surface-interrupt-resume.md).
 
 | Contract | Object |
 |----------|--------|
-| [runtime-state.json](runtime-state.json) | Runtime State |
-| [thread-state.json](thread-state.json) | Thread State |
+| [runtime-state.json](runtime-state.json) | Runtime State (DTO) |
+| [thread-state.json](thread-state.json) | Thread State (DTO) |
+| [thread-create.json](thread-create.json) | CreateThread request |
+| [run-create.json](run-create.json) | StartRun request (`input`) |
+| [resume-request.json](resume-request.json) | ResumeRun request (`command.resume`) |
+| [run-result.json](run-result.json) | Start/Resume response |
 | [session.json](session.json) | Session |
 | [user.json](user.json) | User |
-| [checkpoint.json](checkpoint.json) | Checkpoint |
-| [interrupt-payload.json](interrupt-payload.json) | Interrupt |
+| [checkpoint.json](checkpoint.json) | Checkpoint (projection) |
+| [interrupt-payload.json](interrupt-payload.json) | Interrupt (projection) |
 | [memory-record.json](memory-record.json) | Memory Record base |
-| [semantic-memory.json](semantic-memory.json) | Semantic Memory (`Memory.md`) |
+| [semantic-memory.json](semantic-memory.json) | Semantic Memory Store value (`Memory.md`) |
 | [procedural-memory.json](procedural-memory.json) | Procedural Memory |
 | [episodic-memory.json](episodic-memory.json) | Episodic Memory |
 | [context.json](context.json) | Context Package |
@@ -22,6 +28,7 @@ Canonical structural schemas for architectural objects. These document **shape**
 | [trace.json](trace.json) | Trace |
 | [reflection.json](reflection.json) | Reflection Proposal |
 | [evaluation.json](evaluation.json) | Evaluation |
+| [evaluation-criteria.json](evaluation-criteria.json) | Skill/run metric definitions & thresholds |
 | [approval.json](approval.json) | Approval |
 | [policy.json](policy.json) | Policy |
 | [event.json](event.json) | Event |

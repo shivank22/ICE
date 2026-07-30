@@ -4,13 +4,15 @@
 
 Evaluation scores runs and skill versions against criteria. Reflection analyzes episodic cohorts and emits **proposals**. Together they support learning without automatic mutation of production procedural memory.
 
+**Framework bindings** (DeepEval example, LangSmith/`agentevals`, custom metrics, LLM-as-judge, trajectory scoring) are detailed in **[18-evaluation-frameworks.md](18-evaluation-frameworks.md)**. Trace prerequisites are in **[17-langgraph-observability.md](17-langgraph-observability.md)**.
+
 ## 2. Purpose
 
 Specify how quality signals become governed change—and what must never happen automatically.
 
 ## 3. Scope
 
-Evaluation records, reflection proposals, learning promotion inputs. Trace infrastructure detail is in observability.
+Evaluation records, reflection proposals, learning promotion inputs. Framework-specific runners and metric catalogs in doc 18. Trace infrastructure in docs 13/17.
 
 ## 4. Architecture Overview
 
@@ -66,8 +68,8 @@ Human review latency vs safety. Use staging soak to reduce production risk.
 
 ### Evaluation Service (logical)
 
-- **Purpose:** Score subjects.
-- See algorithm [../programs/evaluation.md](../programs/evaluation.md).
+- **Purpose:** Score subjects via bound frameworks (DeepEval / LangSmith / custom).
+- See [18-evaluation-frameworks.md](18-evaluation-frameworks.md) · [../programs/evaluation.md](../programs/evaluation.md) · [../programs/evaluate-with-framework.md](../programs/evaluate-with-framework.md).
 
 ## 11. Sequence of Operations
 
@@ -92,6 +94,7 @@ See §4.
 
 - [contracts/reflection.json](contracts/reflection.json)
 - [contracts/evaluation.json](contracts/evaluation.json)
+- [contracts/evaluation-criteria.json](contracts/evaluation-criteria.json)
 - [contracts/episodic-memory.json](contracts/episodic-memory.json)
 
 ## 15. Best Practices
@@ -118,4 +121,4 @@ Automated canary skill labels; causal attribution across tool failures.
 
 ## 19. Related Documents
 
-[07-episodic-memory.md](07-episodic-memory.md) · [06-procedural-memory-skills.md](06-procedural-memory-skills.md) · [11-human-approval-governance.md](11-human-approval-governance.md) · [13-observability.md](13-observability.md)
+[07-episodic-memory.md](07-episodic-memory.md) · [06-procedural-memory-skills.md](06-procedural-memory-skills.md) · [11-human-approval-governance.md](11-human-approval-governance.md) · [13-observability.md](13-observability.md) · [17-langgraph-observability.md](17-langgraph-observability.md) · [18-evaluation-frameworks.md](18-evaluation-frameworks.md)

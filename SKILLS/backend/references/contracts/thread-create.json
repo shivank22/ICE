@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "thread-create.json",
+  "title": "ThreadCreate",
+  "description": "Body for CreateThread. Creates a durable LangGraph thread_id cursor; does not start a run by itself unless if_not_exists/create policies say otherwise on first run.",
+  "type": "object",
+  "properties": {
+    "thread_id": {
+      "type": "string",
+      "description": "Optional client-supplied UUID; server generates if omitted"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Opaque platform metadata (org_id, engagement_id, labels)"
+    },
+    "skill_pins": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["skill_id", "version"],
+        "properties": {
+          "skill_id": { "type": "string" },
+          "version": { "type": "string" },
+          "label": { "type": "string" }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

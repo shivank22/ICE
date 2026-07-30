@@ -1,0 +1,17 @@
+%% Evaluation frameworks flow
+flowchart TB
+  Traces[Traces_and_Goldens]
+  Runner[EvalRunner_DeepEval_or_LangSmith]
+  Code[Custom_code_metrics]
+  Judge[LLM_as_judge]
+  Traj[Trajectory_tool_decomp]
+  Eval[Evaluation_contract]
+  Gate[Promotion_or_Alert_gate]
+  Traces --> Runner
+  Runner --> Code
+  Runner --> Judge
+  Runner --> Traj
+  Code --> Eval
+  Judge --> Eval
+  Traj --> Eval
+  Eval --> Gate

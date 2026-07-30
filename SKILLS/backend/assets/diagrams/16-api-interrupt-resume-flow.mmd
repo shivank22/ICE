@@ -1,0 +1,30 @@
+%% API interrupt / resume flow — any frontend
+sequenceDiagram
+  participant C1 as ClientA
+  participant Gw as Gateway
+  participant O as LangGraph
+  participant CP as Checkpointer
+  participant C2 as ClientB_or_same
+  participant A as ApprovalOptional
+  C1->>Gw: POST threads
+  Gw-->>C1: thread_id
+  C1->>Gw: POST runs input StartRun
+  Gw->>O: ainvoke input thread_id
+  O->>CP: checkpoint steps
+  O->>O: interrupt payload
+  CP-->>O: persist interrupted snapshot
+  O-->>Gw: __interrupt__
+  Gw-->>C1: RunResult awaiting_* + InterruptPayload
+  Note over C1,C2: Frontend may disconnect; STM stays in checkpointer
+  C2->>Gw: GET threads/id/state
+  Gw->>O: get_state
+  O-->>Gw: StateSnapshot
+  Gw-->>C2: RuntimeState DTO + messages preview
+  C2->>Gw: POST approvals or ResumeRun command.resume
+  Gw->>A: record Approval if required
+  A-->>Gw: ok
+  Gw->>O: ainvoke Command resume same thread_id
+  Note over O: node re-enters; pre-interrupt code re-runs idempotently
+  O->>CP: continue checkpoints
+  O-->>Gw: output or next interrupt
+  Gw-->>C2: RunResult

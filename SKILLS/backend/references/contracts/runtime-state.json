@@ -2,21 +2,41 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "runtime-state.json",
   "title": "RuntimeState",
+  "description": "API projection (DTO) over LangGraph StateSnapshot + platform metadata. Not a second checkpoint store. Map from graph.get_state() / get_state_history().",
   "type": "object",
   "required": ["schema_version", "thread_id", "status", "user_id"],
   "properties": {
     "schema_version": { "type": "string" },
-    "thread_id": { "type": "string" },
+    "thread_id": {
+      "type": "string",
+      "description": "LangGraph configurable.thread_id"
+    },
     "session_id": { "type": "string" },
     "user_id": { "type": "string" },
     "org_id": { "type": "string" },
     "status": {
       "type": "string",
-      "enum": ["running", "awaiting_approval", "succeeded", "failed", "cancelled"]
+      "enum": ["running", "awaiting_input", "awaiting_approval", "succeeded", "failed", "cancelled"],
+      "description": "Derived from snapshot next/interrupts/errors + platform terminal markers—not an independently written FSM table. Use awaiting_approval when interrupt.type is approval; awaiting_input for other interrupt types."
+    },
+    "interrupts": {
+      "type": "array",
+      "description": "All open interrupts on the thread (parallel branches); singular interrupt retained for single-gate convenience",
+      "items": { "$ref": "interrupt-payload.json" }
     },
     "graph_id": { "type": "string" },
-    "current_node": { "type": "string" },
-    "checkpoint_id": { "type": "string" },
+    "current_node": {
+      "type": "string",
+      "description": "Projected from snapshot.next / task metadata"
+    },
+    "checkpoint_id": {
+      "type": "string",
+      "description": "From snapshot.config.configurable.checkpoint_id when present"
+    },
+    "checkpoint_ns": {
+      "type": "string",
+      "description": "LangGraph checkpoint namespace (subgraphs)"
+    },
     "skill_pins": {
       "type": "array",
       "items": {
@@ -36,6 +56,15 @@
         "code": { "type": "string" },
         "message": { "type": "string" }
       }
+    },
+    "langgraph": {
+      "type": "object",
+      "description": "Optional raw snapshot fields retained for debugging",
+      "properties": {
+        "next": { "type": "array", "items": { "type": "string" } },
+        "parent_checkpoint_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
     },
     "updated_at": { "type": "string", "format": "date-time" }
   }

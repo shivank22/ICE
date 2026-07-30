@@ -1,0 +1,15 @@
+%% Trace hierarchy — graph level + agent/component level
+flowchart TB
+  Entry[AgentServiceEntry_observe]
+  Graph[GraphRunSpan_thread_run]
+  NodeP[Node_planner]
+  NodeS[Node_skill]
+  LLM[LLM_span]
+  Tool[Tool_span]
+  Intr[Interrupt_event]
+  Entry --> Graph
+  Graph --> NodeP
+  Graph --> NodeS
+  Graph --> Intr
+  NodeS --> LLM
+  NodeS --> Tool

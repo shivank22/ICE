@@ -1,10 +1,10 @@
-%% Semantic namespace isolation
+%% Semantic namespace isolation via LangGraph Store
 flowchart TB
   JWT[ValidatedJWT]
   UID[user_id_claim]
-  NS["namespace user:user_id"]
-  Table[(SemanticMemoryTable)]
+  NS["Store namespace tuple user_id, semantic"]
+  Store[(LangGraph_Store)]
   Ctx[ContextAssembler]
-  JWT --> UID --> NS --> Table
-  Table --> Ctx
+  JWT --> UID --> NS --> Store
+  Store --> Ctx
   Bad[ClientSuppliedNamespace] -.->|rejected_without_JWT_match| Deny[Deny]

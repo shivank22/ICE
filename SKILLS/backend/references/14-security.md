@@ -19,8 +19,8 @@ See [../assets/diagrams/14-security-boundaries.mmd](../assets/diagrams/14-securi
 ## 5. Core Concepts
 
 - **Validated JWT** at gateway; services trust forwarded identity only via secured mesh.
-- **Namespace = user_id** for personal semantic memory.
-- **Fail closed** on authz errors in retrieval and resume.
+- **Namespace** = JWT `user_id` (Store tuple) for personal semantic memory.
+- **Fail closed** on authz errors in Store retrieval and resume.
 - **Mount-only skills** — no long-lived secrets in skill packages.
 
 ## 6. Design Decisions
@@ -28,10 +28,11 @@ See [../assets/diagrams/14-security-boundaries.mmd](../assets/diagrams/14-securi
 | ID | Decision |
 |----|----------|
 | Sec1 | Never trust client-supplied user_id over token subject |
-| Sec2 | Checkpoint and memory ACL by thread/user/org |
+| Sec2 | Thread ACL on checkpointer access; Store namespace ACL from JWT before search |
 | Sec3 | Production skill promote requires Approval role |
 | Sec4 | Redact secrets from traces and Memory.md |
 | Sec5 | Runners (if used) get short-lived credentials only |
+| Sec6 | Resume authz before `Command(resume=...)` |
 
 ## 7. Decision Rationale
 

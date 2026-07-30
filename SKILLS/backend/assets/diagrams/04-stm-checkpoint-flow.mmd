@@ -1,13 +1,15 @@
-%% STM and checkpoint flow
+%% STM and checkpoint flow — LangGraph checkpointer owns saves
 sequenceDiagram
-  participant O as Orchestrator
-  participant CP as CheckpointStore
   participant C as Client
-  O->>CP: save checkpoint
+  participant O as Orchestrator_LangGraph
+  participant CP as Checkpointer
+  C->>O: invoke with thread_id
+  O->>CP: auto checkpoint on steps
   O->>O: execute node
-  O->>CP: save checkpoint
-  O->>C: interrupt awaiting approval
-  C->>O: resume with approval
-  O->>CP: restore checkpoint
-  O->>O: continue graph
-  O->>CP: save checkpoint
+  O->>CP: auto checkpoint
+  O->>O: interrupt payload
+  O->>C: surface interrupt awaiting approval
+  C->>O: Command resume after Approval
+  Note over O: node re-enters from start
+  O->>O: continue past interrupt
+  O->>CP: auto checkpoint

@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-An enterprise Agentic AI platform is a modular control plane: authenticated clients submit work; an orchestrator runs durable graphs; memory and skills supply context; execution produces artifacts; evaluation and governance close the loop. This document defines layers, services, and interaction boundaries.
+An enterprise Agentic AI platform is a modular control plane on **LangGraph**: authenticated clients submit work; an orchestrator runs durable graphs with **checkpointers** and **Store**; skills and episodic systems supply platform context; execution produces artifacts; evaluation and governance close the loop. This document defines layers, services, and interaction boundaries. See [langgraph-bindings.md](langgraph-bindings.md).
 
 ## 2. Purpose
 
@@ -10,7 +10,7 @@ Establish a shared topology so teams and coding agents do not invent conflicting
 
 ## 3. Scope
 
-Covers logical layers and architectural services. Does not prescribe a single cloud, language, or monorepo layout. LangGraph is the reference orchestration model.
+Covers logical layers and architectural services. Does not prescribe a single cloud, language, or monorepo layout. **LangGraph is the default orchestration binding**—configure its primitives; do not reimplement them.
 
 ## 4. Architecture Overview
 
@@ -19,8 +19,8 @@ Covers logical layers and architectural services. Does not prescribe a single cl
 | Layer | Purpose | Key concerns |
 |-------|---------|--------------|
 | Access | Single edge: auth, RBAC, APIs, streams | Gateway, identity |
-| Orchestration | Job lifecycle and durable agent graphs | Orchestrator, checkpoints |
-| Memory & Skills | Semantic, procedural, episodic knowledge | Knowledge, registry, loader |
+| Orchestration | Job lifecycle and durable LangGraph graphs | Orchestrator, checkpointer |
+| Memory & Skills | Store (semantic), procedural, episodic | Store facade, registry, loader |
 | Execution | Tools / runners that act | Sandbox optional |
 | Evaluation | Traces, scores, cost | Observability, FinOps |
 | Governance | Approvals, policy, promotion | Approval gate, reflection |
@@ -43,11 +43,12 @@ See diagram: [../assets/diagrams/01-container-overview.mmd](../assets/diagrams/0
 
 | Decision | Choice |
 |----------|--------|
-| D1 | Separate orchestration from memory stores |
+| D1 | Separate orchestration from long-term memory (checkpointer ≠ Store) |
 | D2 | Skill loader is sole resolve/mount authority for procedural content |
-| D3 | Checkpoint store has a single writer: the orchestrator |
-| D4 | Semantic namespaces default to JWT `user_id` |
+| D3 | Checkpoints have a single writer: compiled LangGraph + checkpointer |
+| D4 | Semantic memory defaults to LangGraph Store; namespaces from JWT `user_id` |
 | D5 | Episodic learning never writes production skills directly |
+| D6 | RuntimeState / client JSON are projections of `StateSnapshot` |
 
 ## 7. Decision Rationale
 
@@ -70,10 +71,10 @@ More services increase operational surface. The gain is independent scaling, cle
 ### Gateway / Identity
 
 - **Purpose:** Authenticate and authorize every request; forward identity.
-- **Responsibilities:** JWT validation, RBAC, rate limits, routing, SSE/WebSocket edge.
-- **Non-responsibilities:** Graph execution, memory retrieval logic.
+- **Responsibilities:** JWT validation, RBAC, rate limits, routing, SSE/WebSocket edge; Thread/Run/Resume API scaffold ([16-api-surface-interrupt-resume.md](16-api-surface-interrupt-resume.md)).
+- **Non-responsibilities:** Graph execution, memory retrieval logic; owning STM (checkpointer does).
 - **Inputs:** HTTP/SSE/MCP/CLI requests with bearer tokens.
-- **Outputs:** Authorized calls with identity headers/claims.
+- **Outputs:** Authorized calls with identity headers/claims; RunResult / RuntimeState DTOs.
 - **Dependencies:** IdP (OIDC).
 - **Lifecycle:** Always-on control plane.
 - **Failure Modes:** IdP outage, expired tokens, misconfigured audiences.
@@ -81,42 +82,42 @@ More services increase operational surface. The gain is independent scaling, cle
 - **Security:** Audience/issuer checks; no secrets in responses.
 - **Scalability:** Stateless replicas behind LB.
 
-### Agent Orchestrator
+### Agent Orchestrator (LangGraph runtime + facade)
 
-- **Purpose:** Run durable agent graphs.
-- **Responsibilities:** STM, checkpoints, interrupt/resume, invoke context assembler, call tools.
-- **Non-responsibilities:** Owning semantic/episodic stores; skill authoring.
-- **Inputs:** Job/thread commands, resume payloads.
-- **Outputs:** State transitions, tool calls, artifacts events, interrupts.
-- **Dependencies:** Checkpoint store, context assembler, skill loader, LLM.
+- **Purpose:** Run durable LangGraph agent graphs.
+- **Responsibilities:** Compile with checkpointer (+ optional Store); STM; `interrupt`/`Command(resume)`; invoke context assembler; call tools; project `StateSnapshot` → RuntimeState DTO.
+- **Non-responsibilities:** Reimplementing checkpointers; owning episodic SoR; skill authoring.
+- **Inputs:** Job/thread commands, `Command(resume=...)`, approvals.
+- **Outputs:** State transitions, tool calls, artifact events, interrupts.
+- **Dependencies:** Checkpointer, Store, context assembler, skill loader, LLM.
 - **Lifecycle:** Always-on; threads long-lived.
-- **Failure Modes:** LLM timeouts, checkpoint write failures, poison state.
-- **Recovery:** Retry idempotent steps; restore last good checkpoint; dead-letter bad threads.
+- **Failure Modes:** LLM timeouts, checkpointer failures, poison state.
+- **Recovery:** Retry idempotent steps; resume from last good snapshot; dead-letter bad threads.
 - **Security:** Runs with service identity; never trusts client-supplied `user_id` over JWT.
-- **Scalability:** Shard by thread_id; externalize checkpoints.
+- **Scalability:** Shard by `thread_id`; durable checkpointer backend.
 
 ### Context Assembler
 
-- **Purpose:** Build the Context Package deterministically.
+- **Purpose:** Build the Context Package deterministically (platform layer inside nodes/helpers).
 - **Responsibilities:** Ordered merge, budgets, conflict resolution, compression.
-- **Non-responsibilities:** Persisting memory; executing tools.
-- **Inputs:** Request, identity, checkpoint slice, retrieval queries.
+- **Non-responsibilities:** Persisting memory; executing tools; replacing LangGraph state.
+- **Inputs:** Request, identity, snapshot slice, Store retrieval, skill pins.
 - **Outputs:** Context Package JSON.
 - See [08-context-construction.md](08-context-construction.md).
 
-### Knowledge / Semantic Memory Service
+### Semantic Memory (LangGraph Store + optional facade)
 
-- **Purpose:** Persist and retrieve user/org facts (`Memory.md`).
+- **Purpose:** Persist and retrieve user/org facts (`Memory.md` in Store values).
 - See [05-semantic-memory.md](05-semantic-memory.md).
 
 ### Skill Registry + Loader
 
-- **Purpose:** Version and mount procedural skills.
+- **Purpose:** Version and mount procedural skills (platform-on-top).
 - See [06-procedural-memory-skills.md](06-procedural-memory-skills.md).
 
-### Checkpoint Store
+### Checkpointer backend
 
-- **Purpose:** Durable graph snapshots.
+- **Purpose:** Durable graph snapshots via LangGraph checkpointer.
 - See [09-checkpoints-interrupt-resume.md](09-checkpoints-interrupt-resume.md).
 
 ### Trace / Episodic Store
@@ -177,8 +178,10 @@ Referenced above under Architecture Overview and Sequence.
 ## 16. Anti-patterns
 
 - Orchestrator directly editing production skill text.
-- Multiple services writing checkpoints.
+- Multiple services writing checkpoints (bypassing LangGraph checkpointer).
+- Parallel semantic DB for the same facts as Store.
 - Context built ad hoc inside prompts with no contract.
+- Custom interrupt FSM that disagrees with `StateSnapshot` interrupts.
 
 ## 17. Common Mistakes
 
@@ -192,4 +195,4 @@ Add multi-agent fabrics, policy-as-code engines, and multi-region checkpoint rep
 
 ## 19. Related Documents
 
-[00-index.md](00-index.md) · [02-runtime-state-model.md](02-runtime-state-model.md) · [03-memory-architecture.md](03-memory-architecture.md) · [15-deployment-evolution.md](15-deployment-evolution.md)
+[00-index.md](00-index.md) · [langgraph-bindings.md](langgraph-bindings.md) · [02-runtime-state-model.md](02-runtime-state-model.md) · [03-memory-architecture.md](03-memory-architecture.md) · [15-deployment-evolution.md](15-deployment-evolution.md) · [16-api-surface-interrupt-resume.md](16-api-surface-interrupt-resume.md)

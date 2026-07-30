@@ -2,6 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "semantic-memory.json",
   "title": "SemanticMemory",
+  "description": "Value shape stored in LangGraph Store (BaseStore/PostgresStore) under an authorized namespace tuple + key. Not a parallel DB schema by default.",
   "allOf": [
     { "$ref": "memory-record.json" },
     {
@@ -10,13 +11,30 @@
       "properties": {
         "domain": { "const": "semantic" },
         "namespace": {
+          "description": "Logical namespace; LangGraph Store uses a string tuple, e.g. [user_id, \"semantic\"]. Preferred user scope from JWT user_id.",
+          "oneOf": [
+            { "type": "string", "description": "Display form: user:<user_id>" },
+            {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "description": "Store namespace tuple"
+            }
+          ]
+        },
+        "store_key": {
           "type": "string",
-          "description": "Preferred form: user:<user_id> from JWT"
+          "description": "LangGraph Store item key within the namespace"
         },
         "Memory.md": {
           "type": "string",
-          "description": "Markdown memory document body"
+          "description": "Markdown memory document body inside the Store value"
         },
+        "status": {
+          "type": "string",
+          "enum": ["active", "superseded", "archived", "deleted"]
+        },
+        "revision": { "type": "string" },
         "embedding_ref": { "type": "string" },
         "tags": { "type": "array", "items": { "type": "string" } }
       }

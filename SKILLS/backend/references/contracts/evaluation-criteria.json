@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evaluation-criteria.json",
+  "title": "EvaluationCriteria",
+  "description": "Versioned criteria package referenced by skill manifests (evaluation_criteria_ref). Framework-agnostic; DeepEval/LangSmith map metric keys onto Evaluation.scores.",
+  "type": "object",
+  "required": ["criteria_id", "version", "metrics"],
+  "properties": {
+    "criteria_id": { "type": "string" },
+    "version": { "type": "string" },
+    "skill_id": { "type": "string" },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["key", "kind", "threshold"],
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Stable score key written to Evaluation.scores (e.g. task_completion, tool_correctness)"
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["code", "llm_judge", "trajectory", "human", "hybrid"]
+          },
+          "description": { "type": "string" },
+          "threshold": {
+            "type": "object",
+            "properties": {
+              "pass_above": { "type": "number" },
+              "pass_equals": { "type": ["boolean", "string", "number"] },
+              "fail_below": { "type": "number" }
+            }
+          },
+          "weight": { "type": "number", "default": 1 },
+          "required_for_promote": { "type": "boolean", "default": true },
+          "rubric": {
+            "type": "string",
+            "description": "LLM-as-judge rubric text or ref"
+          },
+          "trajectory_mode": {
+            "type": "string",
+            "enum": ["strict", "unordered", "subset", "superset", "llm_judge"]
+          },
+          "binding_hint": {
+            "type": "string",
+            "description": "Optional: deepeval:TaskCompletionMetric | langsmith:custom | agentevals:trajectory_match"
+          }
+        }
+      }
+    },
+    "aggregation": {
+      "type": "string",
+      "enum": ["all_required_pass", "weighted_average", "min_score"],
+      "default": "all_required_pass"
+    },
+    "inconclusive_blocks_promote": { "type": "boolean", "default": true }
+  }
+}

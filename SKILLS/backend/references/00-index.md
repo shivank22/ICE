@@ -2,29 +2,30 @@
 
 ## Executive Summary
 
-This pack is the reference architecture for designing enterprise **Agentic Orchestrator** backends. It teaches AI coding agents and platform engineers how to make durable decisions about orchestration, the four memory domains, skills, context, checkpoints, feedback loops, governance, security, and deployment—without locking the client to a single cloud vendor.
+This pack is the reference architecture for designing enterprise **Agentic Orchestrator** backends **on LangGraph**. It teaches AI coding agents and platform engineers how to make durable decisions about orchestration, the four memory domains, skills, context, checkpoints, feedback loops, governance, security, and deployment—**binding to LangGraph primitives first**, then adding platform layers (skills, context assembly, promotion).
 
-LangGraph concepts (durable graphs, messages, checkpointers, interrupts) are the **reference orchestration model**. Stack bindings are elicited per project.
+LangGraph concepts (durable graphs, messages, checkpointers, Store, interrupts, time travel) are the **default orchestration model**. See [langgraph-bindings.md](langgraph-bindings.md). Stack overrides are elicited per project.
 
 ## Purpose
 
-Remove ambiguity that causes expensive rework: where state lives, how context is built, how skills are versioned, and how learning is promoted without silent prompt mutation.
+Remove ambiguity that causes expensive rework: where state lives, how context is built, how skills are versioned, and how learning is promoted without silent prompt mutation—without reinventing what LangGraph already provides.
 
 ## Scope
 
-**In scope:** architecture, contracts, algorithms, diagrams, decision rationale.
+**In scope:** architecture, contracts, algorithms, diagrams, decision rationale, LangGraph bindings.
 
-**Out of scope:** application source code, vendor SDKs, exploit details, product marketing.
+**Out of scope:** application source code dumps, exploit details, product marketing, alternate orchestrators unless the user explicitly overrides LangGraph.
 
 ## Document map
 
 | ID | Document | Primary concern |
 |----|----------|-----------------|
+| — | [LangGraph Bindings](langgraph-bindings.md) | Checkpointer, Store, interrupt, time travel |
 | 01 | [Architecture Overview](01-architecture-overview.md) | Layers and services |
-| 02 | [Runtime & State Model](02-runtime-state-model.md) | Explicit runtime/thread state |
+| 02 | [Runtime & State Model](02-runtime-state-model.md) | StateSnapshot + DTO projections |
 | 03 | [Memory Architecture](03-memory-architecture.md) | Four domains overview |
-| 04 | [Short-Term Memory](04-short-term-memory.md) | Messages + checkpoints |
-| 05 | [Semantic Memory](05-semantic-memory.md) | Postgres / JWT namespace |
+| 04 | [Short-Term Memory](04-short-term-memory.md) | Messages + checkpointers |
+| 05 | [Semantic Memory](05-semantic-memory.md) | Store / JWT namespace |
 | 06 | [Procedural Memory & Skills](06-procedural-memory-skills.md) | Skill registry |
 | 07 | [Episodic Memory](07-episodic-memory.md) | Traces and episodes |
 | 08 | [Context Construction](08-context-construction.md) | Assembly order |
@@ -35,6 +36,9 @@ Remove ambiguity that causes expensive rework: where state lives, how context is
 | 13 | [Observability](13-observability.md) | Traces, quality, cost |
 | 14 | [Security](14-security.md) | AuthN/Z, namespaces |
 | 15 | [Deployment & Evolution](15-deployment-evolution.md) | Bindings and growth |
+| 16 | [API Surface: Interrupt & Resume](16-api-surface-interrupt-resume.md) | Thread/Run HTTP scaffold, any-FE HITL |
+| 17 | [LangGraph Observability](17-langgraph-observability.md) | Graph + agent traces, Langfuse/LangSmith |
+| 18 | [Evaluation Frameworks](18-evaluation-frameworks.md) | DeepEval, custom metrics, LLM-as-judge |
 | — | [Glossary](glossary.md) | Shared terminology |
 | — | [contracts/](contracts/) | Canonical JSON |
 | — | [../programs/](../programs/) | Algorithms |
@@ -42,16 +46,17 @@ Remove ambiguity that causes expensive rework: where state lives, how context is
 
 ## Recommended reading order
 
-1. Glossary → Architecture Overview  
+1. LangGraph Bindings → Glossary → Architecture Overview  
 2. Runtime & State → Short-Term Memory → Checkpoints  
 3. Memory Architecture → Semantic / Procedural / Episodic  
 4. Context Construction  
 5. Feedback Loops → Approval → Reflection  
-6. Observability → Security → Deployment  
+6. **API Surface (doc 16)** — Thread/Run/Resume for any frontend  
+7. Observability (13) → **LangGraph tracing (17)** → **Eval frameworks (18)** → Security → Deployment  
 
 ## Cross-cutting principles
 
-Modular · Layered · Vendor neutral · Observable · Secure by default · Versioned · Extensible · Testable · Explainable · Human governed
+Modular · Layered · **LangGraph-first** · Observable · Secure by default · Versioned · Extensible · Testable · Explainable · Human governed
 
 ## Related Documents
 

@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-Procedural Memory is a **governed Skill Registry**. A Skill is an architectural package—not a free-floating prompt. Skills are versioned, labeled (draft/staging/production), stored in **local filesystem (e.g. LangGraph backend)** or **object/Blob storage**, and resolved into runtime only through a **Skill Loader**.
+Procedural Memory is a **governed Skill Registry** (platform layer on top of LangGraph). A Skill is an architectural package—not a free-floating prompt. Skills are versioned, labeled (draft/staging/production), stored in **local filesystem** or **object/Blob storage**, and resolved into runtime only through a **Skill Loader**. Registry metadata may optionally live in LangGraph Store, but skill **bodies** remain registry-owned packages.
 
 ## 2. Purpose
 

@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-Context is **assembled**, not improvised. The Context Assembler merges identity, policies, short-term state, skills, semantic hits, episodic exemplars, artifacts, and the user request into a **Context Package** with explicit order, priority, conflict rules, and compression.
+Context is **assembled**, not improvised. The Context Assembler (platform helper used from LangGraph nodes) merges identity, policies, short-term snapshot state, skills, Store semantic hits, episodic exemplars, artifacts, and the user request into a **Context Package** with explicit order, priority, conflict rules, and compression.
 
 ## 2. Purpose
 

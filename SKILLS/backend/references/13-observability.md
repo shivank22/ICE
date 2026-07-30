@@ -4,13 +4,15 @@
 
 Observability for agent platforms covers traces, quality signals, infrastructure health, and cost. Traces feed episodic memory; they are not a substitute for checkpoints or skill registries.
 
+**Opinionated LangGraph practices** (graph-level + agent-level emission, Langfuse/LangSmith bindings, attribute vocabulary, sampling, PII) live in **[17-langgraph-observability.md](17-langgraph-observability.md)**. Evaluation framework bindings (DeepEval, custom metrics, LLM-as-judge) live in **[18-evaluation-frameworks.md](18-evaluation-frameworks.md)**.
+
 ## 2. Purpose
 
 Define what must be observable for operation, eval, and learning—without conflating telemetry with control-plane state.
 
 ## 3. Scope
 
-Tracing, metrics, logging correlation, FinOps signals. Detailed episode curation in doc 07.
+Tracing overview, metrics, logging correlation, FinOps signals. Detailed LangGraph emission checklist in doc 17; episode curation in doc 07.
 
 ## 4. Architecture Overview
 
@@ -108,4 +110,4 @@ OpenTelemetry semantic conventions for agents; anomaly detection on tool error c
 
 ## 19. Related Documents
 
-[07-episodic-memory.md](07-episodic-memory.md) · [12-reflection-evaluation.md](12-reflection-evaluation.md) · [15-deployment-evolution.md](15-deployment-evolution.md)
+[07-episodic-memory.md](07-episodic-memory.md) · [12-reflection-evaluation.md](12-reflection-evaluation.md) · [15-deployment-evolution.md](15-deployment-evolution.md) · [17-langgraph-observability.md](17-langgraph-observability.md) · [18-evaluation-frameworks.md](18-evaluation-frameworks.md)

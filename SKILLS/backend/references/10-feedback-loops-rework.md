@@ -18,10 +18,10 @@ See [../assets/diagrams/10-feedback-loops.mmd](../assets/diagrams/10-feedback-lo
 
 ## 5. Core Concepts
 
-- **HITL loop:** running → awaiting_approval → approve | revise → running.
-- **Rework:** restore checkpoint; inject revision; re-enter graph.
+- **HITL loop:** running → `interrupt()` → awaiting_approval (DTO) → Approval → `Command(resume=...)` → running (node re-enters).
+- **Rework:** resume with revision value and/or `update_state` fork; inject revision; continue graph (prefer lineage-preserving fork).
 - **Eval loop:** scored traces → threshold → gate or alert.
-- **Promotion loop:** episodes → proposal → approve → draft skill → soak → production.
+- **Promotion loop:** episodes → proposal → approve → draft skill → soak → production (platform; not LangGraph).
 
 ## 6. Design Decisions
 

@@ -89,3 +89,16 @@ agent-service/
 ├── Dockerfile                       # Container image
 ├── docker-compose.yml               # Local development stack
 └── README.md                        # Project documentation
+
+
+
+OK Now enrich the skills with Opinionated Langgraph observability
+Add all good practices from langraph docs. Emit traces at graph level and agent level 
+
+Then score evaluations using custom metrics and LLM as judgem, use DEEPEVAL for example
+
+DONE in SKILLS/backend:
+- references/17-langgraph-observability.md
+- references/18-evaluation-frameworks.md
+- programs/trace-emit.md, evaluate-with-framework.md
+- contracts/evaluation-criteria.json (+ evaluation.json fields)

@@ -18,10 +18,10 @@ See [../assets/diagrams/03-memory-domains.mmd](../assets/diagrams/03-memory-doma
 
 | Domain | Holds | Preferred store | Primary owner |
 |--------|-------|-----------------|---------------|
-| Short-Term | Messages, channel values, execution cursor | Checkpointer (Postgres) | Orchestrator |
-| Semantic | Durable facts (`Memory.md`) | Postgres + embeddings | Knowledge service |
-| Procedural | Skills (packages) | Registry + FS or Blob | Skill registry/loader |
-| Episodic | Traces, outcomes, scores | Trace store + episode table | Evaluation / knowledge |
+| Short-Term | Messages, channel values, execution cursor | LangGraph **checkpointer** (`PostgresSaver`) | Orchestrator / LangGraph |
+| Semantic | Durable facts (`Memory.md` in values) | LangGraph **Store** (`PostgresStore`) | Store + optional RBAC facade |
+| Procedural | Skills (packages) | Registry + FS or Blob | Skill registry/loader (platform) |
+| Episodic | Traces, outcomes, scores | Trace store + episode table | Evaluation / observability (platform) |
 
 ## 5. Core Concepts
 
@@ -34,11 +34,12 @@ See [../assets/diagrams/03-memory-domains.mmd](../assets/diagrams/03-memory-doma
 
 | ID | Decision |
 |----|----------|
-| M1 | Four domains, not three (STM is first-class) |
-| M2 | STM never substitutes for semantic facts |
+| M1 | Four domains, not three (STM is first-class via checkpointer) |
+| M2 | STM (checkpointer) never substitutes for semantic facts (Store) |
 | M3 | Procedural memory is a Skill Registry, not prompt strings |
 | M4 | Episodic never auto-mutates production skills |
 | M5 | Context Assembler is the only merger of domains into model input |
+| M6 | Semantic defaults to LangGraph Store namespaces—not a parallel SoR |
 
 ## 7. Decision Rationale
 
@@ -63,9 +64,9 @@ Cross-domain **Memory Router** (logical): maps retrieval intents to the correct 
 ## 11. Sequence of Operations
 
 1. Identify retrieval intents from graph node / skill manifest.
-2. Load STM from checkpoint.
-3. Query semantic by namespace + embedding.
-4. Resolve procedural skills by id/version/label.
+2. Load STM from LangGraph snapshot / checkpointer (`get_state` or in-node state).
+3. Query semantic via Store `search`/`get` by authorized namespace tuples.
+4. Resolve procedural skills by id/version/label (registry).
 5. Select episodic exemplars under token budget.
 6. Merge via Context Assembler.
 
@@ -115,4 +116,4 @@ Hierarchical namespaces (user → team → org), memory quarantine workflows, an
 
 ## 19. Related Documents
 
-[04-short-term-memory.md](04-short-term-memory.md) · [05-semantic-memory.md](05-semantic-memory.md) · [06-procedural-memory-skills.md](06-procedural-memory-skills.md) · [07-episodic-memory.md](07-episodic-memory.md) · [08-context-construction.md](08-context-construction.md)
+[04-short-term-memory.md](04-short-term-memory.md) · [05-semantic-memory.md](05-semantic-memory.md) · [06-procedural-memory-skills.md](06-procedural-memory-skills.md) · [07-episodic-memory.md](07-episodic-memory.md) · [langgraph-bindings.md](langgraph-bindings.md) · [08-context-construction.md](08-context-construction.md)

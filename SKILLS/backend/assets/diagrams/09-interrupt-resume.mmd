@@ -1,14 +1,15 @@
-%% Interrupt and resume sequence
+%% Interrupt and resume — interrupt + Command(resume)
 sequenceDiagram
-  participant O as Orchestrator
-  participant CP as CheckpointStore
+  participant O as Orchestrator_LangGraph
+  participant CP as Checkpointer
   participant H as Human
   participant A as ApprovalService
-  O->>CP: checkpoint before gate
-  O->>O: interrupt
-  O->>H: awaiting approval
+  O->>O: interrupt payload in node
+  CP-->>O: state persisted by runtime
+  O->>H: surface interrupt
   H->>A: approve or revise
-  A->>O: Approval record
-  O->>CP: restore
-  O->>O: resume graph
-  O->>CP: checkpoint after resume
+  A->>A: record Approval
+  A->>O: resume value
+  O->>O: Command resume same thread_id
+  Note over O: node restarts; code before interrupt re-runs
+  O->>CP: auto checkpoint after continue

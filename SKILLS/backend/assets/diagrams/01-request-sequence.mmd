@@ -1,18 +1,18 @@
-%% Request sequence — happy path
+%% Request sequence — happy path on LangGraph
 sequenceDiagram
   participant C as Client
   participant G as Gateway
-  participant O as Orchestrator
+  participant O as Orchestrator_LangGraph
   participant A as ContextAssembler
-  participant M as MemoryStores
+  participant S as Store_and_Registry
   participant L as LLM_Tools
   C->>G: Authenticated request
-  G->>O: Start or resume thread
+  G->>O: invoke or Command resume thread_id
   O->>A: Assemble context
-  A->>M: Retrieve STM semantic procedural episodic
-  M-->>A: Hits and manifests
+  A->>S: Store search + skill resolve + episodes
+  S-->>A: Hits and manifests
   A-->>O: ContextPackage
   O->>L: Model and tool step
   L-->>O: Results
-  O->>O: Checkpoint save
+  Note over O: Checkpointer auto-saves
   O-->>C: Progress or interrupt

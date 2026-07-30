@@ -2,10 +2,14 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "interrupt-payload.json",
   "title": "InterruptPayload",
+  "description": "Client projection of the JSON-serializable value passed to LangGraph interrupt(). Returned on RunResult / RuntimeState. Resume via ResumeRun API → Command(resume=...) with the same thread_id. See 16-api-surface-interrupt-resume.md.",
   "type": "object",
   "required": ["interrupt_id", "type", "summary"],
   "properties": {
-    "interrupt_id": { "type": "string" },
+    "interrupt_id": {
+      "type": "string",
+      "description": "Stable id for the open interrupt (from LangGraph interrupt id when available, else platform-assigned)"
+    },
     "type": {
       "type": "string",
       "enum": ["approval", "input", "policy_hold"]
@@ -14,6 +18,10 @@
     "artifact_ids": { "type": "array", "items": { "type": "string" } },
     "options": { "type": "array", "items": { "type": "string" } },
     "required_roles": { "type": "array", "items": { "type": "string" } },
-    "created_at": { "type": "string", "format": "date-time" }
+    "created_at": { "type": "string", "format": "date-time" },
+    "raw": {
+      "description": "Optional original interrupt value if richer than this DTO",
+      "type": ["object", "string", "array", "number", "boolean", "null"]
+    }
   }
 }

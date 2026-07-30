@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run-create.json",
+  "title": "RunCreate",
+  "description": "Body for StartRun — first or subsequent invoke with graph input (NOT for HITL resume). Maps to LangGraph ainvoke(input, config) or Agent Server runs with input.",
+  "type": "object",
+  "required": ["graph_id", "input"],
+  "properties": {
+    "graph_id": {
+      "type": "string",
+      "description": "Assistant id or graph name to execute"
+    },
+    "input": {
+      "description": "Graph input (e.g. messages). Do not use this field to continue after interrupt — use resume-request.json",
+      "type": ["object", "array", "string", "number", "boolean", "null"]
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "config": {
+      "type": "object",
+      "properties": {
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "recursion_limit": { "type": "integer" },
+        "configurable": { "type": "object", "additionalProperties": true }
+      }
+    },
+    "durability": {
+      "type": "string",
+      "enum": ["sync", "async", "exit"],
+      "default": "async",
+      "description": "Checkpoint durability mode (Agent Server / LangGraph durable execution)"
+    },
+    "multitask_strategy": {
+      "type": "string",
+      "enum": ["reject", "enqueue", "interrupt", "rollback"],
+      "default": "enqueue",
+      "description": "Behavior when another run is already active on the thread"
+    },
+    "webhook": {
+      "type": "string",
+      "format": "uri",
+      "description": "Optional callback when run reaches terminal or interrupt wait"
+    },
+    "stream_mode": {
+      "oneOf": [
+        {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["values", "messages", "messages-tuple", "tasks", "checkpoints", "updates", "events", "debug", "custom"]
+          }
+        },
+        {
+          "type": "string",
+          "enum": ["values", "messages", "messages-tuple", "tasks", "checkpoints", "updates", "events", "debug", "custom"]
+        }
+      ]
+    },
+    "on_disconnect": {
+      "type": "string",
+      "enum": ["cancel", "continue"],
+      "default": "continue",
+      "description": "Streaming disconnect policy; prefer continue for HITL-friendly UIs"
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,7 +1,7 @@
-%% Four memory domains
+%% Four memory domains — LangGraph bindings + platform layers
 flowchart TB
-  STM[ShortTerm_MessagesCheckpoints]
-  Sem[Semantic_Postgres_MemoryMd]
+  STM[ShortTerm_Checkpointer]
+  Sem[Semantic_Store_MemoryMd]
   Proc[Procedural_SkillRegistry]
   Epi[Episodic_TracesEpisodes]
   Ctx[ContextAssembler]

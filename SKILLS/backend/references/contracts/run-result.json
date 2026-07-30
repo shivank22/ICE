@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run-result.json",
+  "title": "RunResult",
+  "description": "Unified response for StartRun / ResumeRun / wait-style invokes. Projects LangGraph invoke/stream outcome including __interrupt__ / stream.interrupts. Not a durability store.",
+  "type": "object",
+  "required": ["thread_id", "status"],
+  "properties": {
+    "thread_id": { "type": "string" },
+    "run_id": { "type": "string" },
+    "graph_id": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": [
+        "running",
+        "awaiting_input",
+        "awaiting_approval",
+        "succeeded",
+        "failed",
+        "cancelled"
+      ],
+      "description": "Derived from snapshot interrupts/next/errors. awaiting_approval when interrupt.type is approval; awaiting_input for free-form interrupt types."
+    },
+    "output": {
+      "description": "Final graph output values when status is succeeded (or partial values if useful)",
+      "type": ["object", "array", "string", "number", "boolean", "null"]
+    },
+    "interrupts": {
+      "type": "array",
+      "description": "Open interrupts for this thread after the run paused; empty if not interrupted",
+      "items": { "$ref": "interrupt-payload.json" }
+    },
+    "runtime_state": {
+      "$ref": "runtime-state.json",
+      "description": "Optional embedded projection; alternatively client calls GetThreadState"
+    },
+    "messages_preview": {
+      "type": "array",
+      "description": "Optional projection of messages channel for UI; SoR remains checkpointer",
+      "items": { "type": "object", "additionalProperties": true }
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "completed_at": { "type": "string", "format": "date-time" }
+  }
+}

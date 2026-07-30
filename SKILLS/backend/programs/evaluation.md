@@ -41,3 +41,7 @@ Score a run, episode, or skill version against criteria.
 ## Failure Handling
 
 Do not promote on inconclusive when policy requires hard pass.
+
+## Related
+
+Framework runners: [evaluate-with-framework.md](evaluate-with-framework.md) · [../references/18-evaluation-frameworks.md](../references/18-evaluation-frameworks.md) · criteria [../references/contracts/evaluation-criteria.json](../references/contracts/evaluation-criteria.json)

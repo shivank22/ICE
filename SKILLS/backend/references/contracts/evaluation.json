@@ -21,6 +21,23 @@
     },
     "pass": { "type": "boolean" },
     "inconclusive": { "type": "boolean" },
+    "framework": {
+      "type": "string",
+      "description": "Binding used: deepeval | langsmith | agentevals | custom",
+      "enum": ["deepeval", "langsmith", "agentevals", "custom", "hybrid"]
+    },
+    "trace_id": { "type": "string" },
+    "skill_versions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "skill_id": { "type": "string" },
+          "version": { "type": "string" }
+        }
+      }
+    },
+    "judge_model": { "type": "string" },
     "notes": { "type": "string" },
     "created_at": { "type": "string", "format": "date-time" }
   }

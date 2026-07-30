@@ -1,0 +1,18 @@
+%% API resource model — Thread / Run / Interrupt (frontend-agnostic)
+flowchart TB
+  Client[AnyClient_Web_Mobile_CLI_MCP]
+  Gw[Gateway_API]
+  Thread[Thread_thread_id]
+  Run[Run_invocation]
+  Orch[Orchestrator_LangGraph]
+  CP[(Checkpointer_STM_messages)]
+  Store[(Store_Semantic)]
+  Appr[Approval_optional]
+  Client --> Gw
+  Gw --> Thread
+  Gw --> Run
+  Run --> Orch
+  Orch --> CP
+  Orch --> Store
+  Gw --> Appr
+  Appr -->|Command_resume| Run

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "resume-request.json",
+  "title": "ResumeRequest",
+  "description": "Body for ResumeRun after LangGraph interrupt(). Maps exclusively to Command(resume=...). Same thread_id as the interrupted run. Do not include original graph input. Do not set checkpoint_id unless intentionally time-traveling.",
+  "type": "object",
+  "required": ["graph_id", "command"],
+  "properties": {
+    "graph_id": {
+      "type": "string",
+      "description": "Same assistant/graph as the interrupted run"
+    },
+    "command": {
+      "type": "object",
+      "required": ["resume"],
+      "properties": {
+        "resume": {
+          "description": "Single resume value OR map of interrupt_id → value for parallel interrupts. Becomes return value(s) of interrupt() in the node.",
+          "type": ["object", "array", "string", "number", "boolean", "null"]
+        }
+      },
+      "additionalProperties": false
+    },
+    "approval_id": {
+      "type": "string",
+      "description": "Optional link to already-recorded Approval when governance gated the resume"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "durability": {
+      "type": "string",
+      "enum": ["sync", "async", "exit"],
+      "default": "async"
+    },
+    "webhook": {
+      "type": "string",
+      "format": "uri"
+    },
+    "on_disconnect": {
+      "type": "string",
+      "enum": ["cancel", "continue"],
+      "default": "continue"
+    }
+  },
+  "additionalProperties": false
+}

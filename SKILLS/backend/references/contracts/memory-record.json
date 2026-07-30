@@ -10,7 +10,13 @@
       "type": "string",
       "enum": ["short_term", "semantic", "procedural", "episodic"]
     },
-    "namespace": { "type": "string" },
+    "namespace": {
+      "description": "Logical isolation key. For semantic Store items prefer a tuple; string form user:<id> allowed for display.",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      ]
+    },
     "status": {
       "type": "string",
       "enum": ["active", "superseded", "archived", "deleted"]
