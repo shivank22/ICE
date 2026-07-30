@@ -23,7 +23,7 @@ See [../assets/diagrams/15-deployment-binding.mmd](../assets/diagrams/15-deploym
 | Orchestration | LangGraph `StateGraph` |
 | Checkpoints | LangGraph `PostgresSaver` |
 | Semantic memory | LangGraph `PostgresStore` (+ vector index); `Memory.md` in values |
-| Procedural | Registry + FS or Blob |
+| Procedural | `skill.yaml` → pgvector index + Skill Resolver (`lfs`\|`blob`) ([19](19-skill-platform-lifecycle.md)) |
 | Traces | Langfuse (ICE) / LangSmith; graph + agent spans ([17](17-langgraph-observability.md)) |
 | Evaluation | DeepEval example and/or LangSmith + agentevals ([18](18-evaluation-frameworks.md)) |
 | Auth | OIDC/JWT |
@@ -35,8 +35,8 @@ Documented in repo ADR-001: Entra ID, Azure Postgres, Service Bus, Langfuse, Azu
 ## 5. Core Concepts
 
 - **Contract first, binding second.**
-- **Colocation allowed early** (orchestrator + loader) if API boundaries remain.
-- **Phase delivery:** STM/checkpoints → skills HITL → semantic/episodic learning.
+- **Colocation allowed early** (orchestrator + discovery/resolver) if API boundaries remain.
+- **Phase delivery:** STM/checkpoints → skills HITL (Git+index) → semantic/episodic learning.
 
 ## 6. Design Decisions
 
@@ -44,7 +44,7 @@ Documented in repo ADR-001: Entra ID, Azure Postgres, Service Bus, Langfuse, Azu
 |----|----------|
 | Dpl1 | Default to LangGraph class names in stack bindings; cloud remains elicited |
 | Dpl2 | Single writer for checkpoints = compiled graph + checkpointer under scale-out |
-| Dpl3 | Skill bodies not baked into images |
+| Dpl3 | Skill bodies via Skill Resolver: `lfs` on containers; `blob` when promoted for singleton API / serverless |
 | Dpl4 | Evolve eval/reflection after durable runs exist |
 | Dpl5 | Configure Store alongside checkpointer when semantic memory is required |
 
@@ -66,13 +66,13 @@ Phased value vs temporary colocation debt—track debt explicitly.
 
 ## 10. Component Breakdown
 
-Deployment units map to services in [01-architecture-overview.md](01-architecture-overview.md). Scale orchestrator horizontally by thread affinity; scale knowledge reads with replicas; keep registry promote path protected.
+Deployment units map to services in [01-architecture-overview.md](01-architecture-overview.md). Scale orchestrator horizontally by thread affinity; scale knowledge reads with replicas; keep **skill promote / CI index** path protected.
 
 ## 11. Sequence of Operations (suggested build order)
 
 1. Gateway + identity + empty Orchestrator thread API  
 2. Checkpoint store + STM interrupt/resume  
-3. Skill registry/loader + one production skill  
+3. Skill Discovery + Skill Resolver Service + one production skill (`lfs` or `blob`)  
 4. Context assembler with policies + STM  
 5. Semantic memory namespaced by user_id  
 6. Traces + episodes  
@@ -114,7 +114,7 @@ All contracts under [contracts/](contracts/) remain stable across bindings; only
 
 ## 18. Future Evolution
 
-Multi-region active/active checkpoints; federated skill registries; policy-as-code continuous verification.
+Multi-region active/active checkpoints; federated skill indexes; policy-as-code continuous verification.
 
 ## 19. Related Documents
 

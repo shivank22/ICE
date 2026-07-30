@@ -20,7 +20,7 @@ See [../assets/diagrams/03-memory-domains.mmd](../assets/diagrams/03-memory-doma
 |--------|-------|-----------------|---------------|
 | Short-Term | Messages, channel values, execution cursor | LangGraph **checkpointer** (`PostgresSaver`) | Orchestrator / LangGraph |
 | Semantic | Durable facts (`Memory.md` in values) | LangGraph **Store** (`PostgresStore`) | Store + optional RBAC facade |
-| Procedural | Skills (packages) | Registry + FS or Blob | Skill registry/loader (platform) |
+| Procedural | Skills (`SKILL.md` + `skill.yaml`) | pgvector index (`index_ready`) + Resolver (`lfs`\|`blob`) | Discovery → context records → Skill Resolver Service (doc 19) |
 | Episodic | Traces, outcomes, scores | Trace store + episode table | Evaluation / observability (platform) |
 
 ## 5. Core Concepts
@@ -36,7 +36,7 @@ See [../assets/diagrams/03-memory-domains.mmd](../assets/diagrams/03-memory-doma
 |----|----------|
 | M1 | Four domains, not three (STM is first-class via checkpointer) |
 | M2 | STM (checkpointer) never substitutes for semantic facts (Store) |
-| M3 | Procedural memory is a Skill Registry, not prompt strings |
+| M3 | Procedural memory is skill packages (`SKILL.md` + `skill.yaml`) indexed in Postgres; bodies via Resolver (`lfs`\|`blob`), not prompt strings |
 | M4 | Episodic never auto-mutates production skills |
 | M5 | Context Assembler is the only merger of domains into model input |
 | M6 | Semantic defaults to LangGraph Store namespaces—not a parallel SoR |
@@ -66,7 +66,7 @@ Cross-domain **Memory Router** (logical): maps retrieval intents to the correct 
 1. Identify retrieval intents from graph node / skill manifest.
 2. Load STM from LangGraph snapshot / checkpointer (`get_state` or in-node state).
 3. Query semantic via Store `search`/`get` by authorized namespace tuples.
-4. Resolve procedural skills by id/version/label (registry).
+4. Procedural: Discovery → index records into Assembler; Skill Resolver Service loads packages from `lfs` or `blob` (doc 19).
 5. Select episodic exemplars under token budget.
 6. Merge via Context Assembler.
 

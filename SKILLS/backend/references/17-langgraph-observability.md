@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-Observability for LangGraph platforms is **contract-first, binding-second**. Emit structured traces at **graph level** (whole invoke/thread run) and **agent/component level** (nodes, tools, LLM calls, custom logic). Preferred bindings: **Langfuse** (ICE example) or **LangSmith**; both use LangChain callbacks / OpenTelemetry-style nesting. Traces feed [episodic memory](07-episodic-memory.md) and [evaluation](18-evaluation-frameworks.md)—they never replace the checkpointer or skill registry.
+Observability for LangGraph platforms is **contract-first, binding-second**. Emit structured traces at **graph level** (whole invoke/thread run) and **agent/component level** (nodes, tools, LLM calls, custom logic). Preferred bindings: **Langfuse** (ICE example) or **LangSmith**; both use LangChain callbacks / OpenTelemetry-style nesting. Traces feed [episodic memory](07-episodic-memory.md) and [evaluation](18-evaluation-frameworks.md)—they never replace the checkpointer or Git skill SoR.
 
 Official refs: [LangGraph Observability](https://docs.langchain.com/oss/python/langgraph/observability) · [Trace with LangGraph](https://docs.langchain.com/langsmith/trace-with-langgraph) · [Langfuse × LangGraph](https://langfuse.com/guides/cookbook/integration_langgraph)
 
@@ -90,7 +90,7 @@ Full fidelity vs cost: use attribute-based keep rules (errors, interrupts, tagge
 | `run_id` | Platform run id |
 | `user_id` / `org_id` | JWT (never client-spoofed) |
 | `graph_id` / `assistant_id` | Deployed graph |
-| `skill_pins` | Manifest versions mounted for the run |
+| `skill_pins` | `skill_id` + `version` + **`locator`** (`lfs`\|`blob`) resolved for the run |
 | `assembly_digest` | Context Package hash |
 | `checkpoint_id` | When known (post-step) |
 | `status` | running / awaiting_* / succeeded / failed |

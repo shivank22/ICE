@@ -72,7 +72,7 @@ Store + revision history increases storage. Embedding refresh adds cost on updat
 
 - **Purpose:** CRUD + retrieval for semantic records across threads.
 - **Responsibilities:** Enforce namespaces, `put`/`get`/`search`, optional index, revision policy, soft-delete/archive conventions.
-- **Non-responsibilities:** Graph scheduling; skill registry; checkpoint persistence.
+- **Non-responsibilities:** Graph scheduling; skill index / Discovery / Resolver; checkpoint persistence.
 - **Inputs:** Authenticated write/read requests; query text; filters; Store injected into nodes.
 - **Outputs:** Store items; ranked hit lists for Context Assembler.
 - **Dependencies:** `PostgresStore` (prod) or `InMemoryStore` (dev); embedding function when index enabled.

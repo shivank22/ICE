@@ -19,7 +19,7 @@ See [../assets/diagrams/11-approval-gates.mmd](../assets/diagrams/11-approval-ga
 Two primary gates:
 
 1. **Run gate** — LangGraph `interrupt()` before irreversible execution; Approval authorizes `Command(resume=...)` via the ResumeRun / ApproveAndResume API ([16-api-surface-interrupt-resume.md](16-api-surface-interrupt-resume.md)).
-2. **Promotion gate** — label moves on procedural skills (platform; not a LangGraph primitive).
+2. **Promotion gate** — `skill.yaml` status moves on procedural skills via governed promote + CI re-index (platform; not a LangGraph primitive). Do **not** reuse ApproveAndResume for skill promotion—that API is run-HITL only.
 
 Prefer **dynamic** `interrupt()` for production HITL. Use static `interrupt_before` / `interrupt_after` for debugging, not as the primary approval mechanism ([Interrupts](https://docs.langchain.com/oss/python/langgraph/interrupts)).
 
@@ -65,7 +65,7 @@ Slower cycle time vs lower blast radius. Mitigate with clear SLAs and notificati
 - **Non-responsibilities:** Generating reflection diffs; running tools.
 - **Inputs:** interrupt/promotion targets; actor identity; decision.
 - **Outputs:** Approval records; unblock signals.
-- **Dependencies:** Identity provider roles; Orchestrator; Skill Registry.
+- **Dependencies:** Identity provider roles; Orchestrator; skill packages / CI index (promotion), not a separate skill-body registry.
 - **Lifecycle:** request → pending → decided.
 - **Failure Modes:** approver unavailable; conflicting dual decisions.
 - **Recovery:** escalate; timeout policies; keep target awaiting.

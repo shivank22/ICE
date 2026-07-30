@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "skill-pin.json",
+  "title": "SkillPin",
+  "description": "Immutable skill pin for a run/thread. Index description stays in context; Skill Resolver Service loads the package from locator.backend (lfs | blob). Client-supplied pins are authz-gated by status + org_allowlist.",
+  "type": "object",
+  "required": ["skill_id", "version", "description"],
+  "additionalProperties": false,
+  "properties": {
+    "skill_id": {
+      "type": "string",
+      "description": "Skill id / folder name (matches skill.yaml name)"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semver from skill.yaml"
+    },
+    "description": {
+      "type": "string",
+      "description": "Index card text used in context (from Skill Index); not the full SKILL.md"
+    },
+    "locator": {
+      "$ref": "skill-locator.json",
+      "description": "Where Resolver reads the full package (lfs or blob)"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "staging", "production", "deprecated", "archived"],
+      "description": "Status at pin time; gateway rejects draft/staging/archived unless caller has pin override role"
+    }
+  }
+}

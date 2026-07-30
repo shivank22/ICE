@@ -1,0 +1,15 @@
+%% Skill CI sync — skill.yaml to disposable index
+flowchart LR
+  Dev[Author_skill_folder]
+  Pkg[(SKILL_md_plus_skill_yaml)]
+  CI[CI_Lifecycle]
+  Val[Validate_test_scan]
+  Emb[Embed_name_desc_metadata]
+  PG[(Postgres_pgvector)]
+  BlobPub[Optional_blob_publish]
+  Dev --> Pkg
+  Pkg --> CI
+  CI --> Val --> Emb --> PG
+  CI -->|when_blob_channel| BlobPub
+  Note1[Index_holds_cards_not_full_bodies]
+  CI -.-> Note1

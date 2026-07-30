@@ -1,14 +1,16 @@
 ---
 name: agentic-backend-architecture
 description: >-
-  Designs production Agentic Orchestrator backends on LangGraph: checkpointers,
-  Store-based semantic memory, interrupt/Command resume, Thread/Run API scaffold
-  for frontend-agnostic HITL, four-memory model, context assembly, skills registry,
-  LangGraph observability (graph+agent traces via Langfuse/LangSmith), evaluation
-  frameworks (DeepEval example, custom metrics, LLM-as-judge), feedback loops, and
-  JSON contracts. Use when building agent platforms on LangGraph/LangChain, memory
-  systems, skill registries, HITL APIs, tracing, or eval gates for Cursor, Claude
-  Code, or VS Code.
+  Consult this skill when designing an agentic backend orchestrator on
+  LangGraph/LangChain and you need opinionated, language-agnostic architecture
+  for components and services. Covers production Agentic Orchestrator backends:
+  checkpointers, Store-based semantic memory, interrupt/Command resume,
+  Thread/Run API scaffold, skill platform (SKILL.md + skill.yaml → CI →
+  Postgres/pgvector; runtime search; Skill Resolver Service loads packages from
+  lfs or blob), four-memory model, context assembly, LangGraph observability,
+  evaluation frameworks (DeepEval example, custom metrics, LLM-as-judge),
+  feedback loops, and JSON contracts. Also for skill repositories, HITL APIs,
+  tracing, or eval gates.
 ---
 
 # Agentic Backend Architecture
@@ -23,7 +25,7 @@ Apply this skill when the user asks to design, document, or scaffold:
 
 - Agentic orchestrators on **LangGraph** (default)
 - Memory systems (short-term checkpointer, semantic Store, procedural, episodic)
-- Skill registries and procedural memory
+- Skill platforms (`skill.yaml` index + Skill Resolver Service)
 - Context construction / compression
 - Checkpoints, interrupt, resume, replay (LangGraph APIs)
 - Frontend-agnostic Thread/Run HTTP APIs for interrupt and resume
@@ -34,6 +36,7 @@ Apply this skill when the user asks to design, document, or scaffold:
 ## Role constraints
 
 - Prefer **architecture over syntax**. Prefer **contracts over assumptions**. Prefer **explicit state over implicit memory**.
+- **Contracts win over prose** when they disagree—update both in the same change. See [references/contracts/](references/contracts/).
 - **Build on LangGraph**—do not reimplement checkpointers, Store, `interrupt`/`Command(resume=...)`, or time travel. See [references/langgraph-bindings.md](references/langgraph-bindings.md).
 - Separate orchestration, memory, policy, runtime, skills, tools, and business logic.
 - Never auto-mutate production skills/prompts from episodic learning. Always **propose → review → approve → promote**.
@@ -49,13 +52,13 @@ Before recommending bindings, collect:
 3. Primary datastore (Postgres + vector extension preferred)
 4. Checkpoint store (**default: LangGraph `PostgresSaver`**)
 5. Semantic / long-term memory (**default: LangGraph `PostgresStore`** with namespace tuples)
-6. Procedural skill storage (local FS / object/blob store + registry metadata)
+6. Procedural skills (`SKILL.md` + `skill.yaml`; CI → Postgres/pgvector; Skill Resolver Service → `lfs` or `blob` — doc 19)
 7. Trace / observability (**Langfuse** ICE example or LangSmith; graph + agent spans — doc 17)
 8. Evaluation framework (**DeepEval** example and/or LangSmith + agentevals; custom + LLM-as-judge — doc 18)
-9. Execution model (in-process tools vs ephemeral sandboxed runners)
+9. Execution model (in-process tools vs ephemeral sandboxed runners; container vs serverless)
 10. Cloud / identity / secrets constraints (if any)
 
-Record answers as a **Stack Binding** note. Until answered, cite preferred LangGraph defaults from this pack. Only stay fully vendor-neutral if the user explicitly overrides LangGraph.
+Record answers as a **Stack Binding** note. Until answered, cite preferred LangGraph defaults from this pack. Only stay fully vendor-neutral if the user explicitly overrides LangGraph—then still emit equivalent contracts; do not leave half-bound designs.
 
 ## Opinionated defaults (ship these unless user overrides)
 
@@ -64,21 +67,32 @@ Record answers as a **Stack Binding** note. Until answered, cite preferred LangG
 | Orchestration | LangGraph `StateGraph` + durable checkpointer |
 | Short-term memory | Graph state + **`PostgresSaver`** (messages via `add_messages` / `MessagesState`) |
 | Semantic memory | **`PostgresStore`** (+ index); namespace tuple from JWT `user_id`; body field `Memory.md` |
-| Procedural memory | Governed Skill Registry (versioned packages); FS or Blob backend |
+| Procedural memory | **Folder: `SKILL.md` + `skill.yaml` (version/metadata)** → CI builds Postgres/pgvector → runtime search → index records in context → **Skill Resolver Service** loads bodies from **`lfs`** (container) or **`blob`** (serverless/singleton API) — doc 19 |
 | Episodic memory | Traces (Langfuse/LangSmith) + episode records; gated promotion to skills |
 | Observability | Graph-level + agent-level spans; required correlation attrs — doc 17 |
 | Evaluation | Custom metrics + LLM-as-judge; DeepEval example binding — doc 18 |
-| HITL | `interrupt()` + `Command(resume=...)`; ResumeRun API; Approval wraps resume |
-| Context | Deterministic ordered assembly + budget compression (in graph nodes) |
+| HITL | `interrupt()` + `Command(resume=...)`; ResumeRun API; Approval wraps resume **inside** orchestration |
+| Context | Deterministic assembly; skill section = **index records** (name, description, metadata)—not full corpus |
 | Irreversible actions | Human interrupt **before** execution; nodes idempotent through `interrupt()` |
-| Skill changes | Never silent mutation of production labels |
+| Skill changes | Never silent mutation of production status; gated promote |
+| Skill pins | `skill_id` + `version` + **description** + `locator` (`lfs` \| `blob`) ([skill-pin.json](references/contracts/skill-pin.json)) |
 | RuntimeState JSON | **DTO projection** of LangGraph `StateSnapshot`—not a second SoR |
 
 ## Layering to apply
 
-Access → Orchestration (LangGraph) → Memory/Skills → Execution → Evaluation → Governance
+Access → Orchestration (LangGraph) → Memory/Skills → Execution
 
-Walk the user through: **state → context → memory → checkpoint → feedback**, always naming the LangGraph primitive first.
+**Cross-cutting (not afterthoughts):** Evaluation and Governance (Approval, policy, promotion) apply **inside** orchestration—HITL interrupts mid-graph; promotion gates skill status changes. Do not model them as a final pipeline stage only.
+
+Walk the user through: **state → memory → checkpoint → skills → context → feedback**, always naming the LangGraph primitive first.
+
+**Skill runtime (only this model):**
+
+1. Each skill is a folder with **`SKILL.md`** (LLM) and **`skill.yaml`** (version + metadata).
+2. **CI** builds / updates **Postgres + pgvector** from `skill.yaml` (name, description, metadata).
+3. At runtime: **pgvector search** on name + descriptions **plus metadata filters** → skill index records.
+4. Retrieved **skill records are added to context**.
+5. **Skill Resolver Service** (customizable per use case) reads the appropriate full packages from **`lfs`** (code on the container) or **`blob`** (when promoted for singleton API / serverless)—wherever `locator.backend` points.
 
 ## Progressive disclosure (reading map)
 
@@ -95,6 +109,7 @@ Read only what the current question needs. Start from the index:
 | Short-term | [references/04-short-term-memory.md](references/04-short-term-memory.md) |
 | Semantic | [references/05-semantic-memory.md](references/05-semantic-memory.md) |
 | Procedural / skills | [references/06-procedural-memory-skills.md](references/06-procedural-memory-skills.md) |
+| **Skill platform lifecycle** | [references/19-skill-platform-lifecycle.md](references/19-skill-platform-lifecycle.md) |
 | Episodic | [references/07-episodic-memory.md](references/07-episodic-memory.md) |
 | Context assembly | [references/08-context-construction.md](references/08-context-construction.md) |
 | Checkpoints | [references/09-checkpoints-interrupt-resume.md](references/09-checkpoints-interrupt-resume.md) |
@@ -118,34 +133,39 @@ Copy and track:
 ```
 Architecture session:
 - [ ] Elicit stack binding (LangGraph checkpointer + Store defaults)
-- [ ] Confirm four-memory ownership map (checkpointer / Store / registry / traces)
+- [ ] Confirm four-memory ownership map (checkpointer / Store / skill index+resolver / traces)
 - [ ] Walk runtime StateSnapshot + DTO projection + interrupt lifecycle
 - [ ] Define Thread/Run API scaffold (StartRun vs ResumeRun) for frontend-agnostic HITL
-- [ ] Walk context assembly order and conflict rules
-- [ ] Define skill registry lifecycle and promotion gates
-- [ ] Define episodic → reflection → approval loop
+- [ ] Define skill platform: skill.yaml → CI → Postgres/pgvector; search → records in context; Skill Resolver Service (lfs | blob)
+- [ ] Walk context assembly order (index records in skill section; full SKILL.md via Resolver)
+- [ ] Define skill promotion gates (status in skill.yaml; not a registry service)
+- [ ] Define episodic → reflection → approval → promote loop
 - [ ] Define graph+agent tracing (Langfuse/LangSmith) and eval binding (DeepEval or LangSmith)
-- [ ] Emit ADRs / contracts / diagrams into client repo
+- [ ] Emit ADRs / contracts / diagrams into client repo (only sections the question needs)
 - [ ] List open decisions and preferred defaults
 ```
 
 ### Deliverables to produce in the client environment
+
+Emit only what the question needs. Prefer contracts + one diagram over a full pack.
 
 1. Architecture overview (layers + services) with LangGraph binding table
 2. Memory ownership table
 3. Context assembly sequence + Context Package JSON
 4. Checkpoint / interrupt / resume state diagram (mapped to LangGraph APIs)
 5. **API scaffold:** Thread/Run operations + interrupt/resume contracts (see doc 16)
-6. **Observability + eval:** trace hierarchy + EvaluationCriteria + framework binding (docs 17–18)
-7. Skill Manifest contract + promotion policy
+6. Skill platform: **skill.yaml** + CI index + Skill Resolver Service (`lfs` \| `blob`) — doc 19
+7. **Observability + eval:** trace hierarchy + EvaluationCriteria + framework binding (docs 17–18)
 8. Mermaid diagrams (one concept each)
 9. Decision log with alternatives and tradeoffs
 
 ### Writing standard for artifacts
 
-Each major document should cover: Executive Summary, Purpose, Scope, Architecture Overview, Core Concepts, Design Decisions, Decision Rationale, Alternatives, Tradeoffs, Component Breakdown, Sequence of Operations, State Changes, Mermaid Diagrams, JSON Contracts, Best Practices, Anti-patterns, Common Mistakes, Future Evolution, Related Documents.
+For a **full** architecture document (when the user asks for one), cover as applicable: Executive Summary, Purpose, Scope, Architecture Overview, Core Concepts, Design Decisions, Decision Rationale, Alternatives, Tradeoffs, Component Breakdown, Sequence of Operations, State Changes, Mermaid Diagrams, JSON Contracts, Best Practices, Anti-patterns, Common Mistakes, Future Evolution, Related Documents.
 
-Each major component: Purpose, Responsibilities, Non-responsibilities, Inputs, Outputs, Dependencies, Lifecycle, Failure Modes, Recovery, Security, Scalability.
+For a **narrow** question, answer with the relevant subset only—do not dump the full template.
+
+Each major component (when specified): Purpose, Responsibilities, Non-responsibilities, Inputs, Outputs, Dependencies, Lifecycle, Failure Modes, Recovery, Security, Scalability.
 
 ## Hard anti-patterns (reject these)
 
@@ -156,11 +176,14 @@ Each major component: Purpose, Responsibilities, Non-responsibilities, Inputs, O
 - Building a second semantic DB while also using Store for the same facts
 - Implicit context (whatever was in the last chat) with no assembly order
 - Checkpoint store owned by multiple writers
-- Baking skills into runner images instead of registry mount/resolve
+- Treating Postgres as the editable SoR for full skill bodies (index = cards/metadata only)
+- Injecting full `skill.yaml` or the entire skill corpus into every prompt
+- Discovery returning full `SKILL.md` bodies
+- Skipping the Skill Resolver Service and inventing ad-hoc file reads outside `lfs` / `blob`
 - Irreversible side effects before `interrupt()` without idempotent guards
 - Resuming by re-passing initial state instead of `Command(resume=...)`
 - Frontend-owned message history as SoR, or a chat endpoint that “continues” by replaying `input` after interrupt
 
 ## Diagrams and contracts
 
-When explaining state or context, open the matching file under `assets/diagrams/` and `references/contracts/`. Prefer diagrams over long prose. Prefer JSON structure over implementation fields. Prefer LangGraph API names over invented synonyms.
+When explaining state or context, open the matching file under `assets/diagrams/` and `references/contracts/`. Prefer diagrams over long prose. Prefer JSON structure over implementation fields. Prefer LangGraph API names over invented synonyms. Prefer **index records in context + Skill Resolver Service (`lfs` \| `blob`)** for procedural content.

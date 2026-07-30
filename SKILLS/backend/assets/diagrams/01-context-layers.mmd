@@ -10,13 +10,13 @@ flowchart TB
   end
   subgraph mem [MemoryAndSkills]
     Sem[SemanticMemory]
-    Reg[SkillRegistry]
+    Skills[SkillIndex_Discovery_ResolverService]
     Epi[EpisodicStore]
   end
   subgraph exec [Execution]
     Tools[ToolsOrRunners]
   end
-  subgraph gov [EvaluationGovernance]
+  subgraph gov [EvaluationGovernance_cross_cutting]
     Trace[Traces]
     Reflect[Reflection]
     Approve[ApprovalGate]
@@ -24,8 +24,10 @@ flowchart TB
   Client --> Gw --> Orch
   Orch --> Ctx
   Ctx --> Sem
-  Ctx --> Reg
+  Ctx --> Skills
   Ctx --> Epi
   Orch --> Tools
   Orch --> Trace
-  Trace --> Reflect --> Approve --> Reg
+  Trace --> Reflect --> Approve
+  Approve -->|resume_HITL| Orch
+  Approve -->|skill_promote_CI| Skills

@@ -26,7 +26,8 @@ Remove ambiguity that causes expensive rework: where state lives, how context is
 | 03 | [Memory Architecture](03-memory-architecture.md) | Four domains overview |
 | 04 | [Short-Term Memory](04-short-term-memory.md) | Messages + checkpointers |
 | 05 | [Semantic Memory](05-semantic-memory.md) | Store / JWT namespace |
-| 06 | [Procedural Memory & Skills](06-procedural-memory-skills.md) | Skill registry |
+| 06 | [Procedural Memory & Skills](06-procedural-memory-skills.md) | Skill packages (`SKILL.md` + `skill.yaml`) |
+| 19 | [Skill Platform Lifecycle](19-skill-platform-lifecycle.md) | CI→pgvector, Discovery→context records→Skill Resolver (`lfs`\|`blob`) |
 | 07 | [Episodic Memory](07-episodic-memory.md) | Traces and episodes |
 | 08 | [Context Construction](08-context-construction.md) | Assembly order |
 | 09 | [Checkpoints, Interrupt, Resume](09-checkpoints-interrupt-resume.md) | Durability & HITL |
@@ -48,15 +49,17 @@ Remove ambiguity that causes expensive rework: where state lives, how context is
 
 1. LangGraph Bindings → Glossary → Architecture Overview  
 2. Runtime & State → Short-Term Memory → Checkpoints  
-3. Memory Architecture → Semantic / Procedural / Episodic  
+3. Memory Architecture → Semantic / Procedural (**+ doc 19 Skill Platform**) / Episodic  
 4. Context Construction  
 5. Feedback Loops → Approval → Reflection  
 6. **API Surface (doc 16)** — Thread/Run/Resume for any frontend  
 7. Observability (13) → **LangGraph tracing (17)** → **Eval frameworks (18)** → Security → Deployment  
 
+**Skill runtime phases:** Discover → Assemble (index records) → Skill Resolver Service (`lfs`\|`blob`) → Execute — [../programs/skill-runtime-pipeline.md](../programs/skill-runtime-pipeline.md)
+
 ## Cross-cutting principles
 
-Modular · Layered · **LangGraph-first** · Observable · Secure by default · Versioned · Extensible · Testable · Explainable · Human governed
+Modular · Layered · **LangGraph-first** · Observable · Secure by default · Versioned · Extensible · Testable · Explainable · Human governed · **Contracts win over prose**
 
 ## Related Documents
 

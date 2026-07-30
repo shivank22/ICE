@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "skill-locator.json",
+  "title": "SkillLocator",
+  "description": "Where the Skill Resolver Service reads full skill packages (SKILL.md + package tree). lfs = skill/program code on the container filesystem. blob = object storage when skills are promoted for singleton API or serverless execution. One authoritative backend per skill version.",
+  "type": "object",
+  "required": ["backend", "uri"],
+  "additionalProperties": false,
+  "properties": {
+    "backend": {
+      "type": "string",
+      "enum": ["lfs", "blob"],
+      "description": "lfs = container-local skill tree; blob = object store for serverless / singleton API"
+    },
+    "uri": {
+      "type": "string",
+      "description": "Backend-specific URI (e.g. /app/skills/java-migration, s3://bucket/skills/java-migration/1.2.0.tar.gz)"
+    },
+    "version": {
+      "type": "string",
+      "description": "Semver when not encoded in uri"
+    },
+    "checksum": {
+      "type": "string",
+      "description": "Optional content digest of package root / SKILL.md+yaml"
+    }
+  }
+}

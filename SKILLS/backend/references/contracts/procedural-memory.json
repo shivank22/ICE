@@ -2,28 +2,21 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "procedural-memory.json",
   "title": "ProceduralMemory",
+  "description": "Procedural memory record referencing a skill package via locator (lfs | blob).",
   "allOf": [
     { "$ref": "memory-record.json" },
     {
       "type": "object",
-      "required": ["skill_id", "version", "label", "locator"],
+      "required": ["skill_id", "version", "status", "locator"],
       "properties": {
         "domain": { "const": "procedural" },
         "skill_id": { "type": "string" },
         "version": { "type": "string" },
-        "label": {
+        "status": {
           "type": "string",
           "enum": ["draft", "staging", "production", "deprecated", "archived"]
         },
-        "locator": {
-          "type": "object",
-          "required": ["backend", "uri"],
-          "properties": {
-            "backend": { "type": "string", "enum": ["fs", "blob", "registry"] },
-            "uri": { "type": "string" },
-            "checksum": { "type": "string" }
-          }
-        },
+        "locator": { "$ref": "skill-locator.json" },
         "manifest_ref": { "type": "string" }
       }
     }

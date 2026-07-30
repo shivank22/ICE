@@ -21,8 +21,13 @@ Canonical structural schemas for architectural objects. These document **shape**
 | [procedural-memory.json](procedural-memory.json) | Procedural Memory |
 | [episodic-memory.json](episodic-memory.json) | Episodic Memory |
 | [context.json](context.json) | Context Package |
-| [skill.json](skill.json) | Skill package |
-| [skill-manifest.json](skill-manifest.json) | Skill Manifest |
+| [skill.json](skill.json) | Skill package view |
+| [skill-manifest.json](skill-manifest.json) | Skill Manifest (API projection of skill.yaml) |
+| [skill-yaml.json](skill-yaml.json) | On-disk platform manifest (`skill.yaml`) |
+| [skill-pin.json](skill-pin.json) | Run/thread skill pin (description + locator) |
+| [skill-locator.json](skill-locator.json) | Package origin (`lfs` \| `blob`) |
+| [skill-reference.json](skill-reference.json) | Resolver handle after load |
+| [skill-index-record.json](skill-index-record.json) | pgvector index row (runtime **cards**) |
 | [artifact.json](artifact.json) | Artifact |
 | [tool-invocation.json](tool-invocation.json) | Tool Invocation |
 | [trace.json](trace.json) | Trace |
@@ -32,3 +37,5 @@ Canonical structural schemas for architectural objects. These document **shape**
 | [approval.json](approval.json) | Approval |
 | [policy.json](policy.json) | Policy |
 | [event.json](event.json) | Event |
+
+**Skill contracts rule:** prose and programs must match these schemas. **Runtime model** = CI builds index from `skill.yaml` → Discovery puts **index records** in context → **Skill Resolver Service** loads full packages from `lfs` or `blob`. Map `skill.yaml` → SkillManifest via [../../programs/skill-yaml-to-manifest.md](../../programs/skill-yaml-to-manifest.md).

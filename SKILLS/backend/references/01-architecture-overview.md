@@ -20,7 +20,7 @@ Covers logical layers and architectural services. Does not prescribe a single cl
 |-------|---------|--------------|
 | Access | Single edge: auth, RBAC, APIs, streams | Gateway, identity |
 | Orchestration | Job lifecycle and durable LangGraph graphs | Orchestrator, checkpointer |
-| Memory & Skills | Store (semantic), procedural, episodic | Store facade, registry, loader |
+| Memory & Skills | Store (semantic), procedural, episodic | Store facade, Skill Index, Discovery, Skill Resolver Service |
 | Execution | Tools / runners that act | Sandbox optional |
 | Evaluation | Traces, scores, cost | Observability, FinOps |
 | Governance | Approvals, policy, promotion | Approval gate, reflection |
@@ -44,7 +44,7 @@ See diagram: [../assets/diagrams/01-container-overview.mmd](../assets/diagrams/0
 | Decision | Choice |
 |----------|--------|
 | D1 | Separate orchestration from long-term memory (checkpointer ≠ Store) |
-| D2 | Skill loader is sole resolve/mount authority for procedural content |
+| D2 | Skill Resolver Service is sole authority for loading full skill packages (`lfs` \| `blob`) |
 | D3 | Checkpoints have a single writer: compiled LangGraph + checkpointer |
 | D4 | Semantic memory defaults to LangGraph Store; namespaces from JWT `user_id` |
 | D5 | Episodic learning never writes production skills directly |
@@ -89,7 +89,7 @@ More services increase operational surface. The gain is independent scaling, cle
 - **Non-responsibilities:** Reimplementing checkpointers; owning episodic SoR; skill authoring.
 - **Inputs:** Job/thread commands, `Command(resume=...)`, approvals.
 - **Outputs:** State transitions, tool calls, artifact events, interrupts.
-- **Dependencies:** Checkpointer, Store, context assembler, skill loader, LLM.
+- **Dependencies:** Checkpointer, Store, context assembler, Skill Resolver Service, LLM.
 - **Lifecycle:** Always-on; threads long-lived.
 - **Failure Modes:** LLM timeouts, checkpointer failures, poison state.
 - **Recovery:** Retry idempotent steps; resume from last good snapshot; dead-letter bad threads.
@@ -110,10 +110,12 @@ More services increase operational surface. The gain is independent scaling, cle
 - **Purpose:** Persist and retrieve user/org facts (`Memory.md` in Store values).
 - See [05-semantic-memory.md](05-semantic-memory.md).
 
-### Skill Registry + Loader
+### Skill Discovery + Skill Resolver Service (procedural platform)
 
-- **Purpose:** Version and mount procedural skills (platform-on-top).
-- See [06-procedural-memory-skills.md](06-procedural-memory-skills.md).
+- **Purpose:** Search the Skill Index and load full packages (doc 19).
+- **Responsibilities:** Discovery = pgvector + metadata → **index records** for context; Skill Resolver Service = load appropriate packages from **`lfs`** (container) or **`blob`** (serverless/singleton API)—customizable per use case.
+- **Non-responsibilities:** Injecting skill.yaml into the LLM; semantic user facts; running Discovery or Resolve inside Context Assembler.
+- See [06-procedural-memory-skills.md](06-procedural-memory-skills.md) · [19-skill-platform-lifecycle.md](19-skill-platform-lifecycle.md).
 
 ### Checkpointer backend
 

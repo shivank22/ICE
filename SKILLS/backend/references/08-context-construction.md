@@ -18,15 +18,19 @@ See [../assets/diagrams/08-context-assembly.mmd](../assets/diagrams/08-context-a
 
 ### Ordered pipeline (preferred)
 
+**Skill index records must already be retrieved** before assembly. See [../programs/skill-runtime-pipeline.md](../programs/skill-runtime-pipeline.md): Discover → Assemble (records) → Skill Resolver Service → Execute. The Assembler does not run Discovery or Resolve.
+
 1. System guidance / platform policies  
 2. Auth identity + entitlements  
 3. Restored checkpoint / thread slice (STM)  
-4. Selected procedural skills (manifest + constraints)  
+4. Procedural skills — **index records** (name, description, metadata) from Discovery; full `SKILL.md` via Skill Resolver Service (`lfs` \| `blob`) at execute — doc 19  
 5. Semantic retrieval (namespaced)  
 6. Episodic exemplars (ranked, budgeted)  
 7. Artifacts / tool outputs for this turn  
 8. User request  
 9. Compression / budget enforcement → **final Context Package**
+
+Empty Discovery → human interrupt or fail closed; never inject all production skills.
 
 ## 5. Core Concepts
 
@@ -67,14 +71,14 @@ Assembler complexity vs prompt simplicity. Required at enterprise scale.
 - **Purpose:** Produce Context Package JSON.
 - **Responsibilities:** Fetch, order, conflict-resolve, compress, attest provenance.
 - **Non-responsibilities:** Persisting memories; executing tools.
-- **Inputs:** Request, JWT claims, thread/checkpoint ids, skill pins, budgets.
+- **Inputs:** Request, JWT claims, thread/checkpoint ids, **skill index records / pins** (description + locator), budgets.
 - **Outputs:** Context Package; assembly metrics.
-- **Dependencies:** STM, semantic, procedural, episodic APIs; policy engine.
+- **Dependencies:** STM, semantic, episodic APIs; policy engine; pins from skill pipeline (not Discovery).
 - **Lifecycle:** Stateless per invocation (preferred).
-- **Failure Modes:** retrieval timeouts, budget overflow, policy deny.
-- **Recovery:** Degrade sections by priority; fail closed on authz errors.
-- **Security:** Strip secrets; enforce namespace ACL.
-- **Scalability:** Parallel retrieval with deadlines; cache skill manifests.
+- **Failure Modes:** retrieval timeouts, budget overflow, policy deny, missing pins on execute.
+- **Recovery:** Degrade sections by priority; fail closed on authz errors; never Discovery-from-assembler.
+- **Security:** Strip secrets; enforce namespace ACL; respect pin status authz.
+- **Scalability:** Parallel retrieval with deadlines; cache SkillManifest projections.
 
 ## 11. Sequence of Operations
 
@@ -118,4 +122,4 @@ Adaptive budgets by node type; learned compression with guarantees; signed conte
 
 ## 19. Related Documents
 
-[03-memory-architecture.md](03-memory-architecture.md) · [02-runtime-state-model.md](02-runtime-state-model.md) · [14-security.md](14-security.md)
+[03-memory-architecture.md](03-memory-architecture.md) · [02-runtime-state-model.md](02-runtime-state-model.md) · [14-security.md](14-security.md) · [19-skill-platform-lifecycle.md](19-skill-platform-lifecycle.md) · [../programs/skill-runtime-pipeline.md](../programs/skill-runtime-pipeline.md)

@@ -16,15 +16,8 @@
     },
     "skill_pins": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["skill_id", "version"],
-        "properties": {
-          "skill_id": { "type": "string" },
-          "version": { "type": "string" },
-          "label": { "type": "string" }
-        }
-      }
+      "description": "Optional client-requested pins. Gateway authz: production (or deprecated+explicit) only unless caller has skills.pin_non_production; locator (lfs|blob) required when pinning; org_allowlist enforced.",
+      "items": { "$ref": "skill-pin.json" }
     }
   },
   "additionalProperties": false

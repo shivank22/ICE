@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "skill-index-record.json",
+  "title": "SkillIndexRecord",
+  "description": "PostgreSQL + pgvector runtime index row built from skill.yaml (name, description, version, metadata). Primary runtime source for Discovery cards. Not a dump of full SKILL.md. Rebuildable by CI.",
+  "type": "object",
+  "required": ["skill_id", "name", "version", "status", "description", "locator"],
+  "properties": {
+    "skill_id": { "type": "string" },
+    "name": { "type": "string" },
+    "description": {
+      "type": "string",
+      "description": "Card text injected into context for relevant skills — the main runtime payload from the index"
+    },
+    "embedding": {
+      "type": "array",
+      "items": { "type": "number" },
+      "description": "pgvector embedding over name + description (+ searchable metadata); omitted in some API projections"
+    },
+    "version": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "staging", "production", "deprecated", "archived"]
+    },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "owner": { "type": "string" },
+    "locator": {
+      "$ref": "skill-locator.json",
+      "description": "Where Skill Resolver Service loads the full package (lfs | blob)"
+    },
+    "index_ready": {
+      "type": "boolean",
+      "description": "True only after embed + upsert succeeded; Discovery must ignore false"
+    },
+    "org_allowlist": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "updated_at": { "type": "string", "format": "date-time" }
+  }
+}

@@ -16,8 +16,12 @@ Where a LangGraph primitive exists, algorithms **bind to it** (checkpointer, Sto
 | Resume | [resume.md](resume.md) | LangGraph `Command(resume=...)` |
 | API Run Lifecycle | [api-run-lifecycle.md](api-run-lifecycle.md) | Thread/Start/Resume HTTP scaffold |
 | Replay | [replay.md](replay.md) | LangGraph time travel |
-| Skill Discovery | [skill-discovery.md](skill-discovery.md) | Platform |
-| Skill Selection | [skill-selection.md](skill-selection.md) | Platform |
+| Skill Discovery | [skill-discovery.md](skill-discovery.md) | pgvector + metadata → index records |
+| Skill Resolve | [skill-resolve.md](skill-resolve.md) | Skill Resolver Service (`lfs` \| `blob`) |
+| Skill CI Sync | [skill-ci-sync.md](skill-ci-sync.md) | Validate + embed + index from `skill.yaml` |
+| Skill Selection | [skill-selection.md](skill-selection.md) | Resolver policy hooks + pin authz |
+| Skill Runtime Pipeline | [skill-runtime-pipeline.md](skill-runtime-pipeline.md) | Discover → context records → Resolve → Execute |
+| skill.yaml → Manifest | [skill-yaml-to-manifest.md](skill-yaml-to-manifest.md) | Deterministic projection |
 | Skill Composition | [skill-composition.md](skill-composition.md) | Platform |
 | Reflection | [reflection.md](reflection.md) | Platform |
 | Learning Promotion | [learning-promotion.md](learning-promotion.md) | Platform |

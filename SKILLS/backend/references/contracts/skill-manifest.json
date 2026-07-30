@@ -2,15 +2,31 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "skill-manifest.json",
   "title": "SkillManifest",
+  "description": "Logical/API projection of skill.yaml (+ optional SKILL.md summary). Produced by programs/skill-yaml-to-manifest.md. Prefer skill.yaml on disk; use this shape in Context Package / APIs.",
   "type": "object",
-  "required": ["skill_id", "version", "name", "purpose", "compatibility"],
+  "required": ["skill_id", "version", "name", "status"],
+  "additionalProperties": false,
   "properties": {
-    "skill_id": { "type": "string" },
+    "skill_id": {
+      "type": "string",
+      "description": "Equals skill.yaml name"
+    },
     "version": { "type": "string" },
-    "name": { "type": "string" },
-    "purpose": { "type": "string" },
+    "name": {
+      "type": "string",
+      "description": "Display name; defaults to skill_id"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "staging", "production", "deprecated", "archived"]
+    },
+    "purpose": {
+      "type": "string",
+      "description": "From skill.yaml purpose, else description"
+    },
     "scope": { "type": "string" },
     "tags": { "type": "array", "items": { "type": "string" } },
+    "owner": { "type": "string" },
     "inputs": { "type": "object" },
     "outputs": { "type": "object" },
     "constraints": { "type": "array", "items": { "type": "string" } },
@@ -19,6 +35,7 @@
       "type": "array",
       "items": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "skill_id": { "type": "string" },
           "version_range": { "type": "string" }
@@ -27,12 +44,21 @@
     },
     "compatibility": {
       "type": "object",
+      "additionalProperties": false,
       "properties": {
         "runtime": { "type": "string" },
         "min_platform_version": { "type": "string" }
       }
     },
     "evaluation_criteria_ref": { "type": "string" },
-    "examples_ref": { "type": "string" }
+    "examples_ref": { "type": "string" },
+    "locator": {
+      "$ref": "skill-locator.json",
+      "description": "Where Skill Resolver Service loads the package (`lfs` \| `blob`)"
+    },
+    "org_allowlist": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
   }
 }

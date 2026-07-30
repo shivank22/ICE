@@ -39,15 +39,8 @@
     },
     "skill_pins": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": ["skill_id", "version"],
-        "properties": {
-          "skill_id": { "type": "string" },
-          "version": { "type": "string" },
-          "label": { "type": "string" }
-        }
-      }
+      "description": "Pinned skills for this thread/run; each pin carries description + locator (see skill-pin.json)",
+      "items": { "$ref": "skill-pin.json" }
     },
     "interrupt": { "$ref": "interrupt-payload.json" },
     "error": {

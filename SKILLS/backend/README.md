@@ -6,6 +6,7 @@ IDE-pluggable Architecture Knowledge Pack for designing enterprise **Agentic Orc
 - LangGraph bindings: [`references/langgraph-bindings.md`](references/langgraph-bindings.md)
 - Handbook index: [`references/00-index.md`](references/00-index.md)
 - **Thread/Run API (HITL any FE):** [`references/16-api-surface-interrupt-resume.md`](references/16-api-surface-interrupt-resume.md)
+- **Skill platform:** [`references/19-skill-platform-lifecycle.md`](references/19-skill-platform-lifecycle.md)
 - **LangGraph observability:** [`references/17-langgraph-observability.md`](references/17-langgraph-observability.md)
 - **Evaluation frameworks (DeepEval example):** [`references/18-evaluation-frameworks.md`](references/18-evaluation-frameworks.md)
 - Algorithms: [`programs/`](programs/)
@@ -18,8 +19,10 @@ IDE-pluggable Architecture Knowledge Pack for designing enterprise **Agentic Orc
 |--------|---------|
 | Short-term | Graph state + LangGraph **checkpointer** (`PostgresSaver`) |
 | Semantic | LangGraph **Store** (`PostgresStore`); namespace = JWT `user_id`; `Memory.md` in values |
-| Procedural | Skill registry (FS or Blob) — platform on top |
+| Procedural | **`SKILL.md` + `skill.yaml`** → CI → Postgres/pgvector; runtime search → records in context; **Skill Resolver Service** loads packages from **`lfs`** (container) or **`blob`** (serverless/singleton API) — doc 19 |
 | Episodic | Traces + episodes; gated promotion to skills — platform on top |
+
+**Contracts rule:** skill locator `backend` is `lfs` \| `blob`. Index holds cards (name, description, metadata); Resolver loads full packages. See [`references/contracts/`](references/contracts/).
 
 ## Usage
 

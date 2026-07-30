@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-This pack’s **default orchestration binding is LangGraph**. Platform layers (skill registry, context assembly, approval, episodic reflection) build **on top** of LangGraph primitives. Do not reimplement checkpointers, stores, interrupt/resume, or time travel.
+This pack’s **default orchestration binding is LangGraph**. Platform layers (skill index + Skill Resolver Service, context assembly, approval, episodic reflection) build **on top** of LangGraph primitives. Do not reimplement checkpointers, stores, interrupt/resume, or time travel.
 
 Official docs:
 
@@ -28,11 +28,13 @@ Official docs:
 | History / replay | `get_state_history` | — | Side-effect policy |
 | Fork / branch | `update_state` | — | Audit + fork thread ids |
 | Debug breakpoints | `interrupt_before` / `interrupt_after` | — | Not prod HITL |
-| Procedural skills | — | Skill Registry + Loader | **Yes** |
-| Context Package | — | Assembler in nodes | **Yes** |
+| Procedural skills | — | `skill.yaml` → Postgres/pgvector; Discovery → records in context | **Yes** — doc 19; [../programs/skill-runtime-pipeline.md](../programs/skill-runtime-pipeline.md) |
+| Skill materialize | — | **Skill Resolver Service** `lfs` \| `blob` | Customizable per use case |
+| Skill execution | — | LangGraph nodes/tools using resolved `SKILL.md` | Same pin/locator contract |
+| Context Package | — | Assembler; skill section = **index records** | **Yes** |
 | Episodic / traces | — | LangSmith / Langfuse + episodes | **Yes** — see [17-langgraph-observability.md](17-langgraph-observability.md) |
 | Evaluation runners | — | DeepEval / LangSmith + agentevals | **Yes** — see [18-evaluation-frameworks.md](18-evaluation-frameworks.md) |
-| Skill promotion | — | Approval + labels | **Yes** |
+| Skill promotion | — | Approval + `skill.yaml` status + CI re-index (+ blob publish when used) | **Yes** |
 
 ## Compile pattern (reference)
 
@@ -63,7 +65,7 @@ Dev may use `InMemorySaver` / `InMemoryStore`. Production must use durable backe
 |--------|-----------------|-------|
 | Short-term | Checkpointer | Thread-scoped |
 | Semantic | Store | Cross-thread; namespace = JWT `user_id` (+ org/engagement) |
-| Procedural | Skill Registry | Versioned packages; optional Store for metadata only |
+| Procedural | **skill.yaml → Skill Index**; Skill Resolver Service (`lfs` \| `blob`) | Discover → context records → Resolve → Execute — doc 19 |
 | Episodic | Trace/episode platform | Feeds reflection; not a checkpointer substitute |
 
 ## What agents should emit for client repos
@@ -75,8 +77,9 @@ When scaffolding a LangGraph platform from this skill:
 3. Interrupt gate nodes with idempotency notes.
 4. Store namespace conventions.
 5. DTO mapping: `StateSnapshot` → `RuntimeState`.
-6. Skill registry + promotion policy (platform).
-7. Context assembly order (platform).
+6. Skill platform + promotion policy (`skill.yaml` status + CI index; blob publish when used).
+7. Context assembly order with skill **index records** (platform).
+8. Skill pin authz + locator (`lfs` \| `blob`) requirements.
 
 ## Related Documents
 

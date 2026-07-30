@@ -1,13 +1,23 @@
-%% Skill registry and loader
+%% Skill platform — skill.yaml index, discovery, resolver
 flowchart LR
-  Author[Author]
-  Reg[SkillRegistry]
-  FS[FS_or_Blob]
-  Loader[SkillLoader]
-  Orch[Orchestrator]
-  Author --> Reg
-  Reg --> FS
-  Orch --> Loader
-  Loader --> Reg
-  Loader --> FS
-  Loader -->|mount_or_resolve| Orch
+  Author[Author_skill_folder]
+  Pkg[(SKILL_md_plus_skill_yaml)]
+  CI[CI_Lifecycle]
+  PG[(Postgres_pgvector)]
+  Disc[Discovery]
+  Ctx[Context_index_records]
+  Res[SkillResolverService]
+  LFS[(lfs)]
+  Blob[(blob)]
+  Orch[Execute]
+  Author --> Pkg
+  Pkg --> CI
+  CI -->|index_ready| PG
+  Orch --> Disc
+  Disc --> PG
+  Disc -->|records| Ctx
+  Ctx --> Res
+  Res --> LFS
+  Res --> Blob
+  LFS --> Orch
+  Blob --> Orch

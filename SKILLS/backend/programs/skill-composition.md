@@ -6,8 +6,8 @@ Order and constrain multiple selected skills into an executable plan.
 
 ## Inputs
 
-- `skill_pins[]`
-- `manifests[]` with dependencies and constraints
+- `skill_pins[]` — each with `skill_id`, `version`, `description`, `locator`
+- `manifests[]` — SkillManifest projections (from skill.yaml map) with dependencies and constraints
 - `phase_graph` template
 
 ## Outputs
@@ -16,8 +16,9 @@ Order and constrain multiple selected skills into an executable plan.
 
 ## Preconditions
 
-- All manifests resolved.
+- All manifests resolved for pinned `skill_id` + `version` via Skill Resolver Service.
 - Dependency graph is acyclic.
+- Pin authz already passed.
 
 ## Postconditions
 

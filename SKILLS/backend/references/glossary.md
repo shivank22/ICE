@@ -30,7 +30,7 @@ Shared terminology for this Architecture Knowledge Pack. Use these terms consist
 |------|------------|
 | **Short-Term Memory (STM)** | Thread-scoped conversation and execution state managed via graph messages/channels and **checkpointers**. |
 | **Semantic Memory** | Cross-thread facts about users, orgs, or engagements in **Store**, retrieved by namespace/similarity. |
-| **Procedural Memory** | Governed how-to knowledge packaged as Skills in a registry—not bare prompt strings (platform layer). |
+| **Procedural Memory** | Governed how-to knowledge packaged as Skills (`SKILL.md` + `skill.yaml`) with a rebuildable Skill Index and Resolver (`lfs` \| `blob`)—not bare prompt strings. |
 | **Episodic Memory** | Records of what happened: traces, outcomes, failures, scores (platform / observability). |
 | **Memory.md** | Markdown document field inside a Store semantic value (not a reason to invent a parallel DB). |
 | **Namespace** | Store isolation key (tuple of strings); preferred user scope is JWT `user_id`. |
@@ -39,12 +39,19 @@ Shared terminology for this Architecture Knowledge Pack. Use these terms consist
 
 | Term | Definition |
 |------|------------|
-| **Skill** | Architectural package: purpose, manifest, constraints, references, examples, evaluation criteria. |
-| **Skill Manifest** | Machine-readable metadata for discovery, versioning, compatibility, and mount. |
-| **Skill Registry** | System of record for procedural memory versions and labels (draft/staging/production). |
-| **Skill Loader** | Authority that resolves and mounts production skills into the execution environment. |
+| **Skill** | Folder under `skills/<name>/` with `SKILL.md` (LLM) + `skill.yaml` (version + metadata). |
+| **SKILL.md** | LLM-facing instructions and references; not platform deploy metadata. |
+| **skill.yaml** | Platform-only manifest (version, status, owner, tags, description); never injected as LLM procedural body. CI syncs it into the Skill Index. |
+| **Skill Index** | Rebuildable Postgres + pgvector rows from `skill.yaml` (name, description, metadata, locator). Primary runtime input for Discovery. |
+| **Skill Discovery** | pgvector search on name + descriptions **plus metadata filters**; returns Top-K **index records** (no full SKILL.md). |
+| **Skill Resolver Service** | Customizable service that loads full skill packages for appropriate skills from `locator.backend`: **`lfs`** (code on the container) or **`blob`** (object store for singleton API / serverless). |
+| **Skill Manifest** | API projection of `skill.yaml` via [../programs/skill-yaml-to-manifest.md](../programs/skill-yaml-to-manifest.md). |
+| **Skill Pin** | Run record: `skill_id` + `version` + description + `locator` (`lfs` \| `blob`). |
+| **Skill Locator** | Package origin: `lfs` \| `blob` ([contracts/skill-locator.json](contracts/skill-locator.json)). |
+| **lfs** | Container-local skill/program tree the Resolver reads at runtime. |
+| **blob** | Object-storage backend when skills are promoted for singleton API or serverless execution. |
 | **Reflection Proposal** | Suggested skill/prompt improvement derived from episodes; never auto-applied. |
-| **Promotion** | Governed move of a skill version into a higher label (e.g. staging → production). |
+| **Promotion** | Governed move of a skill version into a higher status (`draft`→`staging`→`production`), with index re-sync and optional blob publish. |
 
 ## Governance and observation
 

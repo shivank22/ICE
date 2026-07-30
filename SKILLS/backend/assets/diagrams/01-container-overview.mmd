@@ -1,23 +1,29 @@
-%% Container overview — LangGraph runtime + platform services
+%% Container overview — architectural services
 flowchart LR
   Gw[Gateway]
-  Orch[Orchestrator_LangGraph]
+  Orch[Orchestrator]
   Ctx[ContextAssembler]
-  Store[(LangGraph_Store)]
-  Loader[SkillLoader]
-  Reg[SkillRegistry]
-  Cp[(Checkpointer_PostgresSaver)]
-  Blob[(SkillBlobOrFS)]
+  Know[KnowledgeService]
+  Disc[SkillDiscovery]
+  Res[SkillResolverService]
+  LFS[(lfs_container)]
+  Blob[(blob_store)]
+  Idx[(Postgres_pgvector_index)]
+  Cp[(CheckpointStore)]
+  Sem[(PostgresSemantic)]
   Tr[(TraceStore)]
   Appr[ApprovalService]
   Gw --> Orch
   Orch --> Ctx
   Orch --> Cp
-  Orch --> Store
-  Ctx --> Store
-  Ctx --> Loader
-  Loader --> Reg
-  Reg --> Blob
+  Orch --> Disc
+  Ctx --> Know
+  Disc --> Idx
+  Disc -->|index_records| Ctx
+  Orch --> Res
+  Res -->|lfs| LFS
+  Res -->|blob| Blob
+  Res -->|SkillReferences| Orch
+  Know --> Sem
   Orch --> Tr
   Appr --> Orch
-  Appr --> Reg

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "skill-yaml.json",
+  "title": "SkillYaml",
+  "description": "Platform-only skill manifest in the skill folder (skill.yaml): version + metadata. Never injected as LLM procedural instructions. Validated by CI and synced to the Postgres/pgvector Skill Index. Maps to SkillManifest via programs/skill-yaml-to-manifest.md.",
+  "type": "object",
+  "required": ["name", "version", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Skill id / folder name (e.g. java-migration); must match skills/<name>/"
+    },
+    "version": { "type": "string", "description": "Semver" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "staging", "production", "deprecated", "archived"]
+    },
+    "owner": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "description": {
+      "type": "string",
+      "description": "Short searchable blurb for Skill Index cards; may mirror SKILL.md summary. Maps to SkillManifest.purpose when purpose is absent."
+    },
+    "purpose": {
+      "type": "string",
+      "description": "Optional explicit purpose; preferred source for SkillManifest.purpose"
+    },
+    "scope": { "type": "string" },
+    "evaluation_criteria_ref": { "type": "string" },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "runtime": { "type": "string" },
+        "min_platform_version": { "type": "string" }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "description": "Dependent skill id" },
+          "version_range": { "type": "string" }
+        }
+      }
+    },
+    "org_allowlist": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Optional org_ids allowed to discover/mount; empty/omitted = all authenticated orgs (subject to platform policy)"
+    }
+  }
+}

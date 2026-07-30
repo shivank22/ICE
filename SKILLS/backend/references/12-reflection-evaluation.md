@@ -59,7 +59,7 @@ Human review latency vs safety. Use staging soak to reduce production risk.
 - **Non-responsibilities:** Final production label moves without Approval; context assembly.
 - **Inputs:** Episodes, criteria, base skill versions.
 - **Outputs:** Reflection Proposals; draft skill versions.
-- **Dependencies:** Episodic store; Skill Registry; Approval.
+- **Dependencies:** Episodic store; skill package promote path + CI; Approval.
 - **Lifecycle:** schedule → analyze → propose → await → apply draft → close.
 - **Failure Modes:** weak evidence; rebase conflicts.
 - **Recovery:** defer proposal; require new reflection.

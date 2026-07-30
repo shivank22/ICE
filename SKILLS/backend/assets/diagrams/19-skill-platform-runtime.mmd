@@ -1,0 +1,20 @@
+%% Skill platform runtime — index records in context; Resolver loads lfs|blob
+flowchart TB
+  User[User_goal]
+  Disc[SkillDiscovery]
+  PG[(Postgres_pgvector_index)]
+  Asm[ContextAssembler_index_records]
+  Resolver[SkillResolverService]
+  LFS[(lfs_container_skills)]
+  Blob[(blob_object_store)]
+  Exec[Execute_resolved_SKILL_md]
+  User --> Disc
+  Disc --> PG
+  PG -->|name_desc_metadata_records| Disc
+  Disc --> Asm
+  Asm --> Resolver
+  Resolver -->|backend_lfs| LFS
+  Resolver -->|backend_blob| Blob
+  LFS --> Exec
+  Blob --> Exec
+  Asm --> Exec

@@ -3,14 +3,17 @@ flowchart TB
   Contracts[StableContracts]
   OrchBind[OrchestratorBinding]
   StoreBind[StoreBindings]
+  SkillBind[SkillPlatformBinding]
   TraceBind[TraceBinding]
   AuthBind[AuthBinding]
   Contracts --> OrchBind
   Contracts --> StoreBind
+  Contracts --> SkillBind
   Contracts --> TraceBind
   Contracts --> AuthBind
-  OrchBind --> LG[LangGraph_reference]
-  StoreBind --> PG[Postgres]
-  StoreBind --> Blob[Blob_or_FS]
-  TraceBind --> LF[Langfuse_or_equivalent]
+  OrchBind --> LG[LangGraph_DeepAgent]
+  StoreBind --> PG[Postgres_checkpointer_Store]
+  SkillBind --> Git[Git_skills_SoR]
+  SkillBind --> PGv[Postgres_pgvector_index]
+  TraceBind --> LF[Langfuse_or_LangSmith]
   AuthBind --> OIDC[OIDC_JWT]

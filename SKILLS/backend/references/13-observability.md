@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-Observability for agent platforms covers traces, quality signals, infrastructure health, and cost. Traces feed episodic memory; they are not a substitute for checkpoints or skill registries.
+Observability for agent platforms covers traces, quality signals, infrastructure health, and cost. Traces feed episodic memory; they are not a substitute for checkpoints or the Skill Index.
 
 **Opinionated LangGraph practices** (graph-level + agent-level emission, Langfuse/LangSmith bindings, attribute vocabulary, sampling, PII) live in **[17-langgraph-observability.md](17-langgraph-observability.md)**. Evaluation framework bindings (DeepEval, custom metrics, LLM-as-judge) live in **[18-evaluation-frameworks.md](18-evaluation-frameworks.md)**.
 

@@ -94,7 +94,7 @@ See [../assets/diagrams/02-state-transitions.mmd](../assets/diagrams/02-state-tr
 | messages | From `values` (messages channel) |
 | interrupt | Mapped from LangGraph interrupt values |
 | checkpoint_id | From snapshot `config.configurable` |
-| skill_pins | Platform metadata / Store / registry resolve |
+| skill_pins | Platform metadata from Discovery / Resolver (`skill_id` + `version` + description + `locator`) |
 
 ## 13. Mermaid Diagrams
 

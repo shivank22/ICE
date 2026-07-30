@@ -10,7 +10,7 @@ Provide recoverable, interruptible execution state without overloading semantic 
 
 ## 3. Scope
 
-Thread messages, channel values, checkpoint lifecycle, interrupt/resume/replay as they relate to STM. Semantic facts live in Store ([05](05-semantic-memory.md)); skill bodies live in the registry ([06](06-procedural-memory-skills.md)).
+Thread messages, channel values, checkpoint lifecycle, interrupt/resume/replay as they relate to STM. Semantic facts live in Store ([05](05-semantic-memory.md)); skill bodies are loaded by the Skill Resolver Service ([06](06-procedural-memory-skills.md), [19](19-skill-platform-lifecycle.md)).
 
 ## 4. Architecture Overview
 
@@ -80,7 +80,7 @@ Durable checkpoints add latency and storage. Worth it for enterprise HITL and au
 
 1. Create or load thread (`thread_id`).
 2. LangGraph restores latest checkpoint on invoke (if any).
-3. Assemble context (reads Store / registry; does not replace STM).
+3. Assemble context (reads Store / skill pins; does not replace STM).
 4. Execute node; reducers update messages/channels; checkpointer saves.
 5. On interrupt: `interrupt(payload)` after any pre-gate logic that is safe to re-run; irreversible effects only after resume.
 6. On resume: same `thread_id` + `Command(resume=...)`.

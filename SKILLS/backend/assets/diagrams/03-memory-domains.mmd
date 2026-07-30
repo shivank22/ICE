@@ -2,7 +2,7 @@
 flowchart TB
   STM[ShortTerm_Checkpointer]
   Sem[Semantic_Store_MemoryMd]
-  Proc[Procedural_SkillRegistry]
+  Proc[Procedural_GitSoR_plus_Index]
   Epi[Episodic_TracesEpisodes]
   Ctx[ContextAssembler]
   STM --> Ctx
@@ -10,4 +10,4 @@ flowchart TB
   Proc --> Ctx
   Epi --> Ctx
   Epi -->|proposals_only| Reflect[Reflection]
-  Reflect -->|approval_gated| Proc
+  Reflect -->|approval_gated_PR| Proc

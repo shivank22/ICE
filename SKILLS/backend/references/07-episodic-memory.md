@@ -10,13 +10,13 @@ Enable learning and auditability from real runs without compromising production 
 
 ## 3. Scope
 
-Trace capture, episode records, reflection inputs, retention. Does not own skill registry writes (only proposals).
+Trace capture, episode records, reflection inputs, retention. Does not own skill package writes (only proposals).
 
 ## 4. Architecture Overview
 
 See [../assets/diagrams/07-episodic-to-promotion.mmd](../assets/diagrams/07-episodic-to-promotion.mmd)
 
-Flow: Run → Trace Store → Episode Record → Reflection Service → Reflection Proposal → Approval → Skill Registry (draft/new version).
+Flow: Run → Trace Store → Episode Record → Reflection Service → Reflection Proposal → Approval → **draft skill version** (never direct prod write or index-as-SoR edits).
 
 ## 5. Core Concepts
 

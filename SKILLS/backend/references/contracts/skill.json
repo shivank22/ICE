@@ -2,25 +2,22 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "skill.json",
   "title": "Skill",
+  "description": "Package view of a skill. Full bodies are read by the Skill Resolver Service from locator.backend lfs (container) or blob (serverless / singleton API).",
   "type": "object",
   "required": ["manifest", "package"],
+  "additionalProperties": false,
   "properties": {
     "manifest": { "$ref": "skill-manifest.json" },
     "package": {
       "type": "object",
       "required": ["locator"],
+      "additionalProperties": false,
       "properties": {
-        "locator": {
-          "type": "object",
-          "properties": {
-            "backend": { "type": "string", "enum": ["fs", "blob", "registry"] },
-            "uri": { "type": "string" },
-            "checksum": { "type": "string" }
-          }
-        },
+        "locator": { "$ref": "skill-locator.json" },
         "contents": {
           "type": "object",
           "description": "Logical package tree references, not implementation files",
+          "additionalProperties": false,
           "properties": {
             "purpose": { "type": "string" },
             "algorithms": { "type": "array", "items": { "type": "string" } },
@@ -31,9 +28,10 @@
         }
       }
     },
-    "label": {
+    "status": {
       "type": "string",
-      "enum": ["draft", "staging", "production", "deprecated", "archived"]
+      "enum": ["draft", "staging", "production", "deprecated", "archived"],
+      "description": "Mirrors skill.yaml status / SkillManifest.status"
     }
   }
 }

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "skill-reference.json",
+  "title": "SkillReference",
+  "description": "Handle returned by the Skill Resolver Service after loading a skill package from lfs or blob. Description remains the index card; skill_md_path points at the resolved SKILL.md.",
+  "type": "object",
+  "required": ["name", "version", "description", "locator", "resolved_from"],
+  "additionalProperties": false,
+  "properties": {
+    "name": { "type": "string" },
+    "description": {
+      "type": "string",
+      "description": "Short card text for context — from the Skill Index row"
+    },
+    "version": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "staging", "production", "deprecated", "archived"]
+    },
+    "locator": { "$ref": "skill-locator.json" },
+    "skill_md_path": {
+      "type": "string",
+      "description": "Readable path to SKILL.md after resolve (container path or materialized cache path)"
+    },
+    "resolved_from": {
+      "type": "string",
+      "enum": ["lfs", "blob"],
+      "description": "Backend used by the Skill Resolver Service"
+    }
+  }
+}
