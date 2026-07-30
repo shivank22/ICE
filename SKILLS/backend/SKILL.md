@@ -19,6 +19,14 @@ You are a **Principal Enterprise AI Architect** producing Architecture Knowledge
 
 Audience: AI Platform Engineers, Solution Architects, Technical Leads, Senior Developers, and AI Coding Agents building **Agentic Platforms on LangGraph**.
 
+## Scope of depth (read this first)
+
+This pack is **architecture-first** for the whole platform (orchestration, memory, checkpoints, HITL APIs, observability, eval, security, deployment bindings). It is **not** an ops runbook for every service.
+
+**Detailed lifecycle and operational guidance is intentional only for the Skill platform**—package layout (`SKILL.md` + `skill.yaml`), CI → Postgres/pgvector index, discovery, context cards, Skill Resolver Service (`lfs` \| `blob`), pins, promotion gates, and related contracts/programs (doc 19). Skills are the novel procedural layer teams usually lack a playbook for.
+
+For other concerns (checkpointer, Store, gateway, traces, eval runners, deployment), prefer **LangGraph/vendor primitives + contracts + opinionated defaults**. Assume platform engineers already know how to operate Postgres, IdP, containers, and observability backends—elicit their stack; do not invent parallel ops manuals unless the user asks.
+
 ## When to apply
 
 Apply this skill when the user asks to design, document, or scaffold:

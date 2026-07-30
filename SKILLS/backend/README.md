@@ -2,6 +2,12 @@
 
 IDE-pluggable Architecture Knowledge Pack for designing enterprise **Agentic Orchestrator** backends **on LangGraph**.
 
+## Scope of depth
+
+Architecture guidance covers the whole platform. **Detailed lifecycle / ops guidance is intentional only for Skills**—the novel procedural layer (`skill.yaml` → CI index → discovery → context records → Skill Resolver `lfs`|`blob` → gated promote). See [doc 19](references/19-skill-platform-lifecycle.md).
+
+Other services (checkpointer, Store, gateway, traces, eval, deployment) get bindings, contracts, and defaults—not full ops playbooks. Teams are expected to operate those with existing platform practice; elicit the stack rather than prescribing runbooks unless asked.
+
 - Entrypoint for agents: [`SKILL.md`](SKILL.md)
 - LangGraph bindings: [`references/langgraph-bindings.md`](references/langgraph-bindings.md)
 - Handbook index: [`references/00-index.md`](references/00-index.md)
