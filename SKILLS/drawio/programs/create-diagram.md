@@ -61,12 +61,12 @@ Follow [../references/xml-format.md](../references/xml-format.md) and styles fro
 Skeleton:
 
 ```xml
-<mxfile host="app.diagrams.net" compressed="false">
+<mxfile host="app.diagrams.net" agent="drawio-diagrams" version="22.1.0" type="device">
   <diagram id="page-1" name="Page-1">
-    <mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0" background="none">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
-        <mxCell id="0"/>
-        <mxCell id="1" parent="0"/>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
       </root>
     </mxGraphModel>
   </diagram>
@@ -83,16 +83,16 @@ Write the full XML to the chosen path. Create parent directories if needed. Do n
 
 Before finishing:
 
-- [ ] Root is `<mxfile … compressed="false">`
+- [ ] Root is `<mxfile host="app.diagrams.net" … type="device">` (no `compressed` attr)
 - [ ] Cells `0` and `1` present
-- [ ] All ids unique
+- [ ] All ids unique; shapes/edges prefer `parent="1"`
 - [ ] Vertices have `vertex="1"` + geometry `x,y,width,height`
 - [ ] Edges have `edge="1"`, `source`/`target` (or points), and a `<mxGeometry>` child
 - [ ] Labels escaped; no XML comments
-- [ ] `background="none"` unless requested otherwise
+- [ ] No `background="none"`; no nested group parents for ordinary boxes
 - [ ] File opens conceptually as one clear composition
 
-Report the file path to the user. Optional: mention open in [app.diagrams.net](https://app.diagrams.net/) or export to Visio from Draw.io UI.
+Report the file path to the user. Optional: mention open in [app.diagrams.net](https://app.diagrams.net/), Draw.io desktop, or export to Visio from Draw.io UI.
 
 ## Editing an existing diagram
 
@@ -107,6 +107,7 @@ Report the file path to the user. Optional: mention open in [app.diagrams.net](h
 | Symptom | Likely cause | Fix |
 |---------|--------------|-----|
 | Blank in Draw.io | Missing `mxfile` wrapper | Use full wrapper |
-| Missing arrows | Self-closing edge / no geometry | Expand `<mxGeometry>` |
+| Attribute / parse error on open | `compressed`, `background="none"`, or nested parents | Omit those attrs; flatten to `parent="1"` |
+| Missing arrows | Edge without geometry | Ensure `<mxGeometry relative="1" as="geometry" />` |
 | Broken open | XML comments or bad escapes | Remove comments; escape `& < > "` |
 | Messy layout | Random coordinates | Snap to grid; consistent sizes |

@@ -15,13 +15,15 @@ Reuse these `style` strings. Always end with a semicolon. Prefer `html=1;whiteSp
 | Document | `shape=document;whiteSpace=wrap;html=1;` |
 | Process (parallelogram) | `shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;` |
 
-## Containers
+## Containers / boundaries
+
+Prefer **visual** boundaries (all cells `parent="1"`). Avoid `container=1` nesting unless the user needs real swimlanes.
 
 | Kind | Style |
 |------|-------|
-| Group box | `rounded=0;whiteSpace=wrap;html=1;container=1;collapsible=0;strokeWidth=1;fillColor=none;` |
-| Swimlane | `swimlane;whiteSpace=wrap;html=1;startSize=30;` |
-| Rounded container | `rounded=1;whiteSpace=wrap;html=1;container=1;collapsible=0;fillColor=#f5f5f5;strokeColor=#666666;` |
+| Dashed boundary (preferred) | `rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fillColor=none;strokeColor=#999999;dashed=1;spacingTop=2;` |
+| Filled zone | `rounded=1;whiteSpace=wrap;html=1;verticalAlign=top;fontStyle=1;fillColor=#f5f5f5;strokeColor=#666666;spacingTop=2;` |
+| Swimlane (only when needed) | `swimlane;whiteSpace=wrap;html=1;startSize=30;` |
 
 ## Edges
 

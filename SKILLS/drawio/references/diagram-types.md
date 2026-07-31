@@ -21,7 +21,7 @@ Opinionated defaults. Adapt when the user specifies otherwise.
 ## Architecture / containers
 
 - **Flow:** left → right (request path) or top → bottom (layers)
-- **Shapes:** rounded boxes for services; cylinders for stores; group containers for boundaries
+- **Shapes:** rounded boxes for services; cylinders for stores; dashed boundary boxes for zones (all `parent="1"`)
 - **Edges:** solid for runtime calls; dashed for dependencies
 - **Heuristic:** one layer or one trust boundary per horizontal/vertical band; label edges only when direction is ambiguous
 - **Template:** [../examples/architecture.drawio](../examples/architecture.drawio)

@@ -36,13 +36,14 @@ Do **not** use this skill for Mermaid-only requests, spreadsheet/chart generatio
 ## Hard rules (always)
 
 1. **Full wrapper required:** `<mxfile>` → `<diagram>` → `<mxGraphModel>` → `<root>`. Bare `mxGraphModel` alone is **not** a valid `.drawio` file.
-2. **Uncompressed only:** set `compressed="false"` on `mxfile`. Never emit deflate/Base64 diagram bodies.
-3. **Structural cells:** always include `id="0"` (root) and `id="1"` (default layer, `parent="0"`). All shapes/edges use `parent="1"` (or a group/layer id).
+2. **Uncompressed only:** emit `<mxGraphModel>` as XML children. Never emit deflate/Base64 bodies. Prefer **omitting** the `compressed` attribute (do not set `compressed="true"`).
+3. **Structural cells:** always include `id="0"` (root) and `id="1"` (default layer, `parent="0"`). Prefer all shapes/edges at `parent="1"` with absolute coordinates.
 4. **Unique ids** for every `mxCell`.
-5. **Vertices** use `vertex="1"`; **edges** use `edge="1"` (mutually exclusive). Every edge must have a non-self-closing `<mxGeometry>` child.
-6. **Escape** `&`, `<`, `>`, `"` in attribute/label text as `&amp;`, `&lt;`, `&gt;`, `&quot;`.
+5. **Vertices** use `vertex="1"`; **edges** use `edge="1"` (mutually exclusive). Every edge needs an `<mxGeometry>` child (`relative="1"`).
+6. **Escape** `&`, `<`, `>`, `"` (and newlines as `&#xa;`) in labels.
 7. **No XML comments** (`<!-- -->`) — they waste tokens and can break parsers.
-8. **`background="none"`** on `mxGraphModel` unless the user explicitly wants a solid background.
+8. **Avoid fragile attrs:** do not set `background="none"`; do not nest ordinary boxes under group parents—use dashed boundary boxes at `parent="1"` instead.
+9. **mxfile metadata:** include `host="app.diagrams.net"`, `agent="drawio-diagrams"`, `version="22.1.0"`, `type="device"`.
 
 Details: [references/xml-format.md](references/xml-format.md).
 
