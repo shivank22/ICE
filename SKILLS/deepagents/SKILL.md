@@ -7,7 +7,9 @@ description: >-
   long-term memory (AGENTS.md / MemoryMiddleware), context engineering
   (offload/summarization/runtime context), write_todos planning,
   task/subagent decomposition, dynamic subagents (interpreter/QuickJS),
-  human-in-the-loop (interrupt_on / decisions / resume), and
+  human-in-the-loop (interrupt_on / decisions / resume), LangGraph Send
+  map-reduce (CompiledSubAgent), graph engineering (explicit StateGraph
+  workflows vs single-agent loops), and
   guardrails (permissions/HITL/PII/limits). Use when building deep agents,
   debugging the deepagents stack, or assembling a deep-agent-like LangGraph agent.
 ---
@@ -30,6 +32,7 @@ For ICE platform architecture (skill CI, Thread/Run APIs, Store ownership contra
 Agent = Model + Harness
 Harness = system prompt + tools + middleware around the ReAct tool-calling loop
 Deep Agents = opinionated harness on create_agent + LangGraph runtime
+Graph engineering = explicit nodes/edges/state/gates coordinating agents + humans
 ```
 
 `create_agent` **is** the ReAct loop. Do not hand-roll a `while` tool loop.
@@ -40,9 +43,11 @@ Deep Agents = opinionated harness on create_agent + LangGraph runtime
 |-----------|------|
 | Ship a deep agent quickly | **A** — `create_deep_agent` |
 | Fork the stack, teach internals, or debug a layer | **B** — assemble with `create_agent` |
+| Fixed stages + hard validation / HITL / revision caps | **Graph engineering** — custom `StateGraph` |
 | Graph shape is not an agent loop | Custom LangGraph (optionally as a `CompiledSubAgent`) |
+| Runtime N× same worker, different inputs | LangGraph **`Send`** map-reduce (custom graph / CompiledSubAgent) |
 
-Prefer Path A unless Path B is required.
+Prefer Path A unless Path B or an explicit graph is required.
 
 ## Under-the-hood cheat sheet
 
@@ -56,6 +61,8 @@ Prefer Path A unless Path B is required.
 | Planning | Opt-in todos (v0.7+ not default) | `TodoListMiddleware` |
 | Decomposition | Default `task` + general-purpose subagent | `SubAgentMiddleware` |
 | Dynamic subagents | Fan-out from interpreter JS via `task()` | `CodeInterpreterMiddleware` (beta) |
+| Map-reduce graph | Runtime fan-out via `Send` (not the ReAct harness) | `langgraph.types.Send` + `StateGraph` |
+| Graph engineering | Explicit stages, routes, validators, HITL gates | Custom `StateGraph` (± deep-agent nodes) |
 | Context | Offload + summarization + isolation + runtime/state schemas | See context-engineering |
 | Resume hygiene | Repair dangling tool calls | `PatchToolCallsMiddleware` |
 | Memory | Always-loaded memory files (`AGENTS.md`, etc.) | `MemoryMiddleware` + durable backend |
@@ -80,6 +87,8 @@ Read only what the current request needs:
 | Long-term memory (`memory=` / AGENTS.md) | [programs/configure-memory.md](programs/configure-memory.md) |
 | Context engineering (offload / summarize / runtime) | [programs/context-engineering.md](programs/context-engineering.md) |
 | Dynamic subagents (interpreter fan-out) | [programs/dynamic-subagents.md](programs/dynamic-subagents.md) |
+| Map-reduce / Send API (custom graph) | [programs/map-reduce-send.md](programs/map-reduce-send.md) |
+| Graph engineering (explicit workflows) | [programs/graph-engineering.md](programs/graph-engineering.md) |
 | Choose State/FS/Store/Composite/Sandbox | [programs/choose-backend.md](programs/choose-backend.md) |
 | Human-in-the-loop (interrupt / resume) | [programs/human-in-the-loop.md](programs/human-in-the-loop.md) |
 | Permissions / HITL / PII / limits | [programs/apply-guardrails.md](programs/apply-guardrails.md) |
@@ -89,6 +98,8 @@ Read only what the current request needs:
 | Memory reference | [references/memory.md](references/memory.md) |
 | Context engineering reference | [references/context-engineering.md](references/context-engineering.md) |
 | Dynamic subagents reference | [references/dynamic-subagents.md](references/dynamic-subagents.md) |
+| Send / map-reduce reference | [references/send-api.md](references/send-api.md) |
+| Graph engineering reference | [references/graph-engineering.md](references/graph-engineering.md) |
 | Backend catalog + security | [references/backends.md](references/backends.md) |
 | HITL reference | [references/human-in-the-loop.md](references/human-in-the-loop.md) |
 | Guardrails reference | [references/guardrails.md](references/guardrails.md) |
@@ -128,7 +139,8 @@ Deep Agents session:
 11. **Memory ≠ skills** — `memory=` is always loaded; skills are index-then-`read_file`. Scope Store namespaces per user/assistant.
 12. **Shared memory is usually read-only** — deny agent writes on org/policy paths to avoid cross-user prompt injection.
 13. **Dynamic subagents are beta** — need QuickJS interpreter; gate `eval` for HITL (inner interpreter `task()` bypasses parent `interrupt_on`).
-14. **HITL needs a checkpointer** — resume with the same `thread_id`; decisions must match `action_requests` order; use `reject` (not `respond`) to deny side effects.
+15. **Send is graph API, not Path A** — use `Send` in a `StateGraph` (often as `CompiledSubAgent`); for ReAct fan-out prefer parallel `task` or dynamic subagents. Fan-in fields need reducers.
+16. **Graph when gates matter** — put hard validation / revision caps / risk HITL in routing code; do not over-graph simple open-ended assistants.
 
 ## Anti-patterns
 
@@ -144,6 +156,8 @@ Deep Agents session:
 - Relying on `interrupt_on={"task": True}` to approve interpreter fan-out (it won't)
 - Resuming HITL on a different `thread_id` or with mismatched decision count/order
 - Using `respond` to deny deletes/emails (model may treat it as success)
+- Expecting `create_deep_agent` to expose `Send` — build a custom graph (or CompiledSubAgent) instead
+- Building a multi-agent graph when a single deep agent would do (more boxes ≠ better)
 
 ## Upstream
 
@@ -153,6 +167,8 @@ Deep Agents session:
 - [Context engineering](https://docs.langchain.com/oss/python/deepagents/context-engineering)
 - [Human-in-the-loop](https://docs.langchain.com/oss/python/deepagents/human-in-the-loop)
 - [Dynamic subagents](https://docs.langchain.com/oss/python/deepagents/dynamic-subagents)
+- [LangGraph Send / map-reduce](https://docs.langchain.com/oss/python/langgraph/use-graph-api#map-reduce-and-the-send-api)
+- [Graph engineering (essay)](https://www.analyticsvidhya.com/blog/2026/07/graph-engineering/)
 - [Customization](https://docs.langchain.com/oss/python/deepagents/customization)
 - [Build from scratch](https://docs.langchain.com/oss/python/langchain/deep-agent-from-scratch)
 - [Going to production](https://docs.langchain.com/oss/python/deepagents/going-to-production)

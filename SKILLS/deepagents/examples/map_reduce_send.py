@@ -1,0 +1,59 @@
+"""LangGraph map-reduce with Send — standalone or as CompiledSubAgent.
+
+Requires: pip install langgraph
+Docs: https://docs.langchain.com/oss/python/langgraph/use-graph-api#map-reduce-and-the-send-api
+"""
+
+import operator
+from typing_extensions import Annotated, TypedDict
+
+from langgraph.graph import END, START, StateGraph
+from langgraph.types import Send
+
+
+class OverallState(TypedDict):
+    topic: str
+    subjects: list[str]
+    jokes: Annotated[list[str], operator.add]
+    best_selected_joke: str
+
+
+def generate_topics(state: OverallState):
+    return {"subjects": ["lions", "elephants", "penguins"]}
+
+
+def generate_joke(state: OverallState):
+    joke_map = {
+        "lions": "Why don't lions like fast food? Because they can't catch it!",
+        "elephants": "Why don't elephants use computers? They're afraid of the mouse!",
+        "penguins": "Why don't penguins like talking to strangers at parties? Because they find it hard to break the ice.",
+    }
+    return {"jokes": [joke_map[state["subject"]]]}
+
+
+def continue_to_jokes(state: OverallState):
+    return [Send("generate_joke", {"subject": s}) for s in state["subjects"]]
+
+
+def best_joke(state: OverallState):
+    return {"best_selected_joke": "penguins"}
+
+
+builder = StateGraph(OverallState)
+builder.add_node("generate_topics", generate_topics)
+builder.add_node("generate_joke", generate_joke)
+builder.add_node("best_joke", best_joke)
+builder.add_edge(START, "generate_topics")
+builder.add_conditional_edges("generate_topics", continue_to_jokes, ["generate_joke"])
+builder.add_edge("generate_joke", "best_joke")
+builder.add_edge("best_joke", END)
+graph = builder.compile()
+
+if __name__ == "__main__":
+    result = graph.invoke({"topic": "animals"})
+    print(result["jokes"])
+    print(result["best_selected_joke"])
+
+# Optional — attach under create_deep_agent:
+# from deepagents.middleware.subagents import CompiledSubAgent
+# CompiledSubAgent(name="joke-batch", description="...", runnable=graph)

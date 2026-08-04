@@ -96,3 +96,4 @@ Copyable prompt: [../examples/orchestrator_planning_prompt.md](../examples/orche
 - [../references/planning-and-decomposition.md](../references/planning-and-decomposition.md)
 - [../references/prompt-fragments.md](../references/prompt-fragments.md)
 - Many independent units / JS fan-out: [dynamic-subagents.md](dynamic-subagents.md)
+- Explicit LangGraph map-reduce (`Send`): [map-reduce-send.md](map-reduce-send.md)

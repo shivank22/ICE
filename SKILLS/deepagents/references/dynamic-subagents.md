@@ -19,6 +19,8 @@ Related: https://docs.langchain.com/oss/python/deepagents/interpreters · https:
 | Trigger | Normal user ask | Often phrase as a **"workflow"** |
 | HITL | `interrupt_on={"task": ...}` can apply | Inner `task()` **bypasses** parent tool HITL — gate `eval` |
 
+For an explicit `StateGraph` map-reduce (`Send`), see [send-api.md](send-api.md) — different from interpreter `task()`.
+
 ## Setup
 
 ```python
@@ -72,4 +74,5 @@ Orchestration pattern: keep working set in JS variables → slice → `task()` �
 
 - [../programs/dynamic-subagents.md](../programs/dynamic-subagents.md)
 - [planning-and-decomposition.md](planning-and-decomposition.md) — standard `task` path
+- [send-api.md](send-api.md) — LangGraph `Send` map-reduce (custom graph / CompiledSubAgent)
 - [../examples/dynamic_subagents.py](../examples/dynamic_subagents.py)

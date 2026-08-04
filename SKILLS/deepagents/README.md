@@ -10,6 +10,8 @@ IDE-pluggable skill for **writing Deep Agents** with `create_deep_agent`, or for
 - Context engineering: [`programs/context-engineering.md`](programs/context-engineering.md)
 - Human-in-the-loop: [`programs/human-in-the-loop.md`](programs/human-in-the-loop.md)
 - Dynamic subagents: [`programs/dynamic-subagents.md`](programs/dynamic-subagents.md)
+- Map-reduce / Send: [`programs/map-reduce-send.md`](programs/map-reduce-send.md)
+- Graph engineering: [`programs/graph-engineering.md`](programs/graph-engineering.md)
 - References: [`references/`](references/)
 - Examples: [`examples/`](examples/)
 

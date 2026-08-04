@@ -135,4 +135,7 @@ If parity is hard to maintain, switch back to Path A unless the fork is intentio
 ## See also
 
 - Example: [../examples/assemble_deep_like_agent.py](../examples/assemble_deep_like_agent.py)
+- Map-reduce `Send` as CompiledSubAgent: [map-reduce-send.md](map-reduce-send.md)
+- Graph engineering (when to leave the single-agent loop): [graph-engineering.md](graph-engineering.md)
 - From-scratch guide: https://docs.langchain.com/oss/python/langchain/deep-agent-from-scratch
+- Graph API Send: https://docs.langchain.com/oss/python/langgraph/use-graph-api#map-reduce-and-the-send-api

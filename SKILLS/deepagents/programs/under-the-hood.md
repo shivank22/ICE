@@ -91,6 +91,8 @@ Examples:
 | Planning / `task` | [plan-and-decompose.md](plan-and-decompose.md) |
 | Backends | [choose-backend.md](choose-backend.md) |
 | HITL internals + resume | [human-in-the-loop.md](human-in-the-loop.md) |
+| Map-reduce / Send | [map-reduce-send.md](map-reduce-send.md) |
+| Graph engineering | [graph-engineering.md](graph-engineering.md) |
 | Guardrails | [apply-guardrails.md](apply-guardrails.md) |
 
 ## Failure modes

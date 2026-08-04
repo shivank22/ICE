@@ -143,6 +143,29 @@ Details / Path B: [human-in-the-loop.md](human-in-the-loop.md).
 
 Details: [context-engineering.md](context-engineering.md).
 
+## Send / map-reduce (quick)
+
+| Knob | Notes |
+|------|-------|
+| Import | `from langgraph.types import Send` |
+| Shape | `Send("worker_node", {"item": x})` |
+| Wire | Conditional edge returns `list[Send]`; list allowed destinations |
+| Fan-in | `Annotated[list[T], operator.add]` (or `add_messages`) |
+| Under deep agent | `CompiledSubAgent(runnable=compiled_graph)` |
+
+Not part of Path A factory — custom `StateGraph`. Details: [send-api.md](send-api.md).
+
+## Graph engineering (quick)
+
+| Idea | Prefer |
+|------|--------|
+| Open-ended tool agent | Path A `create_deep_agent` |
+| Fixed stages + hard gates | Explicit `StateGraph` |
+| Runtime N workers | `Send` map-reduce |
+| Risk HITL / revise loops | Routes in code + checkpointer |
+
+Details: [graph-engineering.md](graph-engineering.md).
+
 ## Version notes (from docs)
 
 | Feature | Approx. version |
@@ -162,5 +185,7 @@ Details: [context-engineering.md](context-engineering.md).
 - https://docs.langchain.com/oss/python/deepagents/context-engineering
 - https://docs.langchain.com/oss/python/deepagents/human-in-the-loop
 - https://docs.langchain.com/oss/python/deepagents/dynamic-subagents
+- https://docs.langchain.com/oss/python/langgraph/use-graph-api#map-reduce-and-the-send-api
+- https://www.analyticsvidhya.com/blog/2026/07/graph-engineering/
 - https://docs.langchain.com/oss/python/langchain/deep-agent-from-scratch
 - https://github.com/langchain-ai/deepagents

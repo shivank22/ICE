@@ -19,6 +19,7 @@ Interpreters: https://docs.langchain.com/oss/python/deepagents/interpreters
 | Single delegation | Normal `task` tool (model tool-call) — [plan-and-decompose.md](plan-and-decompose.md) |
 | Many files/tickets, classify→act, fan-out+merge, adversarial check, tournament | **Dynamic subagents** via interpreter `task()` |
 | Deterministic loop over N items | Dynamic (JS loop) over N separate model turns |
+| Explicit StateGraph map-reduce (per-item worker node) | LangGraph **`Send`** — [map-reduce-send.md](map-reduce-send.md) |
 
 ## Checklist
 
@@ -120,5 +121,6 @@ Details: [../references/dynamic-subagents.md](../references/dynamic-subagents.md
 ## See also
 
 - [plan-and-decompose.md](plan-and-decompose.md) — standard `task` tool path
+- [map-reduce-send.md](map-reduce-send.md) — LangGraph `Send` map-reduce
 - [../examples/dynamic_subagents.py](../examples/dynamic_subagents.py)
 - https://docs.langchain.com/oss/python/deepagents/dynamic-subagents

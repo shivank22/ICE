@@ -99,12 +99,16 @@ Prompt template: [../examples/orchestrator_planning_prompt.md](../examples/orche
 - Empty `description` relying on parent history (child cannot see it)
 - Treating todo completion as the user answer
 
-For **many independent units** orchestrated in code (JS loops / parallel batches), see [dynamic-subagents.md](dynamic-subagents.md) / [../programs/dynamic-subagents.md](../programs/dynamic-subagents.md).
+For **many independent units** orchestrated in code (JS loops / parallel batches), see [dynamic-subagents.md](dynamic-subagents.md).
+
+For an **explicit LangGraph map-reduce** (runtime N× same worker node with per-item `Send` payloads), see [send-api.md](send-api.md) / [../programs/map-reduce-send.md](../programs/map-reduce-send.md) — typically as a `CompiledSubAgent`, not inside the Path A ReAct harness.
 
 ## See also
 
 - [../programs/plan-and-decompose.md](../programs/plan-and-decompose.md)
 - [prompt-fragments.md](prompt-fragments.md)
+- [send-api.md](send-api.md)
 - https://docs.langchain.com/oss/python/deepagents/overview#task-planning
 - https://docs.langchain.com/oss/python/deepagents/subagents
 - https://docs.langchain.com/oss/python/deepagents/dynamic-subagents
+- https://docs.langchain.com/oss/python/langgraph/use-graph-api#map-reduce-and-the-send-api
